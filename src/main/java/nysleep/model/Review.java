@@ -7,8 +7,14 @@ public class Review {
     private int rate;
     private LocalDate date;
 
-
-    public long getAccommodation() {
+    public Review(Accommodation acc, Customer cus, String com, int rate, LocalDate date){
+        this.accommodation=acc;
+        this.customer=cus;
+        this.comment=com;
+        this.rate=rate;
+        this.date=date;
+    }
+    public Accommodation getAccommodation() {
         return accommodation;
     }
 
