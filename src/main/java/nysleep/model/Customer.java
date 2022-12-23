@@ -3,11 +3,12 @@ package nysleep.model;
 public class Customer extends RegisteredUser{
     private String address;
     private String country;
-    private String phoneNum;
+    private String phone;
 
     public Customer(){
 
     }
+    public Customer(String address, String country, String phone){}
 
     public Customer(long customerId){
         super.setId(customerId);
@@ -29,12 +30,12 @@ public class Customer extends RegisteredUser{
         this.country=country;
     }
 
-    public String getPhoneNum(){
-        return phoneNum;
+    public String getPhone(){
+        return phone;
     }
 
-    public void setPhoneNum(String phoneNum){
-        this.phoneNum=phoneNum;
+    public void setPhone(String phoneNum){
+        this.phone=phone;
     }
 
     @Override
@@ -42,7 +43,7 @@ public class Customer extends RegisteredUser{
         return "Customer{"+
                 "address='"+ address + '\''+
                 ", country='"+ country + '\''+
-                ", phoneNum='"+ phoneNum +
+                ", phone='"+ phone +
                 '}';
     }
 }
