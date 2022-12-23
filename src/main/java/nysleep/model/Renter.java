@@ -3,16 +3,16 @@ package nysleep.model;
 public class Renter extends RegisteredUser {
     private int numAccomodations;
     private String workEmail;
-    private String phoneNumber;
+    private String phone;
 
     public Renter(){
 
     }
 
-    public Renter(int numAccomodations, String workEmail, String phoneNumber) {
+    public Renter(int numAccomodations, String workEmail, String phone) {
         this.numAccomodations = numAccomodations;
         this.workEmail = workEmail;
-        this.phoneNumber = phoneNumber;
+        this.phone = phone;
     }
 
 
@@ -24,7 +24,7 @@ public class Renter extends RegisteredUser {
 
     public void setWorkEmail(String workEmail) {this.workEmail = workEmail;}
 
-    public String getPhoneNumber() {return phoneNumber;}
+    public String getPhone() {return phone;}
 
-    public void setPhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
+    public void setPhoneNumber(String phone) {this.phone = phone;}
 }
