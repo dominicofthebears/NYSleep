@@ -70,6 +70,11 @@ public abstract class RegisteredUser {
         return "RegisteredUser{" +
                "id=" + id +
                ", firstName='" + firstName + '\'' +
+               ", lastName='" + lastName + '\'' +
+               ", email='" + email + '\'' +
+               ", password='" + password + '\'' +
+               ", url_prof_pic='" + url_prof_pic + '\'' +
+               ", type='" + type +
                '}';
     }
 }
