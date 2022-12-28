@@ -1,52 +1,52 @@
 package nysleep.DTO;
 
 public class ReviewAccDTO {
-    private long customId;
-    private String customFirstName;
-    private String customLastName;
-    private String customCountry;
+    private long customerId;
+    private String customerFirstName;
+    private String customerLastName;
+    private String customerCountry;
     private int rate;
     private String comment;
 
-    public ReviewAccDTO(long customId, String customFirstName, String customLastName, String customCountry, int rate, String comment) {
-        this.customId = customId;
-        this.customFirstName = customFirstName;
-        this.customLastName = customLastName;
-        this.customCountry = customCountry;
+    public ReviewAccDTO(long customerId, String customerFirstName, String customerLastName, String customerCountry, int rate, String comment) {
+        this.customerId = customerId;
+        this.customerFirstName = customerFirstName;
+        this.customerLastName = customerLastName;
+        this.customerCountry = customerCountry;
         this.rate = rate;
         this.comment = comment;
     }
 
-    public long getCustomId() {
-        return customId;
+    public long getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomId(long customId) {
-        this.customId = customId;
+    public void setCustomerId(long customerId) {
+        this.customerId = customerId;
     }
 
-    public String getCustomFirstName() {
-        return customFirstName;
+    public String getCustomerFirstName() {
+        return customerFirstName;
     }
 
-    public void setCustomFirstName(String customFirstName) {
-        this.customFirstName = customFirstName;
+    public void setCustomerFirstName(String customerFirstName) {
+        this.customerFirstName = customerFirstName;
     }
 
-    public String getCustomLastName() {
-        return customLastName;
+    public String getCustomerLastName() {
+        return customerLastName;
     }
 
-    public void setCustomLastName(String customLastName) {
-        this.customLastName = customLastName;
+    public void setCustomerLastName(String customerLastName) {
+        this.customerLastName = customerLastName;
     }
 
-    public String getCustomCountry() {
-        return customCountry;
+    public String getCustomerCountry() {
+        return customerCountry;
     }
 
-    public void setCustomCountry(String customCountry) {
-        this.customCountry = customCountry;
+    public void setCustomerCountry(String customerCountry) {
+        this.customerCountry = customerCountry;
     }
 
     public int getRate() {
@@ -68,10 +68,10 @@ public class ReviewAccDTO {
     @Override
     public String toString(){
         return "ReviewAccDTO{" +
-               "customID=" + customId +
-               ", customFirstName='"+ customFirstName + '\'' +
-               ", customLastName='"+ customLastName +'\'' +
-               ", customCountry='"+ customCountry +'\'' +
+               "customerID=" + customerId +
+               ", customerFirstName='"+ customerFirstName + '\'' +
+               ", customerLastName='"+ customerLastName +'\'' +
+               ", customerCountry='"+ customerCountry +'\'' +
                ", rate=" + rate +
                ", comment='" + comment +'\'' +
                '}';

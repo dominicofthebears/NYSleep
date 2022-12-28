@@ -1,29 +1,23 @@
-package nysleep.model;
+package nysleep.DTO;
 
 import java.time.LocalDate;
 
-public class Reservation {
+public class ReservationDTO {
     private LocalDate dateRes;
-    private LocalDate dataStart;
-    private LocalDate dataEnd;
+    private LocalDate dateStart;
+    private LocalDate dateEnd;
     private float totalCost;
-    private int numPeople;
     private long customerId;
     private String customerFirstName;
     private String customerLastName;
     private long accommodationId;
     private String accommodationName;
 
-    public Reservation(){
-
-    }
-
-    public Reservation(LocalDate dateRes, LocalDate dataStart, LocalDate dataEnd, float totalCost, int numPeople, long customerId, String customerFirstName, String customerLastName, long accommodationId, String accommodationName) {
+    public ReservationDTO(LocalDate dateRes, LocalDate dateStart, LocalDate dateEnd, float totalCost, long customerId, String customerFirstName, String customerLastName, long accommodationId, String accommodationName) {
         this.dateRes = dateRes;
-        this.dataStart = dataStart;
-        this.dataEnd = dataEnd;
+        this.dateStart = dateStart;
+        this.dateEnd = dateEnd;
         this.totalCost = totalCost;
-        this.numPeople = numPeople;
         this.customerId = customerId;
         this.customerFirstName = customerFirstName;
         this.customerLastName = customerLastName;
@@ -35,21 +29,17 @@ public class Reservation {
 
     public void setDateRes(LocalDate dateRes) {this.dateRes = dateRes;}
 
-    public LocalDate getDataStart() {return dataStart;}
+    public LocalDate getDateStart() {return dateStart;}
 
-    public void setDataStart(LocalDate dataStart) {this.dataStart = dataStart;}
+    public void setDateStart(LocalDate dateStart) {this.dateStart = dateStart;}
 
-    public LocalDate getDataEnd() {return dataEnd;}
+    public LocalDate getDateEnd() {return dateEnd;}
 
-    public void setDataEnd(LocalDate dataEnd) {this.dataEnd = dataEnd;}
+    public void setDateEnd(LocalDate dateEnd) {this.dateEnd = dateEnd;}
 
     public float getTotalCost() {return totalCost;}
 
     public void setTotalCost(float totalCost) {this.totalCost = totalCost;}
-
-    public int getNumPeople() {return numPeople;}
-
-    public void setNumPeople(int numPeople) {this.numPeople = numPeople;}
 
     public long getCustomerId() {
         return customerId;
@@ -89,5 +79,19 @@ public class Reservation {
 
     public void setAccommodationName(String accommodationName) {
         this.accommodationName = accommodationName;
+    }
+
+    public String toString(){
+        return"ReservationDTO{" +
+              "dateRes='" + dateRes + '\'' +
+              ", dateStart='" + dateStart + '\'' +
+              ", dateEnd='" + dateEnd + '\'' +
+              ", totalCost=" + totalCost +
+              ", customerID=" + customerId +
+              ", customerFirstName='"+ customerFirstName + '\'' +
+              ", customerLastName='"+ customerLastName +'\'' +
+              ", accommodationId=" + accommodationId +
+              ", accommodationName='"+ accommodationName + '\'' +
+              '}';
     }
 }
