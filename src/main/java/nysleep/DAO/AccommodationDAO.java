@@ -1,7 +1,19 @@
 package nysleep.DAO;
+
+
+import nysleep.model.Accommodation;
+import nysleep.model.Renter;
+
+import nysleep.DTO.PageDTO;
+import nysleep.DTO.AccommodationDTO;
+
+import java.time.LocalDate;
+
+
 import nysleep.model.Accommodation;
 import nysleep.DTO.PageDTO;
 import nysleep.DTO.AccommodationDTO;
+
 
 
 public interface AccommodationDAO {
@@ -9,8 +21,15 @@ public interface AccommodationDAO {
      void deleteAccommodation(Accommodation acc);
      void updateRating(Accommodation acc, int rating);
      void updateAccommodation(Accommodation oldACc, Accommodation newAcc)
+
+     PageDTO<AccommodationDTO> getAccHomePage();
+     AccommodationDTO getAccommodation(Accommodation acc);
+     PageDTO<AccommodationDTO> getSearchedAcc(LocalDate startDate,LocalDate endDate,int numPeople,String neighborhood,float price);
+     PageDTO<AccommodationDTO> getRenterAccommodations(Renter renter);
+
      PageDTO<AccomodationDTO> viewAccommodationHomePage();
      AccommodationDTO viewAccommodation(Accommodation acc);
+
 
 
 
