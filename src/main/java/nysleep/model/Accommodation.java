@@ -14,8 +14,9 @@ public class Accommodation {
     private int numRooms;
     private List<String> amenities;
     private float price;
+    private long renterId;
 
-    public Accommodation(String name, String neighborhood, String image, int numBeds, float rating, int numReviews, String propertyType, int numRooms, List<String> amenities, float price) {
+    public Accommodation(String name, String neighborhood, String image, int numBeds, float rating, int numReviews, String propertyType, int numRooms, List<String> amenities, float price, long renterId) {
         this.name = name;
         this.neighborhood = neighborhood;
         this.image = image;
@@ -26,6 +27,7 @@ public class Accommodation {
         this.numRooms = numRooms;
         this.amenities = amenities;
         this.price = price;
+        this.renterId = renterId;
     }
 
     public String getName() {return name;}
@@ -67,4 +69,8 @@ public class Accommodation {
     public float getPrice() {return price;}
 
     public void setPrice(float price) {this.price = price;}
+
+    public long getRenterId() {return renterId;}
+
+    public void setRenterId(long renterId) {this.renterId = renterId;}
 }

@@ -8,17 +8,21 @@ public class Reservation {
     private LocalDate dataEnd;
     private float totalCost;
     private int numPeople;
+    private Customer customer;
+    private Accommodation accommodation;
 
     public Reservation(){
 
     }
 
-    public Reservation(LocalDate dateRes, LocalDate dataStart, LocalDate dataEnd, float totalCost, int numPeople) {
+    public Reservation(LocalDate dateRes, LocalDate dataStart, LocalDate dataEnd, float totalCost, int numPeople, long customerId, String customerFirstName, String customerLastName, long accommodationId, String accommodationName, Customer customer, Accommodation accommodation) {
         this.dateRes = dateRes;
         this.dataStart = dataStart;
         this.dataEnd = dataEnd;
         this.totalCost = totalCost;
         this.numPeople = numPeople;
+        this.customer = customer;
+        this.accommodation = accommodation;
     }
 
     public LocalDate getDateRes() {return dateRes;}
@@ -40,4 +44,20 @@ public class Reservation {
     public int getNumPeople() {return numPeople;}
 
     public void setNumPeople(int numPeople) {this.numPeople = numPeople;}
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Accommodation getAccommodation() {
+        return accommodation;
+    }
+
+    public void setAccommodation(Accommodation accommodation) {
+        this.accommodation = accommodation;
+    }
 }
