@@ -1,33 +1,26 @@
 package nysleep.model;
 import java.time.LocalDate;
 public class Review {
-    private Accommodation accommodation;
-    private Customer customer;
+    private long accommodationId;
+    private String accommodationName;
+    private long customerId;
+    private String customerFirstName;
+    private String customerLastName;
+    private String countryCustomer;
     private String comment;
     private int rate;
     private LocalDate date;
 
-    public Review(Accommodation acc, Customer cus, String com, int rate, LocalDate date){
-        this.accommodation=acc;
-        this.customer=cus;
+    public Review(long accommodationId, String accommodationName, long customerId, String customerFirstName, String customerLastName, String countryCustomer, String com, int rate, LocalDate date){
+        this.accommodationId = accommodationId;
+        this.accommodationName = accommodationName;
+        this.customerId = customerId;
+        this.customerFirstName = customerFirstName;
+        this.customerLastName = customerLastName;
+        this.countryCustomer = countryCustomer;
         this.comment=com;
         this.rate=rate;
         this.date=date;
-    }
-    public Accommodation getAccommodation() {
-        return accommodation;
-    }
-
-    public void setAccommodation(Accommodation accommodation) {
-        this.accommodation = accommodation;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
     }
 
     public String getComment() {
@@ -52,5 +45,53 @@ public class Review {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public long getAccommodationId() {
+        return accommodationId;
+    }
+
+    public void setAccommodationId(long accommodationId) {
+        this.accommodationId = accommodationId;
+    }
+
+    public String getAccommodationName() {
+        return accommodationName;
+    }
+
+    public void setAccommodationName(String accommodationName) {
+        this.accommodationName = accommodationName;
+    }
+
+    public long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(long customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getCustomerFirstName() {
+        return customerFirstName;
+    }
+
+    public void setCustomerFirstName(String customerFirstName) {
+        this.customerFirstName = customerFirstName;
+    }
+
+    public String getCustomerLastName() {
+        return customerLastName;
+    }
+
+    public void setCustomerLastName(String customerLastName) {
+        this.customerLastName = customerLastName;
+    }
+
+    public String getCountryCustomer() {
+        return countryCustomer;
+    }
+
+    public void setCountryCustomer(String countryCustomer) {
+        this.countryCustomer = countryCustomer;
     }
 }
