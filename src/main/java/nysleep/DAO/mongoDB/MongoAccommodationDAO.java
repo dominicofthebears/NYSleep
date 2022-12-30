@@ -9,9 +9,11 @@ import nysleep.model.Accommodation;
 import nysleep.model.Renter;
 
 import nysleep.DAO.base.MongoBaseDAO;
+import nysleep.model.Reservation;
 import org.bson.Document;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class MongoAccommodationDAO extends MongoBaseDAO implements AccommodationDAO {
 private final String COLLECTION = "accommodation";
@@ -28,7 +30,12 @@ private final String COLLECTION = "accommodation";
                             .append("property_type",acc.getPropertyType())
                             .append("amenities",acc.getAmenities())
                             .append("rating",acc.getRating());
-                            ;
+        List<Document> reservations = null;
+        for (Reservation res: acc.getReservations()) {
+            reservations.add( new Document("start_Date",res.getStartDate())
+                    .append("end_Date",res.getEndDate()));
+        }        
+        doc.append("reservations",reservations);
     return doc;
     }
 
