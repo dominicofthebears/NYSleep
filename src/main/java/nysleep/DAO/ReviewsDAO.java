@@ -5,15 +5,11 @@ import nysleep.model.Customer;
 import nysleep.model.Accommodation;
 
 
-import nysleep.DTO.AccReviewDTO;
+import nysleep.DTO.ReviewAccDTO;
 import nysleep.DTO.CustomerReviewDTO;
 import nysleep.DTO.PageDTO;
-import nysleep.DTO.CustomerDTO;
-
-
-import nysleep.DTO.ReviewDTO;
+import nysleep.DTO.CustomerReviewDTO;
 import nysleep.DTO.PageDTO;
-import nysleep.DTO.CustomerDTO;
 
 import java.util.List;
 
@@ -22,7 +18,7 @@ public interface ReviewsDAO{
     void insert(Review review);
     void delete(Review  review);
 
-    PageDTO<AccReviewDTO> getReviewsForAcc(Accommodation acc);
+    PageDTO<ReviewAccDTO> getReviewsForAcc(Accommodation acc);
     PageDTO<CustomerReviewDTO> getReviewsForCustomer(Customer customer);
     float getAvgRating(Accommodation acc);
 
