@@ -4,8 +4,8 @@ import java.time.LocalDate;
 
 public class Reservation {
     private LocalDate dateRes;
-    private LocalDate dataStart;
-    private LocalDate dataEnd;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private float totalCost;
     private int numPeople;
     private Customer customer;
@@ -15,10 +15,10 @@ public class Reservation {
 
     }
 
-    public Reservation(LocalDate dateRes, LocalDate dataStart, LocalDate dataEnd, float totalCost, int numPeople, Customer customer, Accommodation accommodation) {
+    public Reservation(LocalDate dateRes, LocalDate startDate, LocalDate endDate, float totalCost, int numPeople, Customer customer, Accommodation accommodation) {
         this.dateRes = dateRes;
-        this.dataStart = dataStart;
-        this.dataEnd = dataEnd;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.totalCost = totalCost;
         this.numPeople = numPeople;
         this.customer = customer;
@@ -29,13 +29,13 @@ public class Reservation {
 
     public void setDateRes(LocalDate dateRes) {this.dateRes = dateRes;}
 
-    public LocalDate getDataStart() {return dataStart;}
+    public LocalDate getStartDate() {return startDate;}
 
-    public void setDataStart(LocalDate dataStart) {this.dataStart = dataStart;}
+    public void setStartDate(LocalDate startDate) {this.startDate = startDate;}
 
-    public LocalDate getDataEnd() {return dataEnd;}
+    public LocalDate getEndDate() {return endDate;}
 
-    public void setDataEnd(LocalDate dataEnd) {this.dataEnd = dataEnd;}
+    public void setEndDate(LocalDate endDate) {this.endDate = endDate;}
 
     public float getTotalCost() {return totalCost;}
 
