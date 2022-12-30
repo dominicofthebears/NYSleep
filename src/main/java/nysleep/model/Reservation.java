@@ -15,7 +15,7 @@ public class Reservation {
 
     }
 
-    public Reservation(LocalDate dateRes, LocalDate dataStart, LocalDate dataEnd, float totalCost, int numPeople, long customerId, String customerFirstName, String customerLastName, long accommodationId, String accommodationName, Customer customer, Accommodation accommodation) {
+    public Reservation(LocalDate dateRes, LocalDate dataStart, LocalDate dataEnd, float totalCost, int numPeople, Customer customer, Accommodation accommodation) {
         this.dateRes = dateRes;
         this.dataStart = dataStart;
         this.dataEnd = dataEnd;
