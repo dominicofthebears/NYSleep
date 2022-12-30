@@ -11,9 +11,7 @@ import nysleep.model.Renter;
 import nysleep.DAO.base.MongoBaseDAO;
 import org.bson.Document;
 
-import javax.swing.event.DocumentEvent;
 import java.time.LocalDate;
-import java.util.Collection;
 
 public class MongoAccommodationDAO extends MongoBaseDAO implements AccommodationDAO {
 private final String COLLECTION = "accommodation";

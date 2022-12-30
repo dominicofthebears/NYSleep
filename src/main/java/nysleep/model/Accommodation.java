@@ -4,9 +4,10 @@ package nysleep.model;
 import java.util.List;
 
 public class Accommodation {
+    private long id;
     private String name;
     private String neighborhood;
-    private String image;
+    private List<String> imagesURL;
     private int numBeds;
     private float rating;
     private int numReviews;
@@ -17,10 +18,11 @@ public class Accommodation {
     private long renterId;
     private List<Reservation> reservations;
 
-    public Accommodation(String name, String neighborhood, String image, int numBeds, float rating, int numReviews, String propertyType, int numRooms, List<String> amenities, float price, long renterId, List<Reservation> reservations) {
+    public Accommodation(long id, String name, String neighborhood, List<String> imagesURL, int numBeds, float rating, int numReviews, String propertyType, int numRooms, List<String> amenities, float price, long renterId, List<Reservation> reservations) {
+        this.id = id;
         this.name = name;
         this.neighborhood = neighborhood;
-        this.image = image;
+        this.imagesURL = imagesURL;
         this.numBeds = numBeds;
         this.rating = rating;
         this.numReviews = numReviews;
@@ -40,9 +42,9 @@ public class Accommodation {
 
     public void setNeighborhood(String neighborhood) {this.neighborhood = neighborhood;}
 
-    public String getImage() {return image;}
+    public List<String> getImagesURL() {return imagesURL;}
 
-    public void setImage(String image) {this.image = image;}
+    public void setImagesURL(List<String> imagesURL) {this.imagesURL = imagesURL;}
 
     public int getNumBeds() {return numBeds;}
 
@@ -82,5 +84,13 @@ public class Accommodation {
 
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
