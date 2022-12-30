@@ -4,10 +4,9 @@ package nysleep.model;
 import java.util.List;
 
 public class Accommodation {
-    private int id;
     private String name;
     private String neighborhood;
-    private List<String> imagesURL;
+    private String image;
     private int numBeds;
     private float rating;
     private int numReviews;
@@ -16,12 +15,12 @@ public class Accommodation {
     private List<String> amenities;
     private float price;
     private long renterId;
+    private List<Reservation> reservations;
 
-    public Accommodation(int id, String name, String neighborhood, List<String> imagesURL, int numBeds, float rating, int numReviews, String propertyType, int numRooms, List<String> amenities, float price, long renterId) {
-        this.id = id;
+    public Accommodation(String name, String neighborhood, String image, int numBeds, float rating, int numReviews, String propertyType, int numRooms, List<String> amenities, float price, long renterId, List<Reservation> reservations) {
         this.name = name;
         this.neighborhood = neighborhood;
-        this.imagesURL = imagesURL;
+        this.image = image;
         this.numBeds = numBeds;
         this.rating = rating;
         this.numReviews = numReviews;
@@ -30,6 +29,7 @@ public class Accommodation {
         this.amenities = amenities;
         this.price = price;
         this.renterId = renterId;
+        this.reservations = reservations;
     }
 
     public String getName() {return name;}
@@ -40,9 +40,9 @@ public class Accommodation {
 
     public void setNeighborhood(String neighborhood) {this.neighborhood = neighborhood;}
 
-    public List<String> getImagesURL() {return imagesURL;}
+    public String getImage() {return image;}
 
-    public void  setImagesURL(List<String> imagesURL) {this.imagesURL = imagesURL;}
+    public void setImage(String image) {this.image = image;}
 
     public int getNumBeds() {return numBeds;}
 
@@ -76,11 +76,11 @@ public class Accommodation {
 
     public void setRenterId(long renterId) {this.renterId = renterId;}
 
-    public int getId() {
-        return id;
+    public List<Reservation> getReservations() {
+        return reservations;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 }
