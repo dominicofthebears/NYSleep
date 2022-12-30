@@ -20,14 +20,14 @@ public interface AccommodationDAO {
      void createAccommodation(Accommodation acc);
      void deleteAccommodation(Accommodation acc);
      void updateRating(Accommodation acc, int rating);
-     void updateAccommodation(Accommodation oldACc, Accommodation newAcc)
+     void updateAccommodation(Accommodation oldACc, Accommodation newAcc);
 
      PageDTO<AccommodationDTO> getAccHomePage();
      AccommodationDTO getAccommodation(Accommodation acc);
      PageDTO<AccommodationDTO> getSearchedAcc(LocalDate startDate,LocalDate endDate,int numPeople,String neighborhood,float price);
      PageDTO<AccommodationDTO> getRenterAccommodations(Renter renter);
 
-     PageDTO<AccomodationDTO> viewAccommodationHomePage();
+     PageDTO<AccommodationDTO> viewAccommodationHomePage();
      AccommodationDTO viewAccommodation(Accommodation acc);
 
 
