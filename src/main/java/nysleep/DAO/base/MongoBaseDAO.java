@@ -7,36 +7,74 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
-public abstract class MongoBaseDAO {
-        protected static String connection = "mongodb://localhost:27017";
-        protected static String dbName;
 
-        public MongoBaseDAO(){}
-        public MongoBaseDAO(String connection){
-            this.connection = connection;
-        }
-        public MongoBaseDAO(String connection,String dbName,String collectionName){
+import java.util.ArrayList;
+import java.util.Iterator;
+
+
+public abstract class MongoBaseDAO{
+    private static String connection = "mongodb://localhost:27017";
+    private static String dbName = "nysleep";
+
+    public MongoBaseDAO(){}
+    public MongoBaseDAO(String connection){
+        this.connection = connection;
+    }
+    public MongoBaseDAO(String connection,String dbName,String collectionName){
         this.connection = connection;
         this.dbName = dbName;
     }
 
-        public String getConnection() {
+    public String getConnection() {
             return connection;
         }
-        public static MongoClient connect() {
-            MongoClient client = MongoClients.create(connection);
-            return client;
+    public static MongoClient connect() {
+        MongoClient client = MongoClients.create(connection);
+        return client;
+    }
+    public static MongoDatabase connect(String dbName) {
+        MongoClient myClient = MongoClients.create(connection);
+        MongoDatabase db = myClient.getDatabase(dbName);
+        return db;
+    }
+    public static MongoCollection<Document> connect(String dbName, String collectionName) {
+        MongoClient myClient = MongoClients.create(connection);
+        MongoDatabase db = myClient.getDatabase(dbName);
+        MongoCollection<Document> collection  = db.getCollection(collectionName);
+        return collection;
+    }
+    public static void insertDoc(Document doc,String collectionName) {
+        MongoClient myClient = MongoClients.create(connection);
+        MongoDatabase db = myClient.getDatabase(dbName);
+        MongoCollection<Document> collection = db.getCollection(collectionName);
+        collection.insertOne(doc);
+        myClient.close();
+    }
+    public static void deleteDoc(Document doc,String collectionName){
+        MongoClient myClient = MongoClients.create(connection);
+        MongoDatabase db = myClient.getDatabase(dbName);
+        MongoCollection<Document> collection  = db.getCollection(collectionName);
+        collection.deleteOne(doc);
+        myClient.close();
         }
-        public static MongoDatabase connect(String dbName) {
-            MongoClient myClient = MongoClients.create(connection);
-            MongoDatabase db = myClient.getDatabase(dbName);
-            return db;
-        }
-        public static MongoCollection<Document> connect(String dbName, String collectionName) {
-            MongoClient myClient = MongoClients.create(connection);
-            MongoDatabase db = myClient.getDatabase(dbName);
-            MongoCollection<Document> collection  = db.getCollection(collectionName);
-            return collection;
-        }
+    public static void updateDoc(Document oldDoc,Document query, String collectionName) {
+        MongoClient myClient = MongoClients.create(connection);
+        MongoDatabase db = myClient.getDatabase(dbName);
+        MongoCollection<Document> collection = db.getCollection(collectionName);
+        collection.updateOne(oldDoc, query);
+        myClient.close();
+    }
+    public static ArrayList<Document> readDoc(Document query, String collectionName) {
+        MongoClient myClient = MongoClients.create(connection);
+        MongoDatabase db = myClient.getDatabase(dbName);
+        MongoCollection<Document> collection = db.getCollection(collectionName);
+
+        Iterator docsIterator = collection.find().iterator();  //Extract all the document found
+        ArrayList<Document> docs = new ArrayList<Document>();
+        while(docsIterator.hasNext()){                          //iterate all over the iterator of document
+                    docs.add((Document) docsIterator.next());
+                }
+        return docs;
+    }
 }
 

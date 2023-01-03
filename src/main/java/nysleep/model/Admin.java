@@ -1,6 +1,6 @@
 package nysleep.model;
 
-public class Admin {
+public class Admin extends RegisteredUser{
     private String title;
 
     public Admin(){
