@@ -27,8 +27,6 @@ public interface AccommodationDAO {
      PageDTO<AccommodationDTO> getSearchedAcc(LocalDate startDate,LocalDate endDate,int numPeople,String neighborhood,float price);
      PageDTO<AccommodationDTO> getRenterAccommodations(Renter renter);
 
-     PageDTO<AccommodationDTO> viewAccommodationHomePage();
-     AccommodationDTO viewAccommodation(Accommodation acc);
 
 
 
