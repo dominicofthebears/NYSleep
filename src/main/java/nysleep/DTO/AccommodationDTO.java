@@ -1,13 +1,13 @@
 package nysleep.DTO;
 
 public class AccommodationDTO {
-    private long id;
+    private int id;
     private String name;
     private String neighborhood;
-    private float rating;
+    private double rating;
     private String mainPicUrl;
 
-    public AccommodationDTO(long id, String name, String neighborhood, float rating, String mainPicUrl) {
+    public AccommodationDTO(int id, String name, String neighborhood, double rating, String mainPicUrl) {
         this.id = id;
         this.name = name;
         this.neighborhood = neighborhood;
@@ -15,11 +15,11 @@ public class AccommodationDTO {
         this.mainPicUrl = mainPicUrl;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -39,11 +39,11 @@ public class AccommodationDTO {
         this.neighborhood = neighborhood;
     }
 
-    public float getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(float rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 

@@ -22,7 +22,7 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
 
     private static Document toDoc(Accommodation acc) {
         //Convert the model Accommodation object in a document to insert in MongoDB
-        Document doc = new Document("id", acc.getId())
+        Document doc = new Document("_id", acc.getId())
                 .append("name", acc.getName())
                 .append("neighborhood", acc.getNeighborhood())
                 .append("images_URL", acc.getImagesURL())
@@ -50,13 +50,13 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
 
     @Override
     public void deleteAccommodation(Accommodation acc) {
-        Document doc = toDoc(acc);
-        deleteDoc(doc, COLLECTION);
+        Document deleteQuery = new Document("_id",new Document("$eq",acc.getId()));
+        deleteDoc(deleteQuery, COLLECTION);
     }
 
     @Override
-    public void updateRating(Accommodation acc, int rating) {
-        Document searchQuery = new Document("id",new Document("$eq",acc.getId()));  //search query
+    public void updateRating(Accommodation acc, double rating) {
+        Document searchQuery = new Document("_id",new Document("$eq",acc.getId()));  //search query
 
         acc.setRating(rating);
         Document newDoc = toDoc(acc);  //updated doc
@@ -68,7 +68,7 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
     @Override
     public void updateAccommodation(Accommodation oldAcc, Accommodation newAcc) {
         //Need to transform accommodation in search query and update query
-        Document searchQuery = new Document("id",new Document("$eq",oldAcc.getId()));  //search query
+        Document searchQuery = new Document("_id",new Document("$eq",oldAcc.getId()));  //search query
         Document newDoc = toDoc(newAcc);  //updated doc
         Document updateQuery = new Document("$set",newDoc); //update query
         updateDoc(searchQuery,updateQuery, COLLECTION);
@@ -83,11 +83,11 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
         for(Document doc: docs){                                                    //iterate all over the documents and extract accommodations to put in the DTO
             ArrayList<String> picsURL = (ArrayList<String>) doc.get("images_URL");
             AccommodationDTO accDTO = new AccommodationDTO(
-                    (Long) doc.get("id"),
+                    (int) doc.get("_id"),
                     (String) doc.get("name"),
                     (String) doc.get("neighborhood"),
-                    (Float) doc.get("rating"),
-                    picsURL.get(1));
+                    (double) doc.get("rating"),
+                    picsURL.get(0));
             AccDTOList.add(accDTO);
         }
 
@@ -99,29 +99,24 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
 
     @Override
     public AccommodationDTO getAccommodation(Accommodation acc) {
-        Document searchQuery = new Document("id",new Document("$eq",acc.getId()));
+        Document searchQuery = new Document("_id",new Document("$eq",acc.getId()));
 
         ArrayList<Document> docs = readDoc(searchQuery,COLLECTION);
-        Document doc = docs.get(1);
+        Document doc = docs.get(0);
 
         ArrayList<String> picsURL = (ArrayList<String>) doc.get("images_URL");
         AccommodationDTO accDTO = new AccommodationDTO(
-                (Long) doc.get("id"),
+                (int) doc.get("_id"),
                 (String) doc.get("name"),
                 (String) doc.get("neighborhood"),
-                (Float) doc.get("rating"),
-                picsURL.get(1) );
-
+                (double) doc.get("rating"),
+                picsURL.get(0) );
         return accDTO;
     }
 
     @Override
-    public PageDTO<AccommodationDTO> getSearchedAcc(LocalDate startDate, LocalDate endDate, int numPeople, String neighborhood, float price) {
+    public PageDTO<AccommodationDTO> getSearchedAcc(LocalDate startDate, LocalDate endDate, int numPeople, String neighborhood, double price) {
         return null;
     }
 
-    @Override
-    public PageDTO<AccommodationDTO> getRenterAccommodations(Renter renter) {
-        return null;
-    }
 }

@@ -3,11 +3,11 @@ package nysleep.model;
 import java.time.LocalDate;
 
 public class Reservation {
+    public int id;
     private LocalDate dateRes;
     private LocalDate startDate;
     private LocalDate endDate;
-    private float totalCost;
-    private int numPeople;
+    private double totalCost;
     private Customer customer;
     private Accommodation accommodation;
 
@@ -15,16 +15,18 @@ public class Reservation {
 
     }
 
-    public Reservation(LocalDate dateRes, LocalDate startDate, LocalDate endDate, float totalCost, int numPeople, Customer customer, Accommodation accommodation) {
+    public Reservation(int id,LocalDate dateRes, LocalDate startDate, LocalDate endDate, double totalCost, Customer customer, Accommodation accommodation) {
+        this.id = id;
         this.dateRes = dateRes;
         this.startDate = startDate;
         this.endDate = endDate;
         this.totalCost = totalCost;
-        this.numPeople = numPeople;
         this.customer = customer;
         this.accommodation = accommodation;
     }
 
+    public int getId(){return this.id;}
+    public void setId(int id){this.id = id;}
     public LocalDate getDateRes() {return dateRes;}
 
     public void setDateRes(LocalDate dateRes) {this.dateRes = dateRes;}
@@ -37,13 +39,9 @@ public class Reservation {
 
     public void setEndDate(LocalDate endDate) {this.endDate = endDate;}
 
-    public float getTotalCost() {return totalCost;}
+    public double getTotalCost() {return totalCost;}
 
-    public void setTotalCost(float totalCost) {this.totalCost = totalCost;}
-
-    public int getNumPeople() {return numPeople;}
-
-    public void setNumPeople(int numPeople) {this.numPeople = numPeople;}
+    public void setTotalCost(double totalCost) {this.totalCost = totalCost;}
 
     public Customer getCustomer() {
         return customer;

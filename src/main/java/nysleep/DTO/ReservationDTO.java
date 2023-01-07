@@ -6,14 +6,14 @@ public class ReservationDTO {
     private LocalDate dateRes;
     private LocalDate dateStart;
     private LocalDate dateEnd;
-    private float totalCost;
-    private long customerId;
+    private double totalCost;
+    private int customerId;
     private String customerFirstName;
     private String customerLastName;
-    private long accommodationId;
+    private int accommodationId;
     private String accommodationName;
 
-    public ReservationDTO(LocalDate dateRes, LocalDate dateStart, LocalDate dateEnd, float totalCost, long customerId, String customerFirstName, String customerLastName, long accommodationId, String accommodationName) {
+    public ReservationDTO(LocalDate dateRes, LocalDate dateStart, LocalDate dateEnd, double totalCost, int customerId, String customerFirstName, String customerLastName, int accommodationId, String accommodationName) {
         this.dateRes = dateRes;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
@@ -37,15 +37,15 @@ public class ReservationDTO {
 
     public void setDateEnd(LocalDate dateEnd) {this.dateEnd = dateEnd;}
 
-    public float getTotalCost() {return totalCost;}
+    public double getTotalCost() {return totalCost;}
 
-    public void setTotalCost(float totalCost) {this.totalCost = totalCost;}
+    public void setTotalCost(double totalCost) {this.totalCost = totalCost;}
 
-    public long getCustomerId() {
+    public int getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(long customerId) {
+    public void setCustomerId(int customerId) {
         this.customerId = customerId;
     }
 
@@ -65,11 +65,11 @@ public class ReservationDTO {
         this.customerLastName = customerLastName;
     }
 
-    public long getAccommodationId() {
+    public int getAccommodationId() {
         return accommodationId;
     }
 
-    public void setAccommodationId(long accommodationId) {
+    public void setAccommodationId(int accommodationId) {
         this.accommodationId = accommodationId;
     }
 

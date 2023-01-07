@@ -8,9 +8,20 @@ public class Customer extends RegisteredUser{
     public Customer(){
 
     }
-    public Customer(String address, String country, String phone){}
+    public Customer(int id,String firstName,String lastName,String email,String password,String url_profile_pic,String type,String address, String country, String phone){
+        super.setId(id);
+        super.setFirstName(firstName);
+        super.setLastName(lastName);
+        super.setEmail(email);
+        super.setUrl_prof_pic(url_profile_pic);
+        super.setPassword(password);
+        super.setType(type);
+        this.address = address;
+        this.country = country;
+        this.phone = phone;
+    }
 
-    public Customer(long customerId){
+    public Customer(int customerId){
         super.setId(customerId);
     }
 
