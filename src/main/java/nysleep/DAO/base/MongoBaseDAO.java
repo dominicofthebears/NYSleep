@@ -17,17 +17,19 @@ public abstract class MongoBaseDAO{
     private static String dbName = "nysleep";
 
     public MongoBaseDAO(){}
-    public MongoBaseDAO(String connection){
-        this.connection = connection;
-    }
-    public MongoBaseDAO(String connection,String dbName,String collectionName){
-        this.connection = connection;
-        this.dbName = dbName;
-    }
 
+    public void setConnection(String connection) {
+        this.connection = connection;
+    }
     public String getConnection() {
             return connection;
         }
+    public void setDbName(String dbName) {
+        this.dbName = dbName;
+    }
+    public String getDbName() {
+        return dbName;
+    }
     public static MongoClient connect() {
         MongoClient client = MongoClients.create(connection);
         return client;
@@ -74,6 +76,8 @@ public abstract class MongoBaseDAO{
         while(docsIterator.hasNext()){                          //iterate all over the iterator of document
                     docs.add((Document) docsIterator.next());
                 }
+
+        myClient.close();
         return docs;
     }
 }

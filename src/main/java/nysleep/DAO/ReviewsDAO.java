@@ -22,7 +22,6 @@ public interface ReviewsDAO{
     PageDTO<CustomerReviewDTO> getReviewsForCustomer(Customer customer);
     float getAvgRating(Accommodation acc);
 
-    PageDTO<ReviewAccDTO> viewReviewsForAcc(Accommodation acc);
 
 
 

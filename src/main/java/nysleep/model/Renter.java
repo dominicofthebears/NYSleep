@@ -8,7 +8,14 @@ public class Renter extends RegisteredUser {
 
     }
 
-    public Renter(String workEmail, String phone) {
+    public Renter(int id,String firstName,String lastName,String email,String password,String url_profile_pic,String type,String workEmail, String phone) {
+        super.setId(id);
+        super.setFirstName(firstName);
+        super.setLastName(lastName);
+        super.setEmail(email);
+        super.setUrl_prof_pic(url_profile_pic);
+        super.setPassword(password);
+        super.setType(type);
         this.workEmail = workEmail;
         this.phone = phone;
     }

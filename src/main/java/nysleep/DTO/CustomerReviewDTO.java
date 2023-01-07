@@ -1,24 +1,24 @@
 package nysleep.DTO;
 
 public class CustomerReviewDTO {
-    private long accommodationId;
+    private int accommodationId;
     private String accommodationName;
     private int rate;
     private String comment;
 
 
-    public CustomerReviewDTO(long accommodationId, String accommodationName, int rate, String comment) {
+    public CustomerReviewDTO(int accommodationId, String accommodationName, int rate, String comment) {
         this.accommodationId = accommodationId;
         this.accommodationName = accommodationName;
         this.rate = rate;
         this.comment = comment;
     }
 
-    public long getAccommodationId() {
+    public int getAccommodationId() {
         return accommodationId;
     }
 
-    public void setAccommodationId(long accommodationId) {
+    public void setAccommodationId(int accommodationId) {
         this.accommodationId = accommodationId;
     }
 

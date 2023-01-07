@@ -1,14 +1,14 @@
 package nysleep.DTO;
 
 public class ReviewAccDTO {
-    private long customerId;
+    private int customerId;
     private String customerFirstName;
     private String customerLastName;
     private String customerCountry;
     private int rate;
     private String comment;
 
-    public ReviewAccDTO(long customerId, String customerFirstName, String customerLastName, String customerCountry, int rate, String comment) {
+    public ReviewAccDTO(int customerId, String customerFirstName, String customerLastName, String customerCountry, int rate, String comment) {
         this.customerId = customerId;
         this.customerFirstName = customerFirstName;
         this.customerLastName = customerLastName;
@@ -17,11 +17,11 @@ public class ReviewAccDTO {
         this.comment = comment;
     }
 
-    public long getCustomerId() {
+    public int getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(long customerId) {
+    public void setCustomerId(int customerId) {
         this.customerId = customerId;
     }
 

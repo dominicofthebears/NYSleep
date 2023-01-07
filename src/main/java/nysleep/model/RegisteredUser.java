@@ -1,7 +1,7 @@
 package nysleep.model;
 
 public abstract class RegisteredUser {
-    private long id;
+    private int id;
     private String firstName;
     private String lastName;
     private String email;
@@ -9,11 +9,12 @@ public abstract class RegisteredUser {
     private String url_prof_pic;
     private String type;
 
-    public Long getId(){
+
+    public int getId(){
         return id;
     }
 
-    public void setId(Long id){
+    public void setId(int id){
         this.id=id;
     }
 
