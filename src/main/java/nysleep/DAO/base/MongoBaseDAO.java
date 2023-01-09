@@ -81,19 +81,6 @@ public abstract class MongoBaseDAO{
         myClient.close();
         return docs;
     }
-    public static ArrayList<Document> readDoc(BasicDBObject query, String collectionName) {
-        MongoClient myClient = MongoClients.create(connection);
-        MongoDatabase db = myClient.getDatabase(dbName);
-        MongoCollection<Document> collection = db.getCollection(collectionName);
 
-        Iterator docsIterator = collection.find(query).iterator();  //Extract all the document found
-        ArrayList<Document> docs = new ArrayList<Document>();
-        while(docsIterator.hasNext()){                          //iterate all over the iterator of document
-            docs.add((Document) docsIterator.next());
-        }
-
-        myClient.close();
-        return docs;
-    }
 }
 
