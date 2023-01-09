@@ -2,6 +2,7 @@ import jdk.vm.ci.code.Register;
 import nysleep.DAO.mongoDB.MongoAccommodationDAO;
 import nysleep.DAO.mongoDB.MongoReservationDAO;
 import nysleep.DAO.mongoDB.MongoUserDAO;
+import nysleep.DAO.neo4j.Neo4jReviewsDAO;
 import nysleep.model.*;
 
 import javax.lang.model.type.ArrayType;
@@ -17,13 +18,22 @@ public class App
         //              RIMETTERE MONGOUSERDAO COME ASTRATTA
         //
         ///
+        /*
         MongoReservationDAO reservationDAO = new MongoReservationDAO();
         try{
             reservationDAO.deleteReservation(reservation);
 
        }catch (Exception e){
             e.printStackTrace();
-        }
+        }*/
+        /*Accommodation acc=new Accommodation(1936, "Cozy 4 bedrm house 2nd floor 5min LGA /15min JFK", "East Elmhurst", null, 6, 4.5, 2, "", 4, null, 339, 0, null);
+        Neo4jReviewsDAO reviewsDAO = new Neo4jReviewsDAO();
+        try{
+            double avg=reviewsDAO.getAvgRating(acc);
+            System.out.println(avg);
+        }catch (Exception e){
+            e.printStackTrace();
+        }*/
 
     }
 
