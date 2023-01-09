@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 public abstract class MongoBaseDAO{
     private static String connection = "mongodb://localhost:27017";
-    private static String dbName = "NYsleep";
+    private static String dbName = "NYSleep";
 
     public MongoBaseDAO(){}
 
