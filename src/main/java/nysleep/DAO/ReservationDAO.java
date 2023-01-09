@@ -15,9 +15,6 @@ public interface ReservationDAO {
 
     void deleteReservation(Reservation reservation);
 
-    PageDTO<ReservationDTO> getRenterReservations(Renter renter);
-
-    PageDTO<ReservationDTO> getCustomerReservations(Customer  customer);
 
 
 }

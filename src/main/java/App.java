@@ -7,36 +7,23 @@ import nysleep.model.*;
 import javax.lang.model.type.ArrayType;
 import java.sql.Array;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class App
 {
     public static void main( String[] args ){
-        //
-        //              RIMETTERE MONGOUSERDAO COME ASTRATTA
-        //
-        ///
         MongoReservationDAO reservationDAO = new MongoReservationDAO();
         try{
-            reservationDAO.deleteReservation(reservation);
+            System.out.println(reservationDAO.getAccReservations(accommodation));
 
        }catch (Exception e){
             e.printStackTrace();
         }
 
     }
-
-
-
-
-
-
-
-
-
-
-
 
     private static LocalDate data1 = LocalDate.of(2003,4,12);
     private static LocalDate data2 = LocalDate.of(2004,5,13);
@@ -74,15 +61,14 @@ public class App
     );
 
 
-    private static Reservation reservation = new Reservation(
+   /* private static Reservation reservation = new Reservation(
             24249249,
-            data1,
             data2,
             data3,
             344,
             customer,
             accommodation);
-
+*/
 
 
 

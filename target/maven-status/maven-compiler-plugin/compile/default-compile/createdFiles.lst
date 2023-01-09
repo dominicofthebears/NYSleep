@@ -8,6 +8,7 @@ App.class
 nysleep/DAO/mongoDB/MongoRenterDAO.class
 nysleep/model/Renter.class
 nysleep/DAO/mongoDB/MongoAccommodationDAO.class
+nysleep/DAO/neo4jDB/NeoReservationDAO.class
 nysleep/DAO/ReservationDAO.class
 nysleep/DTO/PageDTO.class
 nysleep/DTO/ReservationDTO.class

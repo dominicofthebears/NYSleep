@@ -10,7 +10,7 @@ import org.bson.Document;
 import java.util.ArrayList;
 import nysleep.model.Customer;
     public abstract class MongoUserDAO extends MongoBaseDAO implements UserDAO {
-        private static final String COLLECTION="Users";
+        private static final String COLLECTION="users";
         private static Document toDoc(RegisteredUser registeredUser) {
             Document doc = new Document("_id",registeredUser.getId())
                     .append("first_name",registeredUser.getFirstName())

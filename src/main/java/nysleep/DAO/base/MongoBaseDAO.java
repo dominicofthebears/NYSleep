@@ -1,5 +1,6 @@
 package nysleep.DAO.base;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -14,7 +15,7 @@ import java.util.Iterator;
 
 public abstract class MongoBaseDAO{
     private static String connection = "mongodb://localhost:27017";
-    private static String dbName = "nysleep";
+    private static String dbName = "NYsleep";
 
     public MongoBaseDAO(){}
 
@@ -71,11 +72,25 @@ public abstract class MongoBaseDAO{
         MongoDatabase db = myClient.getDatabase(dbName);
         MongoCollection<Document> collection = db.getCollection(collectionName);
 
-        Iterator docsIterator = collection.find().iterator();  //Extract all the document found
+        Iterator docsIterator = collection.find(query).iterator();  //Extract all the document found
         ArrayList<Document> docs = new ArrayList<Document>();
         while(docsIterator.hasNext()){                          //iterate all over the iterator of document
                     docs.add((Document) docsIterator.next());
                 }
+
+        myClient.close();
+        return docs;
+    }
+    public static ArrayList<Document> readDoc(BasicDBObject query, String collectionName) {
+        MongoClient myClient = MongoClients.create(connection);
+        MongoDatabase db = myClient.getDatabase(dbName);
+        MongoCollection<Document> collection = db.getCollection(collectionName);
+
+        Iterator docsIterator = collection.find(query).iterator();  //Extract all the document found
+        ArrayList<Document> docs = new ArrayList<Document>();
+        while(docsIterator.hasNext()){                          //iterate all over the iterator of document
+            docs.add((Document) docsIterator.next());
+        }
 
         myClient.close();
         return docs;

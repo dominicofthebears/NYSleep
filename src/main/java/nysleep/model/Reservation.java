@@ -15,9 +15,9 @@ public class Reservation {
 
     }
 
-    public Reservation(int id,LocalDate dateRes, LocalDate startDate, LocalDate endDate, double totalCost, Customer customer, Accommodation accommodation) {
+    public Reservation(int id, LocalDate startDate, LocalDate endDate, double totalCost, Customer customer, Accommodation accommodation) {
         this.id = id;
-        this.dateRes = dateRes;
+
         this.startDate = startDate;
         this.endDate = endDate;
         this.totalCost = totalCost;
@@ -27,9 +27,6 @@ public class Reservation {
 
     public int getId(){return this.id;}
     public void setId(int id){this.id = id;}
-    public LocalDate getDateRes() {return dateRes;}
-
-    public void setDateRes(LocalDate dateRes) {this.dateRes = dateRes;}
 
     public LocalDate getStartDate() {return startDate;}
 

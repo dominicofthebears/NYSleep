@@ -1,8 +1,10 @@
 package nysleep.DAO.mongoDB;
 
+import com.mongodb.BasicDBObject;
 import nysleep.DAO.ReservationDAO;
 
 import nysleep.DAO.base.MongoBaseDAO;
+import nysleep.DTO.AccommodationDTO;
 import nysleep.DTO.PageDTO;
 import nysleep.DTO.ReservationDTO;
 
@@ -12,9 +14,16 @@ import nysleep.model.Renter;
 import nysleep.model.Reservation;
 
 import org.bson.Document;
+import sun.jvm.hotspot.debugger.Page;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MongoReservationDAO extends MongoBaseDAO implements ReservationDAO {
-    private final String COLLECTION = "Reservations";
+    private final String COLLECTION = "reservations";
 
     private static Document toDoc(Reservation res){
         Document customerDoc = new Document("_id",res.getCustomer().getId())
@@ -26,8 +35,8 @@ public class MongoReservationDAO extends MongoBaseDAO implements ReservationDAO 
                 .append("name",res.getAccommodation().getName())
                 .append("neighborhood",res.getAccommodation().getNeighborhood());
 
-        Document doc = new Document("Customer",customerDoc)
-                .append("Accommodation",accDoc)
+        Document doc = new Document("customer",customerDoc)
+                .append("accommodation",accDoc)
                 .append("start_date",res.getStartDate())
                 .append("end_date",res.getEndDate())
                 .append("cost",res.getTotalCost());
@@ -47,17 +56,76 @@ public class MongoReservationDAO extends MongoBaseDAO implements ReservationDAO 
         insertDoc(doc, COLLECTION);
     }
 
-    @Override
-    public PageDTO<ReservationDTO> getRenterReservations(Renter renter) {
-        return null;
-    }
 
-    @Override
     public PageDTO<ReservationDTO> getCustomerReservations(Customer customer) {
-        return null;
+
+        Document searchQuery = new Document("customer.id",new Document("$eq",customer.getId()));
+        ArrayList<Document> docs = readDoc(searchQuery,COLLECTION);
+        List<ReservationDTO> resDTOList = new ArrayList<ReservationDTO>();
+
+        for(Document doc: docs){        //iterate all over the documents and extract reservation to put in the DTO
+
+            //Casting Date to LocalDate because mongoDB only return Date that is deprecated;
+            Date startDate = (Date) doc.get("start_date");
+            LocalDate startDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            Date endDate =  (Date) doc.get("end_date");
+            LocalDate endDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            Document customerDoc = (Document) doc.get("customer");
+            Document accommodationDoc = (Document) doc.get("accommodation");
+            //Create DTO
+            ReservationDTO resDTO = new ReservationDTO(
+                    startDateCasted,
+                    endDateCasted,
+                    (Integer) doc.get("cost"),
+                    (int) customerDoc.get("id"),
+                    (String) customerDoc.get("first_name"),
+                    (String) customerDoc.get("last_name"),
+                    (int) accommodationDoc.get("id"),
+                    (String) accommodationDoc.get("name")
+                    );
+            resDTOList.add(resDTO);
+        }
+
+        PageDTO<ReservationDTO> resPage = new PageDTO<ReservationDTO>();
+        resPage.setEntries(resDTOList);
+        return resPage;
     }
 
-    PageDTO<ReservationDTO> getAccReservations(Accommodation acc){
-        return null;
+    public PageDTO<ReservationDTO> getAccReservations(Accommodation acc){
+
+        Document searchQuery = new Document("accommodation.id",new Document("$eq",acc.getId()));
+        ArrayList<Document> docs = readDoc(searchQuery,COLLECTION);
+        List<ReservationDTO> resDTOList = new ArrayList<ReservationDTO>();
+
+        for(Document doc: docs){        //iterate all over the documents and extract reservation to put in the DTO
+
+            //Casting Date to LocalDate because mongoDB only return Date that is deprecated;
+            Date startDate = (Date) doc.get("start_date");
+            LocalDate startDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            Date endDate =  (Date) doc.get("end_date");
+            LocalDate endDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            Document customerDoc = (Document) doc.get("customer");
+            Document accommodationDoc = (Document) doc.get("accommodation");
+            //Create DTO
+            ReservationDTO resDTO = new ReservationDTO(
+                    startDateCasted,
+                    endDateCasted,
+                    (Integer) doc.get("cost"),
+                    (int) customerDoc.get("id"),
+                    (String) customerDoc.get("first_name"),
+                    (String) customerDoc.get("last_name"),
+                    (int) accommodationDoc.get("id"),
+                    (String) accommodationDoc.get("name")
+            );
+            resDTOList.add(resDTO);
+        }
+
+        PageDTO<ReservationDTO> resPage = new PageDTO<ReservationDTO>();
+        resPage.setEntries(resDTOList);
+        return resPage;
     };
 }
