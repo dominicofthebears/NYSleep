@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MongoAccommodationDAO extends MongoBaseDAO implements AccommodationDAO {
-    private final String COLLECTION = "Accommodations";
+    private final String COLLECTION = "accommodations";
 
     private static Document toDoc(Accommodation acc) {
         //Convert the model Accommodation object in a document to insert in MongoDB
@@ -74,11 +74,11 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
         updateDoc(searchQuery,updateQuery, COLLECTION);
     }
 
-    @Override
+
     public PageDTO<AccommodationDTO> getAccHomePage() {
         Document searchQuery = new Document();
         ArrayList<Document> docs = readDoc(searchQuery,COLLECTION);
-        List<AccommodationDTO> AccDTOList = new ArrayList<AccommodationDTO>();
+        List<AccommodationDTO> accDTOList = new ArrayList<AccommodationDTO>();
 
         for(Document doc: docs){                                                    //iterate all over the documents and extract accommodations to put in the DTO
             ArrayList<String> picsURL = (ArrayList<String>) doc.get("images_URL");
@@ -88,16 +88,16 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
                     (String) doc.get("neighborhood"),
                     (double) doc.get("rating"),
                     picsURL.get(0));
-            AccDTOList.add(accDTO);
+            accDTOList.add(accDTO);
         }
 
         PageDTO<AccommodationDTO> AccHomePage = new PageDTO<AccommodationDTO>();
-        AccHomePage.setEntries(AccDTOList);
+        AccHomePage.setEntries(accDTOList);
 
         return AccHomePage;
     }
 
-    @Override
+
     public AccommodationDTO getAccommodation(Accommodation acc) {
         Document searchQuery = new Document("_id",new Document("$eq",acc.getId()));
 
@@ -114,7 +114,7 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
         return accDTO;
     }
 
-    @Override
+
     public PageDTO<AccommodationDTO> getSearchedAcc(LocalDate startDate, LocalDate endDate, int numPeople, String neighborhood, double price) {
         return null;
     }

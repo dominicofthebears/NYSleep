@@ -22,9 +22,7 @@ public interface AccommodationDAO {
      void updateRating(Accommodation acc, double rating);
      void updateAccommodation(Accommodation oldACc, Accommodation newAcc);
 
-     PageDTO<AccommodationDTO> getAccHomePage();
-     AccommodationDTO getAccommodation(Accommodation acc);
-     PageDTO<AccommodationDTO> getSearchedAcc(LocalDate startDate,LocalDate endDate,int numPeople,String neighborhood,double price);
+
 
 
 

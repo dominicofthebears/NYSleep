@@ -1,4 +1,5 @@
 package nysleep.DAO.mongoDB;
 
-public class MongoAdminDAO {
+public class MongoAdminDAO extends MongoUserDAO{
+
 }

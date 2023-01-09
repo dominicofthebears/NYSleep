@@ -3,9 +3,9 @@ package nysleep.DTO;
 import java.time.LocalDate;
 
 public class ReservationDTO {
-    private LocalDate dateRes;
-    private LocalDate dateStart;
-    private LocalDate dateEnd;
+
+    private LocalDate startDate;
+    private LocalDate endDate;
     private double totalCost;
     private int customerId;
     private String customerFirstName;
@@ -13,10 +13,9 @@ public class ReservationDTO {
     private int accommodationId;
     private String accommodationName;
 
-    public ReservationDTO(LocalDate dateRes, LocalDate dateStart, LocalDate dateEnd, double totalCost, int customerId, String customerFirstName, String customerLastName, int accommodationId, String accommodationName) {
-        this.dateRes = dateRes;
-        this.dateStart = dateStart;
-        this.dateEnd = dateEnd;
+    public ReservationDTO(LocalDate startDate, LocalDate endDate, double totalCost, int customerId, String customerFirstName, String customerLastName, int accommodationId, String accommodationName) {
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.totalCost = totalCost;
         this.customerId = customerId;
         this.customerFirstName = customerFirstName;
@@ -25,17 +24,14 @@ public class ReservationDTO {
         this.accommodationName = accommodationName;
     }
 
-    public LocalDate getDateRes() {return dateRes;}
 
-    public void setDateRes(LocalDate dateRes) {this.dateRes = dateRes;}
+    public LocalDate getstartDate() {return startDate;}
 
-    public LocalDate getDateStart() {return dateStart;}
+    public void setstartDate(LocalDate startDate) {this.startDate = startDate;}
 
-    public void setDateStart(LocalDate dateStart) {this.dateStart = dateStart;}
+    public LocalDate getendDate() {return endDate;}
 
-    public LocalDate getDateEnd() {return dateEnd;}
-
-    public void setDateEnd(LocalDate dateEnd) {this.dateEnd = dateEnd;}
+    public void setendDate(LocalDate endDate) {this.endDate = endDate;}
 
     public double getTotalCost() {return totalCost;}
 
@@ -83,9 +79,8 @@ public class ReservationDTO {
 
     public String toString(){
         return"ReservationDTO{" +
-              "dateRes='" + dateRes + '\'' +
-              ", dateStart='" + dateStart + '\'' +
-              ", dateEnd='" + dateEnd + '\'' +
+              ", startDate='" + startDate + '\'' +
+              ", endDate='" + endDate + '\'' +
               ", totalCost=" + totalCost +
               ", customerID=" + customerId +
               ", customerFirstName='"+ customerFirstName + '\'' +

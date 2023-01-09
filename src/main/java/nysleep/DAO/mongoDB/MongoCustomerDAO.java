@@ -1,4 +1,7 @@
 package nysleep.DAO.mongoDB;
 
-public class MongoCustomerDAO {
+import nysleep.DAO.base.MongoBaseDAO;
+
+public class MongoCustomerDAO extends MongoUserDAO {
+
 }

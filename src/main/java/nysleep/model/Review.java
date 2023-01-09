@@ -1,13 +1,15 @@
 package nysleep.model;
 import java.time.LocalDate;
 public class Review {
+    private int id;
     private Accommodation accommodation;
     private Customer customer;
     private String comment;
     private int rate;
     private LocalDate date;
 
-    public Review(Accommodation acc, Customer cus, String com, int rate, LocalDate date){
+    public Review(int id, Accommodation acc, Customer cus, String com, int rate, LocalDate date){
+        this.id = id;
         this.accommodation=acc;
         this.customer=cus;
         this.comment=com;
@@ -52,5 +54,13 @@ public class Review {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
