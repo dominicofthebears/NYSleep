@@ -10,7 +10,6 @@ import  nysleep.DTO.ReservationDTO;
 
 
 public interface ReservationDAO {
-
     void createReservation(Reservation reservation);
 
     void deleteReservation(Reservation reservation);

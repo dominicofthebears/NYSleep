@@ -1,6 +1,6 @@
 package nysleep.DTO;
 
-public class ReviewAccDTO {
+public class AccReviewDTO {
     private int customerId;
     private String customerFirstName;
     private String customerLastName;
@@ -8,7 +8,7 @@ public class ReviewAccDTO {
     private int rate;
     private String comment;
 
-    public ReviewAccDTO(int customerId, String customerFirstName, String customerLastName, String customerCountry, int rate, String comment) {
+    public AccReviewDTO(int customerId, String customerFirstName, String customerLastName, String customerCountry, int rate, String comment) {
         this.customerId = customerId;
         this.customerFirstName = customerFirstName;
         this.customerLastName = customerLastName;

@@ -17,11 +17,12 @@
 /home/salvo/NYSleep/src/main/java/nysleep/DAO/base/MongoBaseDAO.java
 /home/salvo/NYSleep/src/main/java/nysleep/DTO/RenterRegistrationDTO.java
 /home/salvo/NYSleep/src/main/java/nysleep/DAO/AccommodationDAO.java
-/home/salvo/NYSleep/src/main/java/nysleep/DTO/ReviewAccDTO.java
 /home/salvo/NYSleep/src/main/java/nysleep/DTO/CustomerReviewDTO.java
 /home/salvo/NYSleep/src/main/java/nysleep/DAO/mongoDB/MongoUserDAO.java
 /home/salvo/NYSleep/src/main/java/nysleep/model/Accommodation.java
+/home/salvo/NYSleep/src/main/java/nysleep/DTO/AccReviewDTO.java
 /home/salvo/NYSleep/src/main/java/nysleep/DTO/ReservationDTO.java
+/home/salvo/NYSleep/src/main/java/nysleep/DAO/mongoDB/MongoReviewDAO.java
 /home/salvo/NYSleep/src/main/java/nysleep/DAO/UserDAO.java
 /home/salvo/NYSleep/src/main/java/nysleep/DAO/mongoDB/MongoRenterDAO.java
 /home/salvo/NYSleep/src/main/java/nysleep/DAO/neo4jDB/NeoReservationDAO.java

@@ -74,7 +74,7 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
         updateDoc(searchQuery,updateQuery, COLLECTION);
     }
 
-    @Override
+
     public PageDTO<AccommodationDTO> getAccHomePage() {
         Document searchQuery = new Document();
         ArrayList<Document> docs = readDoc(searchQuery,COLLECTION);
@@ -97,7 +97,7 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
         return AccHomePage;
     }
 
-    @Override
+
     public AccommodationDTO getAccommodation(Accommodation acc) {
         Document searchQuery = new Document("_id",new Document("$eq",acc.getId()));
 
@@ -114,7 +114,7 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
         return accDTO;
     }
 
-    @Override
+
     public PageDTO<AccommodationDTO> getSearchedAcc(LocalDate startDate, LocalDate endDate, int numPeople, String neighborhood, double price) {
         return null;
     }

@@ -1,6 +1,7 @@
 import jdk.vm.ci.code.Register;
 import nysleep.DAO.mongoDB.MongoAccommodationDAO;
 import nysleep.DAO.mongoDB.MongoReservationDAO;
+import nysleep.DAO.mongoDB.MongoReviewDAO;
 import nysleep.DAO.mongoDB.MongoUserDAO;
 import nysleep.model.*;
 
@@ -15,20 +16,20 @@ import java.util.List;
 public class App
 {
     public static void main( String[] args ){
-        MongoReservationDAO reservationDAO = new MongoReservationDAO();
-        try{
-            System.out.println(reservationDAO.getAccReservations(accommodation));
+        MongoReviewDAO reviewDAO = new MongoReviewDAO();
 
+        try{
+            System.out.println(reviewDAO.getReviewsForCustomer(customer).getEntries());
        }catch (Exception e){
             e.printStackTrace();
         }
 
     }
 
-    private static LocalDate data1 = LocalDate.of(2003,4,12);
-    private static LocalDate data2 = LocalDate.of(2004,5,13);
-    private static LocalDate data3 = LocalDate.of(2006,7,23);
-    private static LocalDate data4 = LocalDate.of(2008,2,11);
+    private static LocalDate date1 = LocalDate.of(2003,4,12);
+    private static LocalDate date2 = LocalDate.of(2004,5,13);
+    private static LocalDate date3 = LocalDate.of(2006,7,23);
+    private static LocalDate date4 = LocalDate.of(2008,2,11);
 
     public static Customer customer = new Customer(0
             ,"Kiona"
@@ -59,7 +60,7 @@ public class App
             ,3
             ,reservations
     );
-
+        public static Review review = new Review(202030,accommodation,customer,"Molto bellina",4,date1);
 
    /* private static Reservation reservation = new Reservation(
             24249249,

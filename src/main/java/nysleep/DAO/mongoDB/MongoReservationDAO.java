@@ -1,21 +1,16 @@
 package nysleep.DAO.mongoDB;
 
-import com.mongodb.BasicDBObject;
 import nysleep.DAO.ReservationDAO;
-
 import nysleep.DAO.base.MongoBaseDAO;
-import nysleep.DTO.AccommodationDTO;
+
 import nysleep.DTO.PageDTO;
 import nysleep.DTO.ReservationDTO;
 
 import nysleep.model.Accommodation;
 import nysleep.model.Customer;
-import nysleep.model.Renter;
 import nysleep.model.Reservation;
 
 import org.bson.Document;
-import sun.jvm.hotspot.debugger.Page;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -26,6 +21,8 @@ public class MongoReservationDAO extends MongoBaseDAO implements ReservationDAO 
     private final String COLLECTION = "reservations";
 
     private static Document toDoc(Reservation res){
+        //Convert the model object in a document
+
         Document customerDoc = new Document("_id",res.getCustomer().getId())
                 .append("first_name",res.getCustomer().getFirstName())
                 .append("last_name",res.getCustomer().getLastName())
