@@ -1,7 +1,6 @@
 nysleep\DTO\ReservationDTO.class
 nysleep\DAO\base\Neo4jBaseDAO.class
 nysleep\model\Admin.class
-nysleep\DAO\mongoDB\MongoRenterDAO.class
 App.class
 nysleep\model\Reservation.class
 nysleep\DAO\ReservationDAO.class
@@ -15,17 +14,16 @@ nysleep\model\Customer.class
 nysleep\DAO\neo4jDB\NeoReviewDAO.class
 nysleep\DAO\AccommodationDAO.class
 nysleep\DAO\mongoDB\MongoReviewDAO.class
-nysleep\DAO\mongoDB\MongoCustomerDAO.class
 nysleep\DAO\UserDAO.class
-nysleep\DAO\mongoDB\MongoAdminDAO.class
 nysleep\DAO\mongoDB\MongoReservationDAO.class
 nysleep\DAO\mongoDB\MongoAccommodationDAO.class
 nysleep\DTO\PageDTO.class
-nysleep\DAO\neo4jDB\NeoReservationDAO.class
+nysleep\DAO\neo4jDB\NeoRenterDAO.class
 nysleep\model\Accommodation.class
 nysleep\DTO\AccReviewDTO.class
 nysleep\model\Renter.class
 nysleep\DAO\ReviewsDAO.class
+nysleep\DAO\neo4jDB\NeoCustomerDAO.class
 nysleep\model\Review.class
 nysleep\DAO\neo4jDB\NeoAccommodationDAO.class
 nysleep\DAO\base\MongoBaseDAO.class
