@@ -43,7 +43,6 @@ public abstract class MongoUserDAO extends MongoBaseDAO implements UserDAO {
         insertDoc(doc, COLLECTION);
     }
 
-    @Override
     public RegisteredUser authenticate(String email,String password) {
         Document searchQuery = new Document("email",new Document("$eq",email))
                 .append("password",new Document("$eq",password));

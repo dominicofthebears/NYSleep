@@ -3,6 +3,9 @@ import nysleep.DAO.mongoDB.MongoAccommodationDAO;
 import nysleep.DAO.mongoDB.MongoReservationDAO;
 import nysleep.DAO.mongoDB.MongoReviewDAO;
 import nysleep.DAO.mongoDB.MongoUserDAO;
+import nysleep.DAO.neo4jDB.NeoAccommodationDAO;
+import nysleep.DAO.neo4jDB.NeoCustomerDAO;
+import nysleep.DAO.neo4jDB.NeoRenterDAO;
 import nysleep.model.*;
 
 import javax.lang.model.type.ArrayType;
@@ -23,7 +26,6 @@ public class App
        }catch (Exception e){
             e.printStackTrace();
         }
-
     }
 
     private static LocalDate date1 = LocalDate.of(2003,4,12);
@@ -70,9 +72,6 @@ public class App
             customer,
             accommodation);
 */
-
-
-
 
 
 
