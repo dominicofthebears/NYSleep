@@ -35,13 +35,13 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
     }
 
     @Override
-    public void deleteAccommodation(Accommodation acc) {
-        deleteAllRelationship(acc);
+    public void deleteAccommodation(int id) {
+        deleteAllRelationship(id);
         driver = initDriver(driver);
         try(Session session = driver.session())
         {
             session.run("MATCH (aa: accommodation {id: $id"+" }) DELETE aa"
-                , parameters("id", acc.getId()));
+                , parameters("id", id));
         }
     }
 
@@ -73,16 +73,16 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
         {
             session.run("MATCH (rr:renter) WHERE rr.id = $idr" + " MATCH (aa:accommodation) WHERE aa.id = $ida" +
                             " CREATE (rr)-[:OWNS]->(aa)",
-                    parameters("idr",acc.getRenterId(), "ida", acc.getId()));
+                    parameters("idr",acc.getRenter().getId(), "ida", acc.getId()));
         }
     }
 
-    public void deleteAllRelationship(Accommodation acc){
+    public void deleteAllRelationship(int id){
         driver = initDriver(driver);
         try(Session session = driver.session())
         {
             session.run("MATCH(cc)-[r:REVIEWS]->(aa:accommodation)<-[o:OWNS]-(rr) WHERE aa.id= $id"+" DELETE o, r"
-                , parameters("id", acc.getId()));
+                , parameters("id", id));
         }
     }
 

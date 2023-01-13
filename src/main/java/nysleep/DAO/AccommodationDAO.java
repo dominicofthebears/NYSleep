@@ -18,7 +18,7 @@ import nysleep.DTO.AccommodationDTO;
 
 public interface AccommodationDAO {
      void createAccommodation(Accommodation acc);
-     void deleteAccommodation(Accommodation acc);
+     void deleteAccommodation(int id);
      void updateRating(Accommodation acc, double rating);
      void updateAccommodation(Accommodation oldACc, Accommodation newAcc);
 
