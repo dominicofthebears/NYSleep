@@ -74,9 +74,9 @@ public class Accommodation {
 
     public void setPrice(double price) {this.price = price;}
 
-    public int getRenterId() {return renterId;}
+    public Renter getRenter() {return renter;}
 
-    public void setRenterId(int renterId) {this.renterId = renterId;}
+    public void setRenter(Renter renter) {this.renter = renter;}
 
     public List<Reservation> getReservations() {
         return reservations;

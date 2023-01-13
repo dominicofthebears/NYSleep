@@ -1,13 +1,19 @@
 package nysleep.DTO;
 
-public class RenterRegistrationDTO {
+public class RenterDetailsDTO {
     private String firstName;
     private String lastName;
-    private String address;
     private String workEmail;
     private String phone;
-    private String email;
-    private String password;
+    private String urlProfilePic;
+
+    public RenterDetailsDTO(String firstName,String lastName,String workEmail,String phone,String urlProfilePic){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.workEmail = workEmail;
+        this.phone = phone;
+        this.urlProfilePic = urlProfilePic;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -23,14 +29,6 @@ public class RenterRegistrationDTO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getWorkEmail() {
@@ -49,19 +47,11 @@ public class RenterRegistrationDTO {
         this.phone = phone;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUrlProfilePic() {
+        return urlProfilePic;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUrlProfilePic(String urlProfilePic) {
+        this.urlProfilePic = urlProfilePic;
     }
 }

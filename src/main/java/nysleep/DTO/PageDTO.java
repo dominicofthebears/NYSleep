@@ -12,6 +12,7 @@ public class PageDTO <T>{
 
     public void setEntries(List<T> entries) {
         this.entries = entries;
+        this.totCount=entries.size();
     }
 
     public int getTotCount() {

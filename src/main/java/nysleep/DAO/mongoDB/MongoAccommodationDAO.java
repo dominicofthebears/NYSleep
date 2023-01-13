@@ -1,20 +1,22 @@
 package nysleep.DAO.mongoDB;
 
 import com.mongodb.client.MongoCollection;
-
+import com.mongodb.client.MongoCursor;
 import nysleep.DAO.AccommodationDAO;
 import nysleep.DTO.AccommodationDTO;
+import nysleep.DTO.AccommodationDetailsDTO;
 import nysleep.DTO.PageDTO;
 
 import nysleep.model.Accommodation;
-import nysleep.model.Renter;
 
 import nysleep.DAO.base.MongoBaseDAO;
+import nysleep.model.Renter;
 import nysleep.model.Reservation;
 import org.bson.Document;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class MongoAccommodationDAO extends MongoBaseDAO implements AccommodationDAO {
@@ -53,6 +55,10 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
         Document deleteQuery = new Document("_id",new Document("$eq",acc.getId()));
         deleteDoc(deleteQuery, COLLECTION);
     }
+    public void deleteAccommodation(int accID) {
+        Document deleteQuery = new Document("_id",new Document("$eq",accID));
+        deleteDoc(deleteQuery, COLLECTION);
+    }
 
     @Override
     public void updateRating(Accommodation acc, double rating) {
@@ -69,54 +75,38 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
     public void updateAccommodation(Accommodation oldAcc, Accommodation newAcc) {
         //Need to transform accommodation in search query and update query
         Document searchQuery = new Document("_id",new Document("$eq",oldAcc.getId()));  //search query
+
         Document newDoc = toDoc(newAcc);  //updated doc
         Document updateQuery = new Document("$set",newDoc); //update query
+
         updateDoc(searchQuery,updateQuery, COLLECTION);
     }
 
-
-    public PageDTO<AccommodationDTO> getAccHomePage() {
+//Get accommodation based on
+    public List<Document> getAccHomePage(int skip, int limit) {
         Document searchQuery = new Document();
-        ArrayList<Document> docs = readDoc(searchQuery,COLLECTION);
-        List<AccommodationDTO> accDTOList = new ArrayList<AccommodationDTO>();
-
-        for(Document doc: docs){                                                    //iterate all over the documents and extract accommodations to put in the DTO
-            ArrayList<String> picsURL = (ArrayList<String>) doc.get("images_URL");
-            AccommodationDTO accDTO = new AccommodationDTO(
-                    (int) doc.get("_id"),
-                    (String) doc.get("name"),
-                    (String) doc.get("neighborhood"),
-                    (double) doc.get("rating"),
-                    picsURL.get(0));
-            accDTOList.add(accDTO);
-        }
-
-        PageDTO<AccommodationDTO> AccHomePage = new PageDTO<AccommodationDTO>();
-        AccHomePage.setEntries(accDTOList);
-
-        return AccHomePage;
+        List<Document> docs = readDocs(searchQuery,COLLECTION,skip,limit);
+        return docs;
     }
 
 
-    public AccommodationDTO getAccommodation(Accommodation acc) {
-        Document searchQuery = new Document("_id",new Document("$eq",acc.getId()));
-
-        ArrayList<Document> docs = readDoc(searchQuery,COLLECTION);
-        Document doc = docs.get(0);
-
-        ArrayList<String> picsURL = (ArrayList<String>) doc.get("images_URL");
-        AccommodationDTO accDTO = new AccommodationDTO(
-                (int) doc.get("_id"),
-                (String) doc.get("name"),
-                (String) doc.get("neighborhood"),
-                (double) doc.get("rating"),
-                picsURL.get(0) );
-        return accDTO;
+    //Get accommodation details
+    public Document getAccommodation(int accID) {
+        Document searchQuery = new Document("_id",new Document("$eq",accID));
+        Document doc = readDoc(searchQuery,COLLECTION);
+        return doc;
     }
 
-
-    public PageDTO<AccommodationDTO> getSearchedAcc(LocalDate startDate, LocalDate endDate, int numPeople, String neighborhood, double price) {
+    public List<Document> getSearchedAcc(LocalDate startDate,LocalDate endDate,int numPeople,String neighborhood,double price,int skip,int limit) {
         return null;
     }
+
+    //Get all the accommodations belonging to a renter
+    public List<Document> getSearchedAcc(int renterID,int skip, int limit) {
+        Document searchQuery = new Document("renter.id",new Document("$eq",renterID));
+        ArrayList<Document> docs = readDocs(searchQuery,COLLECTION,skip,limit);
+        return docs;
+    }
+
 
 }

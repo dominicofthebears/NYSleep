@@ -16,7 +16,7 @@ import java.util.List;
 public class App
 {
     public static void main( String[] args ){
-        MongoReviewDAO reviewDAO = new MongoReviewDAO();
+        MongoUserDAO userDAO = new MongoUserDAO();
 
         try{
             System.out.println(reviewDAO.getReviewsForCustomer(customer).getEntries());
