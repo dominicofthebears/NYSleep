@@ -10,13 +10,12 @@ import nysleep.DTO.PageDTO;
 import nysleep.model.Accommodation;
 
 import nysleep.DAO.base.MongoBaseDAO;
-import nysleep.model.Renter;
+
 import nysleep.model.Reservation;
 import org.bson.Document;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class MongoAccommodationDAO extends MongoBaseDAO implements AccommodationDAO {
@@ -51,14 +50,11 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
     }
 
     @Override
-    public void deleteAccommodation(Accommodation acc) {
-        Document deleteQuery = new Document("_id",new Document("$eq",acc.getId()));
-        deleteDoc(deleteQuery, COLLECTION);
-    }
     public void deleteAccommodation(int accID) {
         Document deleteQuery = new Document("_id",new Document("$eq",accID));
         deleteDoc(deleteQuery, COLLECTION);
     }
+
 
     @Override
     public void updateRating(Accommodation acc, double rating) {

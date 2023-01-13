@@ -162,6 +162,11 @@ public class MongoUserDAO extends MongoBaseDAO implements UserDAO {
         updateDoc(searchQuery,updateQuery, COLLECTION);
     }
 
+    @Override
+    public void deleteAccount(RegisteredUser user) {
+
+    }
+
     public int getLastId(){
         MongoClient myClient = MongoClients.create(connection);
         MongoDatabase db = myClient.getDatabase(dbName);
