@@ -5,6 +5,8 @@ import nysleep.DAO.base.Neo4jBaseDAO;
 import nysleep.model.Accommodation;
 import nysleep.model.RegisteredUser;
 import org.neo4j.driver.Driver;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 
 import static org.neo4j.driver.Values.parameters;
@@ -50,6 +52,21 @@ public class NeoCustomerDAO extends Neo4jBaseDAO implements UserDAO {
         {
             session.run("MATCH(cc:customer)-[r:REVIEWS]->(aa) WHERE cc.id= $id"+" DELETE r"
                     , parameters("id", user.getId()));
+        }
+    }
+
+    public Record mostActiveUser(){
+        driver = initDriver(driver);
+        Record record=null;
+        try(Session session = driver.session())
+        {
+            Result result=session.run("MATCH (cc:customer)-[r:REVIEWS]->(a:accommodation) " +
+                    " RETURN cc.id AS id, cc.first_name AS first_name, cc.last_name AS last_name, COUNT(r) as num_reviews " +
+                    "ORDER BY num_reviews DESC LIMIT 1");
+            while(result.hasNext()){
+                record= result.next();
+            }
+            return record;
         }
     }
 }
