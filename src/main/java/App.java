@@ -19,7 +19,7 @@ public class App
         MongoUserDAO userDAO = new MongoUserDAO();
 
         try{
-            System.out.println(reviewDAO.getReviewsForCustomer(customer).getEntries());
+            System.out.println(userDAO.getLastId());
        }catch (Exception e){
             e.printStackTrace();
         }
@@ -46,21 +46,6 @@ public class App
 
     public static ArrayList<String>amenities = new ArrayList<String>();
     public static ArrayList<Reservation>reservations = new ArrayList<Reservation>();
-    public static Accommodation accommodation = new Accommodation(1
-            ,"Accommodation1"
-            ,"Manahattan"
-            ,urls
-            ,3
-            ,32
-            ,34
-            ,"Monolocale"
-            ,324
-            ,amenities
-            ,34
-            ,3
-            ,reservations
-    );
-        public static Review review = new Review(202030,accommodation,customer,"Molto bellina",4,date1);
 
    /* private static Reservation reservation = new Reservation(
             24249249,
