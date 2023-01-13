@@ -14,8 +14,8 @@ import java.util.Iterator;
 
 
 public abstract class MongoBaseDAO{
-    private static String connection = "mongodb://localhost:27017";
-    private static String dbName = "NYsleep";
+    protected static String connection = "mongodb://localhost:27017";
+    protected static String dbName = "NYSleep";
 
     public MongoBaseDAO(){}
 
@@ -67,12 +67,27 @@ public abstract class MongoBaseDAO{
         collection.updateOne(oldDoc, query);
         myClient.close();
     }
-    protected static ArrayList<Document> readDoc(Document query, String collectionName) {
+    protected static ArrayList<Document> readDocs(Document query, String collectionName) {
         MongoClient myClient = MongoClients.create(connection);
         MongoDatabase db = myClient.getDatabase(dbName);
         MongoCollection<Document> collection = db.getCollection(collectionName);
 
         Iterator docsIterator = collection.find(query).iterator();  //Extract all the document found
+        ArrayList<Document> docs = new ArrayList<Document>();
+        while (docsIterator.hasNext()) {                          //iterate all over the iterator of document
+            docs.add((Document) docsIterator.next());
+        }
+
+        myClient.close();
+        return docs;
+    }
+
+    protected static ArrayList<Document> readDocs(Document query, String collectionName,int skip,int limit) {
+        MongoClient myClient = MongoClients.create(connection);
+        MongoDatabase db = myClient.getDatabase(dbName);
+        MongoCollection<Document> collection = db.getCollection(collectionName);
+
+        Iterator docsIterator = collection.find(query).skip(skip).limit(limit).iterator();  //Extract all the document found
         ArrayList<Document> docs = new ArrayList<Document>();
         while(docsIterator.hasNext()){                          //iterate all over the iterator of document
                     docs.add((Document) docsIterator.next());
@@ -80,6 +95,15 @@ public abstract class MongoBaseDAO{
 
         myClient.close();
         return docs;
+    }
+    protected static Document readDoc(Document query, String collectionName) {
+        MongoClient myClient = MongoClients.create(connection);
+        MongoDatabase db = myClient.getDatabase(dbName);
+        MongoCollection<Document> collection = db.getCollection(collectionName);
+
+        Document doc = collection.find(query).first();  //Extract all the document found
+        myClient.close();
+        return doc;
     }
 
 }

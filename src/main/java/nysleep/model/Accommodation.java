@@ -15,10 +15,10 @@ public class Accommodation {
     private int numRooms;
     private List<String> amenities;
     private double price;
-    private int renterId;
+    private Renter renter;
     private List<Reservation> reservations;
 
-    public Accommodation(int id, String name, String neighborhood, List<String> imagesURL, int numBeds, double rating, int numReviews, String propertyType, int numRooms, List<String> amenities, double price, int renterId, List<Reservation> reservations) {
+    public Accommodation(int id, String name, String neighborhood, List<String> imagesURL, int numBeds, double rating, int numReviews, String propertyType, int numRooms, List<String> amenities, double price, Renter renter, List<Reservation> reservations) {
         this.id = id;
         this.name = name;
         this.neighborhood = neighborhood;
@@ -30,7 +30,7 @@ public class Accommodation {
         this.numRooms = numRooms;
         this.amenities = amenities;
         this.price = price;
-        this.renterId = renterId;
+        this.renter = renter;
         this.reservations = reservations;
     }
 
@@ -74,9 +74,9 @@ public class Accommodation {
 
     public void setPrice(double price) {this.price = price;}
 
-    public int getRenterId() {return renterId;}
+    public Renter getRenter() {return renter;}
 
-    public void setRenterId(int renterId) {this.renterId = renterId;}
+    public void setRenter(Renter renter) {this.renter = renter;}
 
     public List<Reservation> getReservations() {
         return reservations;

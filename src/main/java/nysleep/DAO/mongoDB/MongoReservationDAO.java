@@ -57,7 +57,7 @@ public class MongoReservationDAO extends MongoBaseDAO implements ReservationDAO 
     public PageDTO<ReservationDTO> getCustomerReservations(Customer customer) {
 
         Document searchQuery = new Document("customer.id",new Document("$eq",customer.getId()));
-        ArrayList<Document> docs = readDoc(searchQuery,COLLECTION);
+        ArrayList<Document> docs = readDocs(searchQuery,COLLECTION);
         List<ReservationDTO> resDTOList = new ArrayList<ReservationDTO>();
 
         for(Document doc: docs){        //iterate all over the documents and extract reservation to put in the DTO
@@ -93,7 +93,7 @@ public class MongoReservationDAO extends MongoBaseDAO implements ReservationDAO 
     public PageDTO<ReservationDTO> getAccReservations(Accommodation acc){
 
         Document searchQuery = new Document("accommodation.id",new Document("$eq",acc.getId()));
-        ArrayList<Document> docs = readDoc(searchQuery,COLLECTION);
+        ArrayList<Document> docs = readDocs(searchQuery,COLLECTION);
         List<ReservationDTO> resDTOList = new ArrayList<ReservationDTO>();
 
         for(Document doc: docs){        //iterate all over the documents and extract reservation to put in the DTO

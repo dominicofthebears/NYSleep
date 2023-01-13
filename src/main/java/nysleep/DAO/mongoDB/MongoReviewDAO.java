@@ -51,7 +51,7 @@ public class MongoReviewDAO extends MongoBaseDAO implements ReviewsDAO {
 
     public PageDTO<AccReviewDTO> getReviewsForAcc(Accommodation acc) {
         Document searchQuery = new Document("accommodation.id", new Document("$eq",acc.getId()));
-        ArrayList<Document> docs = readDoc(searchQuery,COLLECTION);
+        ArrayList<Document> docs = readDocs(searchQuery,COLLECTION);
         ArrayList<AccReviewDTO> AccReviewDTOList = new ArrayList<AccReviewDTO>();
 
         for(Document doc: docs){
@@ -77,7 +77,7 @@ public class MongoReviewDAO extends MongoBaseDAO implements ReviewsDAO {
 
     public PageDTO<CustomerReviewDTO> getReviewsForCustomer(Customer customer) {
         Document searchQuery = new Document("customer.id", new Document("$eq",customer.getId()));
-        ArrayList<Document> docs = readDoc(searchQuery,COLLECTION);
+        ArrayList<Document> docs = readDocs(searchQuery,COLLECTION);
         ArrayList<CustomerReviewDTO> customerReviewDTOList = new ArrayList<CustomerReviewDTO>();
 
         for(Document doc: docs){
