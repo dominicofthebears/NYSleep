@@ -4,6 +4,6 @@ import nysleep.model.RegisteredUser;
 
 public interface UserDAO {
     void register(RegisteredUser user);
-    RegisteredUser authenticate(String email, String password);
-    void modifyAccountInfo(RegisteredUser user, RegisteredUser modifiedUser);
+    void modifyAccountInfo(RegisteredUser oldUser, RegisteredUser newUser);
+    void deleteAccount(RegisteredUser user);
 }
