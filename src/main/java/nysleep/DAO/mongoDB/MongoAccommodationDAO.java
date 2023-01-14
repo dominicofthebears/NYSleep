@@ -11,6 +11,7 @@ import nysleep.model.Accommodation;
 
 import nysleep.DAO.base.MongoBaseDAO;
 
+import nysleep.model.Renter;
 import nysleep.model.Reservation;
 import org.bson.Document;
 
@@ -50,8 +51,8 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
     }
 
     @Override
-    public void deleteAccommodation(int accID) {
-        Document deleteQuery = new Document("_id",new Document("$eq",accID));
+    public void deleteAccommodation(Accommodation acc) {
+        Document deleteQuery = new Document("_id",new Document("$eq",acc));
         deleteDoc(deleteQuery, COLLECTION);
     }
 
@@ -87,8 +88,8 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
 
 
     //Get accommodation details
-    public Document getAccommodation(int accID) {
-        Document searchQuery = new Document("_id",new Document("$eq",accID));
+    public Document getAccommodation(Accommodation acc) {
+        Document searchQuery = new Document("_id",new Document("$eq",acc.getId()));
         Document doc = readDoc(searchQuery,COLLECTION);
         return doc;
     }
@@ -98,8 +99,8 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
     }
 
     //Get all the accommodations belonging to a renter
-    public List<Document> getSearchedAcc(int renterID,int skip, int limit) {
-        Document searchQuery = new Document("renter.id",new Document("$eq",renterID));
+    public List<Document> getSearchedAcc(Renter renter, int skip, int limit) {
+        Document searchQuery = new Document("renter.id",new Document("$eq",renter.getId()));
         ArrayList<Document> docs = readDocs(searchQuery,COLLECTION,skip,limit);
         return docs;
     }

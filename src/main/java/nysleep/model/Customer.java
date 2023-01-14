@@ -5,9 +5,7 @@ public class Customer extends RegisteredUser{
     private String country;
     private String phone;
 
-    public Customer(){
-
-    }
+    public Customer(){}
     public Customer(int id,String firstName,String lastName,String email,String password,String url_profile_pic,String type,String address, String country, String phone){
         super.setId(id);
         super.setFirstName(firstName);
