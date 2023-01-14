@@ -16,14 +16,23 @@ import java.util.Iterator;
 public abstract class MongoBaseDAO{
     protected static String connection = "mongodb://localhost:27017";
     protected static String dbName = "NYSleep";
-
-    public MongoBaseDAO(){}
-
-    protected void setConnection(String connection) {
+    protected static MongoClient client;
+    protected static ClientSession session;
+    public MongoBaseDAO(){
+        MongoClient client = MongoClients.create(this.connection);
+        this.client = client;
+        this.session = client.startSession();
+    }
+    public MongoBaseDAO(String connection){
+        MongoClient client = MongoClients.create(connection);
+        this.client = client;
         this.connection = connection;
     }
-    protected String getConnection() {
-            return connection;
+
+    public String getConnectionName(){return connection;}
+
+    public MongoClient getConnection() {
+            return client;
         }
     protected void setDbName(String dbName) {
         this.dbName = dbName;
@@ -53,9 +62,8 @@ public abstract class MongoBaseDAO{
         collection.insertOne(doc);
         myClient.close();
     }
-    protected static void deleteDoc(Document doc,String collectionName){
-        MongoClient myClient = MongoClients.create(connection);
-        MongoDatabase db = myClient.getDatabase(dbName);
+    public static void deleteDoc(Document doc,String collectionName){
+        MongoDatabase db = client.getDatabase(dbName);
         MongoCollection<Document> collection  = db.getCollection(collectionName);
         collection.deleteOne(doc);
         myClient.close();
