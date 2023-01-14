@@ -28,7 +28,6 @@ public class UserServices {
 
     public void modifyUser(RegisteredUser oldUser,RegisteredUser newUser){
         userDAO.modifyAccountInfo(oldUser,newUser);
-        //VA MESSA la query su cypher;
     }
 
     public PageDTO<AccommodationDTO> showHomePage(int numPage){
@@ -60,7 +59,7 @@ public class UserServices {
     public PageDTO<AccommodationDTO> showRenterAccommodations(Renter renter, int numPage){
         int limit = 15;
 
-        List<Document> docs = accDAO.getSearchedAcc(renter.getId(), numPage*limit,limit);
+        List<Document> docs = accDAO.getSearchedAcc(renter, numPage*limit,limit);
 
         List<AccommodationDTO> accDTOList = new ArrayList<AccommodationDTO>();
         for(Document doc: docs){                                                    //iterate all over the documents and extract accommodations to put in the DTO
@@ -87,7 +86,7 @@ public class UserServices {
     }
 
     public AccommodationDetailsDTO showAccDetails(Accommodation acc){
-        Document doc = accDAO.getAccommodation(acc.getId());
+        Document doc = accDAO.getAccommodation(acc);
         Document renterDoc = (Document) doc.get("renter");
 
         AccommodationDetailsDTO accDetailsDTO = new AccommodationDetailsDTO(

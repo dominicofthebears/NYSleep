@@ -7,7 +7,7 @@ public class Review {
     private String comment;
     private int rate;
     private LocalDate date;
-
+    public Review(){}
     public Review(int id, Accommodation acc, Customer cus, String com, int rate, LocalDate date){
         this.id = id;
         this.accommodation=acc;

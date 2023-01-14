@@ -4,9 +4,7 @@ public class Renter extends RegisteredUser {
     private String workEmail;
     private String phone;
 
-    public Renter(){
-
-    }
+    public Renter(){}
 
     public Renter(int id,String firstName,String lastName,String email,String password,String url_profile_pic,String type,String workEmail, String phone) {
         super.setId(id);

@@ -18,6 +18,8 @@ public class Accommodation {
     private Renter renter;
     private List<Reservation> reservations;
 
+    public Accommodation(){}
+
     public Accommodation(int id, String name, String neighborhood, List<String> imagesURL, int numBeds, double rating, int numReviews, String propertyType, int numRooms, List<String> amenities, double price, Renter renter, List<Reservation> reservations) {
         this.id = id;
         this.name = name;

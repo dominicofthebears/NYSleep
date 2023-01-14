@@ -3,9 +3,7 @@ package nysleep.model;
 public class Admin extends RegisteredUser{
     private String title;
 
-    public Admin(){
-
-    }
+    public Admin(){}
     public Admin(int id,String firstName,String lastName,String email,String password,String url_profile_pic,String type,String title) {
         super.setId(id);
         super.setFirstName(firstName);

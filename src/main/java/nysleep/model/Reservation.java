@@ -11,10 +11,8 @@ public class Reservation {
     private Customer customer;
     private Accommodation accommodation;
 
-    public Reservation(){
 
-    }
-
+    public Reservation(){}
     public Reservation(int id, LocalDate startDate, LocalDate endDate, double totalCost, Customer customer, Accommodation accommodation) {
         this.id = id;
 

@@ -3,11 +3,15 @@ package nysleep.DAO.neo4jDB;
 import nysleep.DAO.UserDAO;
 import nysleep.DAO.base.Neo4jBaseDAO;
 import nysleep.model.Accommodation;
+import nysleep.model.Customer;
 import nysleep.model.RegisteredUser;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.neo4j.driver.Values.parameters;
 
@@ -67,6 +71,21 @@ public class NeoCustomerDAO extends Neo4jBaseDAO implements UserDAO {
                 record= result.next();
             }
             return record;
+        }
+    }
+
+    public List<Record> getSuggestedAccommodation(Customer customer){
+        driver = initDriver(driver);
+        List<Record> recordList = new ArrayList<>();
+        try(Session session = driver.session())
+        {
+            Result result= session.run("MATCH (cc:customer)-[r:REVIEWS]->(aa:accommodation)<-[o:OWNS]-(rr:renter)-[so:OWNS]->(sa:accommodation)" +
+                    " WHERE r.rate>3 AND cc.id=$id  RETURN sa", parameters("id", customer.getId()));
+            while(result.hasNext()) {
+                Record record=result.next();
+                recordList.add(record);
+            }
+            return recordList;
         }
     }
 }

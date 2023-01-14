@@ -4,6 +4,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import jdk.vm.ci.code.Register;
 import nysleep.DAO.UserDAO;
 import nysleep.DAO.base.MongoBaseDAO;
 
@@ -101,8 +102,8 @@ public class MongoUserDAO extends MongoBaseDAO implements UserDAO {
 
         return registeredUser;
     }
-    public RegisteredUser getUser(int userID) {
-        Document searchQuery = new Document("id",new Document("$eq", userID));
+    public RegisteredUser getUser(RegisteredUser user) {
+        Document searchQuery = new Document("id",new Document("$eq", user.getId()));
         ArrayList<Document> docs = readDocs(searchQuery,COLLECTION);
         Document doc = docs.get(0);
 
@@ -164,7 +165,8 @@ public class MongoUserDAO extends MongoBaseDAO implements UserDAO {
 
     @Override
     public void deleteAccount(RegisteredUser user) {
-
+        Document deleteQuery = new Document("_id",new Document("$eq",user.getId()));
+        deleteDoc(deleteQuery, COLLECTION);
     }
 
     public int getLastId(){

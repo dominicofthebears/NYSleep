@@ -11,14 +11,19 @@ nysleep\DTO\RenterRegistrationDTO.class
 nysleep\DTO\AccommodationDTO.class
 nysleep\DAO\mongoDB\MongoUserDAO.class
 nysleep\model\Customer.class
+nysleep\DTO\RenterDetailsDTO.class
 nysleep\DAO\neo4jDB\NeoReviewDAO.class
+nysleep\DTO\AccommodationDetailsDTO.class
 nysleep\DAO\AccommodationDAO.class
 nysleep\DAO\mongoDB\MongoReviewDAO.class
 nysleep\DAO\UserDAO.class
+nysleep\business\UserServices.class
 nysleep\DAO\mongoDB\MongoReservationDAO.class
 nysleep\DAO\mongoDB\MongoAccommodationDAO.class
 nysleep\DTO\PageDTO.class
 nysleep\DAO\neo4jDB\NeoRenterDAO.class
+nysleep\business\CustomerServices.class
+nysleep\business\UnregisteredUserServices.class
 nysleep\model\Accommodation.class
 nysleep\DTO\AccReviewDTO.class
 nysleep\model\Renter.class
@@ -27,3 +32,4 @@ nysleep\DAO\neo4jDB\NeoCustomerDAO.class
 nysleep\model\Review.class
 nysleep\DAO\neo4jDB\NeoAccommodationDAO.class
 nysleep\DAO\base\MongoBaseDAO.class
+nysleep\business\exception\BusinessException.class

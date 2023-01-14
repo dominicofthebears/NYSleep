@@ -1,3 +1,4 @@
+import com.mongodb.client.ClientSession;
 import jdk.vm.ci.code.Register;
 import nysleep.DAO.mongoDB.MongoAccommodationDAO;
 import nysleep.DAO.mongoDB.MongoReservationDAO;
@@ -20,11 +21,18 @@ public class App
 {
     public static void main( String[] args ){
         MongoUserDAO userDAO = new MongoUserDAO();
-
         try{
-            System.out.println(userDAO.getLastId());
+            userDAO.getSession().startTransaction();
+            userDAO.register(customer);
+            if(customer.getId() == 20001) {
+                System.out.print("Dentro if");
+                userDAO.getSession().abortTransaction();
+            }
        }catch (Exception e){
             e.printStackTrace();
+        }
+        finally{
+            userDAO.getConnection().close();
         }
     }
 
@@ -33,7 +41,7 @@ public class App
     private static LocalDate date3 = LocalDate.of(2006,7,23);
     private static LocalDate date4 = LocalDate.of(2008,2,11);
 
-    public static Customer customer = new Customer(0
+    public static Customer customer = new Customer(20001
             ,"Kiona"
             ,"Van Weelden"
             , "kiona.vanweelden@example.com"

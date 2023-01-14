@@ -13,8 +13,8 @@ public class CustomerServices extends UserServices{
     }
 
     //Get the renterDTO's of an accommodation
-    public RenterDetailsDTO getAccRenter(int renterID){
-        Renter renter = (Renter) userDAO.getUser(renterID);
+    public RenterDetailsDTO getAccRenter(Renter rent){
+        Renter renter = (Renter) userDAO.getUser(rent);
         RenterDetailsDTO renterDTO = new RenterDetailsDTO(renter.getFirstName()
                 ,renter.getLastName()
                 ,renter.getWorkEmail()
