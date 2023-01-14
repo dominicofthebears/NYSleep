@@ -87,7 +87,7 @@ public class UserServices {
     }
 
     public AccommodationDetailsDTO showAccDetails(Accommodation acc){
-        Document doc = accDAO.getAccommodation(acc.getId());
+        Document doc = accDAO.getAccommodation(acc);
         Document renterDoc = (Document) doc.get("renter");
 
         AccommodationDetailsDTO accDetailsDTO = new AccommodationDetailsDTO(
