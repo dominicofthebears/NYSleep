@@ -7,6 +7,8 @@ import nysleep.DAO.mongoDB.MongoUserDAO;
 import nysleep.DAO.neo4jDB.NeoAccommodationDAO;
 import nysleep.DAO.neo4jDB.NeoCustomerDAO;
 import nysleep.DAO.neo4jDB.NeoRenterDAO;
+import nysleep.DTO.RegisteredUserDTO;
+import nysleep.business.UnregisteredUserServices;
 import nysleep.model.*;
 
 import javax.lang.model.type.ArrayType;
@@ -22,26 +24,34 @@ public class App
     public static void main( String[] args ){
         MongoUserDAO userDAO = new MongoUserDAO();
         try{
+            /*
             userDAO.getSession().startTransaction();
             userDAO.register(customer);
-            if(customer.getId() == 20001) {
+            if(customer.getId() == 20000) {
                 System.out.print("Dentro if");
-                userDAO.getSession().abortTransaction();
+                userDAO.getSession().abortTransaction();*/
+            String username = "hajar.vanderperk@example.com";
+            String password = "break";
+            UnregisteredUserServices us = new UnregisteredUserServices();
+            RegisteredUserDTO reg= us.login(username, password);
+            System.out.println(reg.getFirstName());
             }
-       }catch (Exception e){
+       catch (Exception e){
             e.printStackTrace();
         }
         finally{
             userDAO.getConnection().close();
         }
-    }
+}
+
+
 
     private static LocalDate date1 = LocalDate.of(2003,4,12);
     private static LocalDate date2 = LocalDate.of(2004,5,13);
     private static LocalDate date3 = LocalDate.of(2006,7,23);
     private static LocalDate date4 = LocalDate.of(2008,2,11);
 
-    public static Customer customer = new Customer(20001
+    public static Customer customer = new Customer(20000
             ,"Kiona"
             ,"Van Weelden"
             , "kiona.vanweelden@example.com"

@@ -43,7 +43,7 @@ public class MongoUserDAO extends MongoBaseDAO implements UserDAO {
     }
 
     @Override
-    public  void register(RegisteredUser registeredUser) {
+    public void register(RegisteredUser registeredUser) {
         Document doc = toDoc(registeredUser);
         insertDoc(doc, COLLECTION);
     }

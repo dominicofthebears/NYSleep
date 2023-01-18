@@ -53,76 +53,30 @@ public class MongoReservationDAO extends MongoBaseDAO implements ReservationDAO 
         insertDoc(doc, COLLECTION);
     }
 
+    public void deleteAccReservation(Accommodation acc){
+        Document doc = new Document("accommodation.id",new Document("$eq",acc.getId()));
+        deleteDoc(doc,COLLECTION);
+    }
 
-    public PageDTO<ReservationDTO> getCustomerReservations(Customer customer) {
+    public List<Document> getCustomerReservations(Customer customer) {
 
         Document searchQuery = new Document("customer.id",new Document("$eq",customer.getId()));
         ArrayList<Document> docs = readDocs(searchQuery,COLLECTION);
-        List<ReservationDTO> resDTOList = new ArrayList<ReservationDTO>();
 
-        for(Document doc: docs){        //iterate all over the documents and extract reservation to put in the DTO
+        return docs;
+    }
+    public List<Document> getRenterReservations(Customer customer) {
 
-            //Casting Date to LocalDate because mongoDB only return Date that is deprecated;
-            Date startDate = (Date) doc.get("start_date");
-            LocalDate startDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Document searchQuery = new Document("customer.id",new Document("$eq",customer.getId()));
+        ArrayList<Document> docs = readDocs(searchQuery,COLLECTION);
 
-            Date endDate =  (Date) doc.get("end_date");
-            LocalDate endDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-            Document customerDoc = (Document) doc.get("customer");
-            Document accommodationDoc = (Document) doc.get("accommodation");
-            //Create DTO
-            ReservationDTO resDTO = new ReservationDTO(
-                    startDateCasted,
-                    endDateCasted,
-                    (Integer) doc.get("cost"),
-                    (int) customerDoc.get("id"),
-                    (String) customerDoc.get("first_name"),
-                    (String) customerDoc.get("last_name"),
-                    (int) accommodationDoc.get("id"),
-                    (String) accommodationDoc.get("name")
-                    );
-            resDTOList.add(resDTO);
-        }
-
-        PageDTO<ReservationDTO> resPage = new PageDTO<ReservationDTO>();
-        resPage.setEntries(resDTOList);
-        return resPage;
+        return docs;
     }
 
-    public PageDTO<ReservationDTO> getAccReservations(Accommodation acc){
+    public List<Document> getAccReservations(Accommodation acc){
 
         Document searchQuery = new Document("accommodation.id",new Document("$eq",acc.getId()));
         ArrayList<Document> docs = readDocs(searchQuery,COLLECTION);
-        List<ReservationDTO> resDTOList = new ArrayList<ReservationDTO>();
-
-        for(Document doc: docs){        //iterate all over the documents and extract reservation to put in the DTO
-
-            //Casting Date to LocalDate because mongoDB only return Date that is deprecated;
-            Date startDate = (Date) doc.get("start_date");
-            LocalDate startDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-            Date endDate =  (Date) doc.get("end_date");
-            LocalDate endDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-            Document customerDoc = (Document) doc.get("customer");
-            Document accommodationDoc = (Document) doc.get("accommodation");
-            //Create DTO
-            ReservationDTO resDTO = new ReservationDTO(
-                    startDateCasted,
-                    endDateCasted,
-                    (Integer) doc.get("cost"),
-                    (int) customerDoc.get("id"),
-                    (String) customerDoc.get("first_name"),
-                    (String) customerDoc.get("last_name"),
-                    (int) accommodationDoc.get("id"),
-                    (String) accommodationDoc.get("name")
-            );
-            resDTOList.add(resDTO);
-        }
-
-        PageDTO<ReservationDTO> resPage = new PageDTO<ReservationDTO>();
-        resPage.setEntries(resDTOList);
-        return resPage;
-    };
+        return docs;
+    }
 }

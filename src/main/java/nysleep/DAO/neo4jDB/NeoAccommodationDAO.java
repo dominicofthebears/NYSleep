@@ -30,8 +30,11 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
             session.run("CREATE (aa:accommodation {id: $id"+", name: $name"+
                         ", neighborhood: $neighborhood"+", rating: $rating"+" })"
                 , parameters("id", acc.getId(), "name", acc.getName(), "neighborhood", acc.getNeighborhood(), "rating", acc.getRating()));
+            linkRenter(acc);
+        }finally {
+            close(driver);
         }
-        linkRenter(acc);
+
     }
 
     @Override
@@ -42,6 +45,8 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
         {
             session.run("MATCH (aa: accommodation {id: $id"+" }) DELETE aa"
                 , parameters("id", acc.getId()));
+        }finally {
+            close(driver);
         }
     }
 
@@ -52,6 +57,8 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
         {
             session.run("MATCH (aa: accommodation {id: $id"+" }) SET aa.rating = $rating"
                 , parameters("id", acc.getId(), "rating", rating));
+        }finally {
+            close(driver);
         }
     }
 
@@ -64,6 +71,8 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
                     ", aa.neighborhood = $newNeighborhood"+", aa.rating = $newRating"
                 , parameters("oldId", oldAcc.getId(), "newName", newAcc.getName(),
                             "newNeighborhood", newAcc.getNeighborhood(), "newRating", newAcc.getRating()));
+        }finally {
+            close(driver);
         }
     }
 
@@ -74,6 +83,8 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
             session.run("MATCH (rr:renter) WHERE rr.id = $idr" + " MATCH (aa:accommodation) WHERE aa.id = $ida" +
                             " CREATE (rr)-[:OWNS]->(aa)",
                     parameters("idr",acc.getRenter().getId(), "ida", acc.getId()));
+        }finally {
+            close(driver);
         }
     }
 
@@ -83,6 +94,8 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
         {
             session.run("MATCH(cc)-[r:REVIEWS]->(aa:accommodation)<-[o:OWNS]-(rr) WHERE aa.id= $id"+" DELETE o, r"
                 , parameters("id", acc.getId()));
+        }finally {
+            close(driver);
         }
     }
 
@@ -99,6 +112,8 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
                 recordList.add(record);
             }
             return recordList;
+        }finally {
+            close(driver);
         }
     }
 }

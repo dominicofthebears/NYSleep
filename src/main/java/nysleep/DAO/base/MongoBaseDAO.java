@@ -11,7 +11,7 @@ import java.util.Iterator;
 
 
 public abstract class MongoBaseDAO{
-    protected static String connection = "mongodb://localhost:27017/?retryWrites=false";
+    protected static String connection = "mongodb://localhost:27017";
     protected static String dbName = "NYSleep";
     protected static MongoClient client;
     protected static ClientSession session;
@@ -33,29 +33,40 @@ public abstract class MongoBaseDAO{
             return client;
         }
 
+    public void closeConnection(){client.close();}
+
     public void setDbName(String dbName) {
         this.dbName = dbName;
     }
 
+    public String getDbName() {return dbName;}
+
     public ClientSession getSession(){return this.session;}
 
-    public String getDbName() {return dbName;}
-    
+    public void startTransaction(){session.startTransaction();}
+
+    public void commitTransaction(){session.commitTransaction();}
+
+    public void abortTransaction(){session.abortTransaction();}
+
     public static void insertDoc(Document doc,String collectionName) {
         MongoDatabase db = client.getDatabase(dbName);
         MongoCollection<Document> collection = db.getCollection(collectionName);
         collection.insertOne(session,doc);
     }
+
     public static void deleteDoc(Document doc,String collectionName){
         MongoDatabase db = client.getDatabase(dbName);
         MongoCollection<Document> collection  = db.getCollection(collectionName);
         collection.deleteOne(session,doc);
     }
+
     public static void updateDoc(Document oldDoc,Document query, String collectionName) {
         MongoDatabase db = client.getDatabase(dbName);
         MongoCollection<Document> collection = db.getCollection(collectionName);
         collection.updateOne(session,oldDoc, query);
     }
+
     public static ArrayList<Document> readDocs(Document query, String collectionName) {
         MongoDatabase db = client.getDatabase(dbName);
         MongoCollection<Document> collection = db.getCollection(collectionName);
@@ -87,6 +98,8 @@ public abstract class MongoBaseDAO{
         Document doc = collection.find(query).first();  //Extract all the document found
         return doc;
     }
+
+
 
 }
 

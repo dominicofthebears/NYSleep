@@ -14,6 +14,7 @@ import nysleep.model.Review;
 import org.bson.Document;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MongoReviewDAO extends MongoBaseDAO implements ReviewsDAO {
     private final String COLLECTION="reviews";
@@ -37,6 +38,9 @@ public class MongoReviewDAO extends MongoBaseDAO implements ReviewsDAO {
        return doc;
     }
 
+    public void review() {
+    }
+
     @Override
     public void createReview(Review review) {
         Document doc = toDoc(review);
@@ -45,15 +49,25 @@ public class MongoReviewDAO extends MongoBaseDAO implements ReviewsDAO {
 
     @Override
     public void deleteReview(Review review) {
-        Document doc = toDoc(review);
+        Document doc = new Document("_id",new Document("$eq",review.getId()));
         deleteDoc(doc,COLLECTION);
     }
 
-    public PageDTO<AccReviewDTO> getReviewsForAcc(Accommodation acc) {
-        Document searchQuery = new Document("accommodation.id", new Document("$eq",acc.getId()));
-        ArrayList<Document> docs = readDocs(searchQuery,COLLECTION);
-        ArrayList<AccReviewDTO> AccReviewDTOList = new ArrayList<AccReviewDTO>();
+    public void deleteAccReview(Accommodation accommdation) {
+        Document doc = new Document("accommodation.id",new Document("$eq",accommdation.getId()));
+        deleteDoc(doc,COLLECTION);
+    }
 
+    public void deleteCustomerReview(Customer customer) {
+        Document doc = new Document("customer.id",new Document("$eq",customer.getId()));
+        deleteDoc(doc,COLLECTION);
+    }
+
+    public List<Document> getReviewsForAcc(Accommodation acc) {
+        Document searchQuery = new Document("accommodation.id", new Document("$eq",acc.getId()));
+        List<Document> docs = readDocs(searchQuery,COLLECTION);
+        /*
+        ArrayList<AccReviewDTO> AccReviewDTOList = new ArrayList<AccReviewDTO>();
         for(Document doc: docs){
 
             Document customerDoc = (Document) doc.get("customer");
@@ -71,15 +85,15 @@ public class MongoReviewDAO extends MongoBaseDAO implements ReviewsDAO {
 
         PageDTO<AccReviewDTO> pageDTO = new PageDTO<AccReviewDTO>();
         pageDTO.setEntries(AccReviewDTOList);
-        return pageDTO;
+        */
+        return docs;
     }
 
 
-    public PageDTO<CustomerReviewDTO> getReviewsForCustomer(Customer customer) {
+    public List<Document> getReviewsForCustomer(Customer customer) {
         Document searchQuery = new Document("customer.id", new Document("$eq",customer.getId()));
-        ArrayList<Document> docs = readDocs(searchQuery,COLLECTION);
-        ArrayList<CustomerReviewDTO> customerReviewDTOList = new ArrayList<CustomerReviewDTO>();
-
+        List<Document> docs = readDocs(searchQuery,COLLECTION);
+        /*ArrayList<CustomerReviewDTO> customerReviewDTOList = new ArrayList<CustomerReviewDTO>();
         for(Document doc: docs){
 
             Document accommodationDoc = (Document) doc.get("accommodation");
@@ -96,7 +110,9 @@ public class MongoReviewDAO extends MongoBaseDAO implements ReviewsDAO {
 
         PageDTO<CustomerReviewDTO> pageDTO = new PageDTO<CustomerReviewDTO>();
         pageDTO.setEntries(customerReviewDTOList);
-        return pageDTO;
+        */
+        return docs;
+
     }
 
 }

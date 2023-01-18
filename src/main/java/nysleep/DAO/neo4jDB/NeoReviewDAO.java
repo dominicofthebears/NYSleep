@@ -25,11 +25,6 @@ public class NeoReviewDAO extends Neo4jBaseDAO implements ReviewsDAO {
     private Driver driver;
 
     @Override
-    public Driver initDriver(Driver driver) {
-        return super.initDriver(driver);
-    }
-
-    @Override
     public void createReview(Review review) {
         driver=initDriver(driver);
         try(Session session = driver.session())
@@ -37,6 +32,8 @@ public class NeoReviewDAO extends Neo4jBaseDAO implements ReviewsDAO {
             session.run("MATCH (cc:customer) WHERE cc.id = $idc" + " MATCH (aa:accommodation) WHERE aa.id = $ida" +
                     " CREATE (cc)-[:REVIEWS {rate: $rate" + "}]->(aa)",
                     parameters("idc", review.getCustomer().getId(), "ida", review.getAccommodation().getId(), "rate", review.getRate()));
+        }finally {
+            close(driver);
         }
     }
 
@@ -47,6 +44,8 @@ public class NeoReviewDAO extends Neo4jBaseDAO implements ReviewsDAO {
         {
             session.run("MATCH (cc:customer { id: $idc"+" })-[r:REVIEWS]->(aa:accommodation { id: $ida"+" }) DELETE r",
                     parameters("idc", review.getCustomer().getId(), "ida", review.getAccommodation().getId()));
+        }finally {
+            close(driver);
         }
     }
 
@@ -59,6 +58,8 @@ public class NeoReviewDAO extends Neo4jBaseDAO implements ReviewsDAO {
                 return result.single().get("avg_rate").asDouble();
             });
             return avgRating;
+        }finally {
+            close(driver);
         }
     }
 
