@@ -25,6 +25,8 @@ public class NeoCustomerDAO extends Neo4jBaseDAO implements UserDAO {
         {
             session.run("CREATE (cc: customer {id: $id"+", first_name: $firstName"+", last_name: $lastName"+"})"
                 , parameters("id", user.getId(), "firstName", user.getFirstName(), "lastName", user.getLastName()));
+        }finally {
+            close(driver);
         }
     }
 
@@ -36,6 +38,8 @@ public class NeoCustomerDAO extends Neo4jBaseDAO implements UserDAO {
             session.run("MATCH (cc: customer {id: $oldId"+" }) SET cc.first_name = $newFirstName"+
                     ", cc.last_name = $newLastName", parameters("oldId", oldUser.getId(), "newFirstName", newUser.getFirstName(),
                     "newLastName", newUser.getLastName()));
+        }finally {
+            close(driver);
         }
     }
 
@@ -47,6 +51,8 @@ public class NeoCustomerDAO extends Neo4jBaseDAO implements UserDAO {
         {
             session.run("MATCH (cc: customer {id: $id"+" }) DELETE cc"
                     , parameters("id", user.getId()));
+        }finally {
+            close(driver);
         }
     }
 
@@ -56,6 +62,8 @@ public class NeoCustomerDAO extends Neo4jBaseDAO implements UserDAO {
         {
             session.run("MATCH(cc:customer)-[r:REVIEWS]->(aa) WHERE cc.id= $id"+" DELETE r"
                     , parameters("id", user.getId()));
+        }finally {
+            close(driver);
         }
     }
 
@@ -71,6 +79,8 @@ public class NeoCustomerDAO extends Neo4jBaseDAO implements UserDAO {
                 record= result.next();
             }
             return record;
+        }finally {
+            close(driver);
         }
     }
 
@@ -86,6 +96,8 @@ public class NeoCustomerDAO extends Neo4jBaseDAO implements UserDAO {
                 recordList.add(record);
             }
             return recordList;
+        }finally {
+            close(driver);
         }
     }
 }

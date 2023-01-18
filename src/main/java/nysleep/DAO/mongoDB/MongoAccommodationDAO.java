@@ -40,7 +40,14 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
             reservations.add(new Document("start_Date", res.getStartDate())
                     .append("end_Date", res.getEndDate()));
         }
+        Document renterDoc =  new Document("id",acc.getRenter().getId())
+                .append("first_name",acc.getRenter().getFirstName())
+                .append("last_name",acc.getRenter().getLastName())
+                .append("work_email",acc.getRenter().getWorkEmail())
+                .append("phone",acc.getRenter().getPhone());
+
         doc.append("reservations", reservations);
+        doc.append("renter",renterDoc);
         return doc;
     }
 
@@ -60,22 +67,26 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
     @Override
     public void updateRating(Accommodation acc, double rating) {
         Document searchQuery = new Document("_id",new Document("$eq",acc.getId()));  //search query
+        Document updateQuery = new Document("$set",new Document("rating",rating)); //update query
+        updateDoc(searchQuery,updateQuery, COLLECTION);
+    }
 
-        acc.setRating(rating);
-        Document newDoc = toDoc(acc);  //updated doc
-        Document updateQuery = new Document("$set",newDoc); //update query
-
+    public void decreaseNumReview(Accommodation acc){
+        Document searchQuery = new Document("_id",new Document("$eq",acc.getId()));  //search query
+        Document updateQuery = new Document("$inc", new Document("num_reviews",-1)); //update query
+        updateDoc(searchQuery,updateQuery, COLLECTION);
+    }
+    public void incrementNumReview(Accommodation acc){
+        Document searchQuery = new Document("_id",new Document("$eq",acc.getId()));  //search query
+        Document updateQuery = new Document("$inc", new Document("num_reviews",1)); //update query
         updateDoc(searchQuery,updateQuery, COLLECTION);
     }
 
     @Override
-    public void updateAccommodation(Accommodation oldAcc, Accommodation newAcc) {
-        //Need to transform accommodation in search query and update query
+    public void updateAccommodation(Accommodation oldAcc, Accommodation newAcc){
         Document searchQuery = new Document("_id",new Document("$eq",oldAcc.getId()));  //search query
-
         Document newDoc = toDoc(newAcc);  //updated doc
         Document updateQuery = new Document("$set",newDoc); //update query
-
         updateDoc(searchQuery,updateQuery, COLLECTION);
     }
 
@@ -104,6 +115,28 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
         ArrayList<Document> docs = readDocs(searchQuery,COLLECTION,skip,limit);
         return docs;
     }
+    public List<Document> getSearchedAcc(Renter renter) {
+        Document searchQuery = new Document("renter.id",new Document("$eq",renter.getId()));
+        ArrayList<Document> docs = readDocs(searchQuery,COLLECTION);
+        return docs;
+    }
 
+    public void deleteReservation(Accommodation acc,Reservation res){
+        Document query = new Document("$pull",
+                new Document("reservation",
+                        new Document("start_date",res.getStartDate())
+                        .append("end_date",res.getEndDate())
+                    )
+        );
+        Document accDoc = new Document("_id",new Document("$eq",acc.getId()));
+        updateDoc(accDoc,query,COLLECTION);
+    }
+    public void insertReservation(Accommodation acc, Reservation res){
+        Document searchQuery = new Document("_id",new Document("$eq",acc.getId()));
+
+        Document resDoc = new Document("start_date",res.getStartDate()).append("end_date",res.getEndDate());
+        Document updateQuery = new Document("$push", new Document("reservations",resDoc));
+        updateDoc(searchQuery, updateQuery, COLLECTION);
+    }
 
 }

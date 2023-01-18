@@ -20,6 +20,8 @@ public class NeoRenterDAO extends Neo4jBaseDAO implements UserDAO {
         {
             session.run("CREATE (rr: renter {id: $id"+", first_name: $firstName"+", last_name: $lastName"+"})"
                     , parameters("id", user.getId(), "firstName", user.getFirstName(), "lastName", user.getLastName()));
+        }finally {
+            close(driver);
         }
     }
 
@@ -31,6 +33,8 @@ public class NeoRenterDAO extends Neo4jBaseDAO implements UserDAO {
             session.run("MATCH (rr: renter {id: $oldId"+" }) SET rr.first_name = $newFirstName"+
                     ", rr.last_name = $newLastName", parameters("oldId", oldUser.getId(), "newFirstName", newUser.getFirstName(),
                     "newLastName", newUser.getLastName()));
+        }finally {
+            close(driver);
         }
     }
 
@@ -42,6 +46,8 @@ public class NeoRenterDAO extends Neo4jBaseDAO implements UserDAO {
         {
             session.run("MATCH (rr: renter {id: $id"+" }) DELETE rr"
                     , parameters("id", user.getId()));
+        }finally {
+            close(driver);
         }
     }
 
@@ -51,6 +57,8 @@ public class NeoRenterDAO extends Neo4jBaseDAO implements UserDAO {
         {
             session.run("MATCH(rr:renter)-[o:OWNS]->(aa) WHERE rr.id= $id"+" DELETE o"
                     , parameters("id", user.getId()));
+        }finally {
+            close(driver);
         }
     }
 
@@ -66,6 +74,8 @@ public class NeoRenterDAO extends Neo4jBaseDAO implements UserDAO {
                 record= result.next();
             }
             return record;
+        }finally {
+            close(driver);
         }
     }
 
@@ -82,6 +92,8 @@ public class NeoRenterDAO extends Neo4jBaseDAO implements UserDAO {
                 record= result.next();
             }
             return record;
+        }finally {
+            close(driver);
         }
     }
 
@@ -98,6 +110,8 @@ public class NeoRenterDAO extends Neo4jBaseDAO implements UserDAO {
                 record= result.next();
             }
             return record;
+        }finally {
+            close(driver);
         }
     }
 }
