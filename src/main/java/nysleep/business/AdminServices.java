@@ -24,6 +24,7 @@ public class AdminServices extends UserServices{
     public void modifyUser(Admin oldAdmin, Admin newAdmin) throws BusinessException {
         try{
             documentUserDAO = new MongoUserDAO();
+            newAdmin.setId(oldAdmin.getId());
             documentUserDAO.modifyAccountInfo(oldAdmin, newAdmin);
         }catch (Exception e){
             throw new BusinessException(e);

@@ -24,7 +24,7 @@ public class UnregisteredUserServices extends UserServices {
             graphCustomerDAO = new NeoCustomerDAO();
         if (!documentUserDAO.checkEmail(email)) {
             RegisteredUser to_insert = null;
-            int id = documentUserDAO.getLastId();
+            int id = documentUserDAO.getLastId(documentUserDAO.getCollection());
             if (type.equals("customer")) {
                 to_insert = new Customer(id, firstName, lastName, email, password, url_prof_pic,
                         type, address, country, phone);

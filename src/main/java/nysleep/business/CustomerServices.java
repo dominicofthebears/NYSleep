@@ -46,7 +46,7 @@ public class CustomerServices extends UserServices{
         try {
             documentRevDAO = new MongoReviewDAO();
             documentAccDAO = new MongoAccommodationDAO();
-
+            review.setId(documentRevDAO.getLastId(documentRevDAO.getCollection()));
             documentRevDAO.createReview(review);
             graphRevDAO.createReview(review);
             documentAccDAO.incrementNumReview(review.getAccommodation());
@@ -82,7 +82,7 @@ public class CustomerServices extends UserServices{
         try{
             documentResDAO = new MongoReservationDAO();
             documentAccDAO = new MongoAccommodationDAO();
-
+            reservation.setId(documentResDAO.getLastId(documentResDAO.getCollection()));
             documentResDAO.createReservation(reservation);
             documentAccDAO.insertReservation(reservation.getAccommodation(),reservation);
             documentAccDAO.incrementNumReview(reservation.getAccommodation());
