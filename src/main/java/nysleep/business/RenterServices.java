@@ -45,14 +45,15 @@ public class RenterServices extends UserServices {
             documentAccDAO.startTransaction();
             documentAccDAO.createAccommodation(acc);
             documentAccDAO.commitTransaction();
-
         }catch(Exception e){
             throw new BusinessException(e);}
+
         try{
             graphAccDAO.createAccommodation(acc);
         }catch(Exception e){
             documentAccDAO.abortTransaction();
-            throw new BusinessException(e);}
+            throw new BusinessException(e);
+        }
         finally{
             documentAccDAO.closeConnection();
         }
@@ -95,7 +96,7 @@ public class RenterServices extends UserServices {
         }
     }
 
-    public PageDTO<ReservationDTO> showRenterReservation(Renter renter){
+    public PageDTO<ReservationDTO> showRenterReservation(Renter renter) throws BusinessException {
         try{
             documentResDAO = new MongoReservationDAO();
             documentAccDAO = new MongoAccommodationDAO();
@@ -133,10 +134,8 @@ public class RenterServices extends UserServices {
             PageDTO<ReservationDTO> resPage = new PageDTO<ReservationDTO>();
             resPage.setEntries(resDTOList);
             return resPage;
-
         }catch(Exception e){
-            e.printStackTrace();
-            return null;
+            throw new BusinessException(e);
         }finally{
             documentResDAO.closeConnection();
             documentAccDAO.closeConnection();

@@ -177,6 +177,20 @@ public class MongoUserDAO extends MongoBaseDAO implements UserDAO {
         Document last = (Document) collection.find().sort(sort).limit(1);
         return last.getInteger("_id");
     }
+
+    //controllo per verificare se una mail sia stata già utilizzata
+    public boolean checkEmail(String email){
+        MongoClient myClient = MongoClients.create(connection);
+        MongoDatabase db = myClient.getDatabase(dbName);
+        MongoCollection<Document> collection = db.getCollection(COLLECTION);
+        Document search_email = new Document("email", new Document("$eq",email));
+        if (readDoc(search_email, COLLECTION) == null){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
 }
 
 

@@ -1,6 +1,7 @@
 package nysleep.business;
 
 import nysleep.DAO.mongoDB.*;
+import nysleep.DAO.neo4jDB.NeoCustomerDAO;
 import nysleep.DAO.neo4jDB.NeoReviewDAO;
 import nysleep.DTO.AccommodationDetailsDTO;
 import nysleep.DTO.PageDTO;
@@ -25,21 +26,19 @@ public class CustomerServices extends UserServices{
 
     //Get the renterDTO's of an accommodation
     public RenterDetailsDTO getAccRenter(Accommodation acc) throws BusinessException {
-        RenterDetailsDTO renterDTO = null;
         try {
             documentUserDAO = new MongoUserDAO();
             Renter renter = (Renter) documentUserDAO.getUser(acc.getRenter());
-            renterDTO = new RenterDetailsDTO(renter.getFirstName()
+            RenterDetailsDTO renterDTO = new RenterDetailsDTO(renter.getFirstName()
                     , renter.getLastName()
                     , renter.getWorkEmail()
                     , renter.getPhone()
                     , renter.getUrl_prof_pic());
-
+            return renterDTO;
         } catch (Exception e) {
             throw new BusinessException(e);
         } finally {
             documentUserDAO.closeConnection();
-            return renterDTO;
         }
     }
 
@@ -56,9 +55,11 @@ public class CustomerServices extends UserServices{
         }
         finally{
             documentRevDAO.closeConnection();
-            documentAccDAO.closeConnection());
+            documentAccDAO.closeConnection();
         }
     }
+
+
     public void deleteReview(Review review) throws BusinessException {
         try{
             documentRevDAO = new MongoReviewDAO();
@@ -70,11 +71,14 @@ public class CustomerServices extends UserServices{
 
         }catch(Exception e){
             throw new BusinessException(e);
+        }finally{
+            documentRevDAO.closeConnection();
+            documentAccDAO.closeConnection();
         }
     }
 
 
-    public void insertReservation(Reservation reservation){
+    public void insertReservation(Reservation reservation) throws BusinessException {
         try{
             documentResDAO = new MongoReservationDAO();
             documentAccDAO = new MongoAccommodationDAO();
@@ -82,7 +86,8 @@ public class CustomerServices extends UserServices{
             documentResDAO.createReservation(reservation);
             documentAccDAO.insertReservation(reservation.getAccommodation(),reservation);
             documentAccDAO.incrementNumReview(reservation.getAccommodation());
-        }catch(Exception e){e.printStackTrace();}
+        }catch(Exception e){
+            throw new BusinessException(e);}
         finally{
             documentResDAO.closeConnection();
             documentAccDAO.closeConnection();
@@ -90,8 +95,7 @@ public class CustomerServices extends UserServices{
     }
 
 
-
-    public  PageDTO<ReservationDTO> viewReservations(Customer customer){
+    public  PageDTO<ReservationDTO> viewReservations(Customer customer) throws BusinessException {
         try{
             documentResDAO = new MongoReservationDAO();
             ArrayList<Document>docs =  (ArrayList<Document>) documentResDAO.getCustomerReservations(customer);
@@ -120,26 +124,33 @@ public class CustomerServices extends UserServices{
                 );
                 resDTOList.add(resDTO);
             }
-            PageDTO<ReservationDTO> resPage = new PageDTO<ReservationDTO>();
+            PageDTO<ReservationDTO> resPage = new PageDTO<>();
             resPage.setEntries(resDTOList);
             return resPage;
-
         }catch (Exception e){
-            e.printStackTrace();
-            return null;
+            throw new BusinessException(e);
         }finally{documentResDAO.closeConnection();}
     }
 
-    public void modifyUser(RegisteredUser oldUser,RegisteredUser newUser){
+    public void modifyUser(RegisteredUser oldUser,RegisteredUser newUser) throws BusinessException {
         try{
 
             documentUserDAO = new MongoUserDAO();
+            graphCustomerDAO = new NeoCustomerDAO();
+            newUser.setId(oldUser.getId());
+            documentUserDAO.startTransaction();
             documentUserDAO.modifyAccountInfo(oldUser,newUser);
-
+            documentUserDAO.commitTransaction();
         }catch(Exception e){
-            e.printStackTrace();
-        }finally {
             documentUserDAO.closeConnection();
+            throw new BusinessException(e);
+        }
+        try{
+            graphCustomerDAO.modifyAccountInfo(oldUser, newUser);
+        }catch (Exception e){
+            documentUserDAO.abortTransaction();
+            documentUserDAO.closeConnection();
+            throw new BusinessException(e);
         }
     }
 }
