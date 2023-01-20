@@ -5,6 +5,7 @@ import nysleep.DAO.mongoDB.MongoReservationDAO;
 import nysleep.DAO.mongoDB.MongoUserDAO;
 
 import nysleep.DAO.neo4jDB.NeoAccommodationDAO;
+import nysleep.DAO.neo4jDB.NeoCustomerDAO;
 import nysleep.DAO.neo4jDB.NeoRenterDAO;
 import nysleep.DTO.PageDTO;
 import nysleep.DTO.ReservationDTO;
@@ -28,12 +29,20 @@ public class RenterServices extends UserServices {
         try{
             documentUserDAO = new MongoUserDAO();
             graphRenterDAO = new NeoRenterDAO();
+            newRenter.setId(oldRenter.getId());
+            documentUserDAO.startTransaction();
             documentUserDAO.modifyAccountInfo(oldRenter,newRenter);
-            graphRenterDAO.modifyAccountInfo(oldRenter,newRenter);
+            documentUserDAO.commitTransaction();
         }catch(Exception e){
-            throw new BusinessException(e);
-        }finally {
             documentUserDAO.closeConnection();
+            throw new BusinessException(e);
+        }
+        try{
+            graphCustomerDAO.modifyAccountInfo(oldRenter,newRenter);
+        }catch (Exception e){
+            documentUserDAO.abortTransaction();
+            documentUserDAO.closeConnection();
+            throw new BusinessException(e);
         }
     }
 
@@ -42,17 +51,19 @@ public class RenterServices extends UserServices {
 
             documentAccDAO = new MongoAccommodationDAO();
             graphAccDAO = new NeoAccommodationDAO();
+            acc.setId(documentResDAO.getLastId(documentResDAO.getCollection()));
             documentAccDAO.startTransaction();
             documentAccDAO.createAccommodation(acc);
             documentAccDAO.commitTransaction();
-
         }catch(Exception e){
             throw new BusinessException(e);}
+
         try{
             graphAccDAO.createAccommodation(acc);
         }catch(Exception e){
             documentAccDAO.abortTransaction();
-            throw new BusinessException(e);}
+            throw new BusinessException(e);
+        }
         finally{
             documentAccDAO.closeConnection();
         }
@@ -83,7 +94,7 @@ public class RenterServices extends UserServices {
         try{
             documentAccDAO = new MongoAccommodationDAO();
             graphAccDAO = new NeoAccommodationDAO();
-
+            newAcc.setId(oldAcc.getId());
             documentAccDAO.updateAccommodation(oldAcc, newAcc);
             graphAccDAO.updateAccommodation(oldAcc,newAcc);
 
@@ -95,7 +106,7 @@ public class RenterServices extends UserServices {
         }
     }
 
-    public PageDTO<ReservationDTO> showRenterReservation(Renter renter){
+    public PageDTO<ReservationDTO> showRenterReservation(Renter renter) throws BusinessException {
         try{
             documentResDAO = new MongoReservationDAO();
             documentAccDAO = new MongoAccommodationDAO();
@@ -133,10 +144,8 @@ public class RenterServices extends UserServices {
             PageDTO<ReservationDTO> resPage = new PageDTO<ReservationDTO>();
             resPage.setEntries(resDTOList);
             return resPage;
-
         }catch(Exception e){
-            e.printStackTrace();
-            return null;
+            throw new BusinessException(e);
         }finally{
             documentResDAO.closeConnection();
             documentAccDAO.closeConnection();

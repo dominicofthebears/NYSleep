@@ -22,20 +22,25 @@ public class UnregisteredUserServices extends UserServices {
 
             documentUserDAO = new MongoUserDAO();
             graphCustomerDAO = new NeoCustomerDAO();
-        if (documentUserDAO.authenticate(email, password) == null) {
+        if (!documentUserDAO.checkEmail(email)) {
             RegisteredUser to_insert = null;
-            int id = documentUserDAO.getLastId();
+            int id = documentUserDAO.getLastId(documentUserDAO.getCollection());
             if (type.equals("customer")) {
                 to_insert = new Customer(id, firstName, lastName, email, password, url_prof_pic,
                         type, address, country, phone);
             } else if (type.equals("renter")) {
                 to_insert = new Renter(id, firstName, lastName, email, password, url_prof_pic, type, workEmail, phone);
             }
+
             try {
+                documentUserDAO.startTransaction();
                 documentUserDAO.register(to_insert);
+                documentUserDAO.commitTransaction();
             } catch (Exception e) {
+                documentUserDAO.closeConnection();
                 throw new BusinessException(e);
             }
+
             try {
                 graphCustomerDAO.register(to_insert);
             } catch (Exception e) {
@@ -46,7 +51,6 @@ public class UnregisteredUserServices extends UserServices {
                 documentUserDAO.closeConnection();
             }
             return to_insert;
-
         } else {
             throw new BusinessException("Email already used");
         }

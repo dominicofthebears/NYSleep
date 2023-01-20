@@ -15,6 +15,7 @@ public abstract class MongoBaseDAO{
     protected static String dbName = "NYSleep";
     protected static MongoClient client;
     protected static ClientSession session;
+    protected static String COLLECTION;
     public MongoBaseDAO(){
         MongoClient client = MongoClients.create(this.connection);
         this.client = client;
@@ -99,6 +100,18 @@ public abstract class MongoBaseDAO{
         return doc;
     }
 
+    public int getLastId(String COLLECTION){
+        MongoClient myClient = MongoClients.create(connection);
+        MongoDatabase db = myClient.getDatabase(dbName);
+        MongoCollection<Document> collection = db.getCollection(COLLECTION);
+        Document sort = new Document("_id",-1);
+        Document last = (Document) collection.find().sort(sort).limit(1);
+        return last.getInteger("_id");
+    }
+
+    public String getCollection(){
+        return COLLECTION;
+    }
 
 
 }

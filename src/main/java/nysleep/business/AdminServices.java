@@ -2,15 +2,13 @@ package nysleep.business;
 
 import nysleep.DAO.mongoDB.MongoAccommodationDAO;
 import nysleep.DAO.mongoDB.MongoReservationDAO;
+import nysleep.DAO.mongoDB.MongoReviewDAO;
 import nysleep.DAO.mongoDB.MongoUserDAO;
 import nysleep.DAO.neo4jDB.NeoAccommodationDAO;
 import nysleep.DTO.PageDTO;
 import nysleep.DTO.ReservationDTO;
 import nysleep.business.exception.BusinessException;
-import nysleep.model.Accommodation;
-import nysleep.model.Admin;
-import nysleep.model.RegisteredUser;
-import nysleep.model.Renter;
+import nysleep.model.*;
 import org.bson.Document;
 
 import java.time.LocalDate;
@@ -26,6 +24,7 @@ public class AdminServices extends UserServices{
     public void modifyUser(Admin oldAdmin, Admin newAdmin) throws BusinessException {
         try{
             documentUserDAO = new MongoUserDAO();
+            newAdmin.setId(oldAdmin.getId());
             documentUserDAO.modifyAccountInfo(oldAdmin, newAdmin);
         }catch (Exception e){
             throw new BusinessException(e);
@@ -52,7 +51,8 @@ public class AdminServices extends UserServices{
             documentAccDAO.closeConnection();
         }
     }
-    public PageDTO<ReservationDTO> showAccReservations(Accommodation acc){
+
+    public PageDTO<ReservationDTO> showAccReservations(Accommodation acc) throws BusinessException {
         try{
             documentResDAO = new MongoReservationDAO();
             ArrayList<Document> docs = (ArrayList<Document>) documentResDAO.getAccReservations(acc);
@@ -85,10 +85,26 @@ public class AdminServices extends UserServices{
             resPage.setEntries(accReservations);
             return resPage;
         }catch (Exception e){
-            e.printStackTrace();
-            return null;
+            throw new BusinessException(e);
         }finally {
             documentResDAO.closeConnection();
+        }
+    }
+
+    public void deleteReview(Review review) throws BusinessException {
+        try{
+            documentRevDAO = new MongoReviewDAO();
+            documentAccDAO = new MongoAccommodationDAO();
+
+            documentRevDAO.deleteReview(review);
+            graphRevDAO.deleteReview(review);
+            documentAccDAO.decreaseNumReview(review.getAccommodation());
+
+        }catch(Exception e){
+            throw new BusinessException(e);
+        }finally{
+            documentRevDAO.closeConnection();
+            documentAccDAO.closeConnection();
         }
     }
 }

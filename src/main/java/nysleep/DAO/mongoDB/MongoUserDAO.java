@@ -4,7 +4,6 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import jdk.vm.ci.code.Register;
 import nysleep.DAO.UserDAO;
 import nysleep.DAO.base.MongoBaseDAO;
 
@@ -18,6 +17,7 @@ import java.util.ArrayList;
 
 public class MongoUserDAO extends MongoBaseDAO implements UserDAO {
     private static final String COLLECTION="users";
+
     private static Document toDoc(RegisteredUser registeredUser) {
         //Convert the model object in a document
         Document doc = new Document("_id",registeredUser.getId())
@@ -41,6 +41,7 @@ public class MongoUserDAO extends MongoBaseDAO implements UserDAO {
         }
         return doc;
     }
+
 
     @Override
     public void register(RegisteredUser registeredUser) {
@@ -169,13 +170,20 @@ public class MongoUserDAO extends MongoBaseDAO implements UserDAO {
         deleteDoc(deleteQuery, COLLECTION);
     }
 
-    public int getLastId(){
+
+
+    //controllo per verificare se una mail sia stata già utilizzata
+    public boolean checkEmail(String email){
         MongoClient myClient = MongoClients.create(connection);
         MongoDatabase db = myClient.getDatabase(dbName);
         MongoCollection<Document> collection = db.getCollection(COLLECTION);
-        Document sort = new Document("age",-1);
-        Document last = (Document) collection.find().sort(sort).limit(1);
-        return last.getInteger("_id");
+        Document search_email = new Document("email", new Document("$eq",email));
+        if (readDoc(search_email, COLLECTION) == null){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 }
 
