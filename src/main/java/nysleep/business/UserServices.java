@@ -13,6 +13,7 @@ import org.bson.Document;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -23,23 +24,22 @@ public class UserServices {
     protected MongoUserDAO documentUserDAO;
     protected MongoReservationDAO documentResDAO;
 
-    protected NeoCustomerDAO graphCustomerDAO;
-    protected NeoRenterDAO graphRenterDAO;
-    protected NeoAccommodationDAO graphAccDAO;
-    protected NeoReviewDAO graphRevDAO;
+    protected NeoCustomerDAO graphCustomerDAO = new NeoCustomerDAO();
+    protected NeoRenterDAO graphRenterDAO = new NeoRenterDAO();
+    protected NeoAccommodationDAO graphAccDAO = new NeoAccommodationDAO();
+    protected NeoReviewDAO graphRevDAO  = new NeoReviewDAO();
 
     public UserServices(){}
 
-    public PageDTO<AccommodationDTO> showHomePage(int numPage){
-        int limit = 15;
+    public PageDTO<AccommodationDTO> showHomePage(int numPage) throws BusinessException {
         try{
 
             documentAccDAO = new MongoAccommodationDAO();
-            ArrayList<Document> docs = (ArrayList<Document>) documentAccDAO.getAccHomePage(numPage*limit, limit);
+            LinkedList<Document> docs = (LinkedList<Document>) documentAccDAO.getAccHomePage();
 
-            List<AccommodationDTO> accDTOList = new ArrayList<>();
+            List<AccommodationDTO> accDTOList = new LinkedList<>();
             for(Document doc: docs){ //iterate all over the documents and extract accommodations to put in the DTO
-                ArrayList<String> picsURL = (ArrayList<String>) doc.get("images_URL");
+                LinkedList<String> picsURL = (LinkedList<String>) doc.get("images_URL");
                 AccommodationDTO accDTO = new AccommodationDTO(
                         (int) doc.get("_id"),
                         (String) doc.get("name"),
@@ -53,8 +53,7 @@ public class UserServices {
             AccHomePage.setEntries(accDTOList);
             return AccHomePage;
         }catch(Exception e){
-            e.printStackTrace();
-            return null;
+            throw new BusinessException(e);
         }
         finally{
             documentAccDAO.closeConnection();
@@ -66,7 +65,7 @@ public class UserServices {
         try {
             documentRevDAO = new MongoReviewDAO();
             List<Document> docs = documentRevDAO.getReviewsForAcc(acc);
-            ArrayList<AccReviewDTO> AccReviewDTOList = new ArrayList<AccReviewDTO>();
+            LinkedList<AccReviewDTO> AccReviewDTOList = new LinkedList<>();
             for (Document doc : docs) {
 
                 Document customerDoc = (Document) doc.get("customer");
@@ -81,7 +80,7 @@ public class UserServices {
 
                 AccReviewDTOList.add(accReviewDTO);
             }
-            pageDTO = new PageDTO<AccReviewDTO>();
+            pageDTO = new PageDTO<>();
             pageDTO.setEntries(AccReviewDTOList);
         } catch (Exception e) {
             throw new BusinessException(e);
@@ -92,16 +91,15 @@ public class UserServices {
     }
 
     public PageDTO<AccommodationDTO> showRenterAccommodations(Renter renter, int numPage) throws BusinessException {
-        int limit = 15;
         PageDTO<AccommodationDTO> AccPage;
         try {
 
             documentAccDAO = new MongoAccommodationDAO();
-            List<Document> docs = documentAccDAO.getSearchedAcc(renter, numPage * limit, limit);
+            List<Document> docs = documentAccDAO.getSearchedAcc(renter);
 
-            List<AccommodationDTO> accDTOList = new ArrayList<>();
+            LinkedList<AccommodationDTO> accDTOList = new LinkedList<>();
             for (Document doc : docs) {                                                    //iterate all over the documents and extract accommodations to put in the DTO
-                ArrayList<String> picsURL = (ArrayList<String>) doc.get("images_URL");
+                LinkedList<String> picsURL = (LinkedList<String>) doc.get("images_URL");
                 AccommodationDTO accDTO = new AccommodationDTO(
                         (int) doc.get("_id"),
                         (String) doc.get("name"),
@@ -110,7 +108,7 @@ public class UserServices {
                         picsURL.get(0));
                 accDTOList.add(accDTO);
             }
-            AccPage = new PageDTO<AccommodationDTO>();
+            AccPage = new PageDTO<>();
             AccPage.setEntries(accDTOList);
 
         } catch (Exception e) {
@@ -121,14 +119,34 @@ public class UserServices {
         return AccPage;
     }
 
-    public PageDTO<AccommodationDTO> showSearchAcc(LocalDate startDate, LocalDate endDate, int numPeople, String neighborhood,double price,int numPage){
-        //aggiungi controlli
-        int limit=15;
-        //Document docs = documentAccDAO.getSearchedAcc(startDate, endDate, numPeople, neighborhood, price,limit*numPage,);
-        return null;
+
+
+    public PageDTO<AccommodationDTO> showSearchAcc  (LocalDate startDate, LocalDate endDate, int numPeople, String neighborhood,double price) throws BusinessException{
+      try{
+        documentAccDAO = new MongoAccommodationDAO();
+        List<Document> results = documentAccDAO.getSearchedAcc(startDate,endDate, numPeople,neighborhood, price);
+        LinkedList<AccommodationDTO> accDTOList = new LinkedList<>();
+        for (Document doc : results) {
+            LinkedList<String> picsURL = (LinkedList<String>) doc.get("images_URL");
+            AccommodationDTO accDTO = new AccommodationDTO(
+                    (int) doc.get("_id"),
+                    (String) doc.get("name"),
+                    (String) doc.get("neighborhood"),
+                    (double) doc.get("rating"),
+                    picsURL.get(0));
+            accDTOList.add(accDTO);
+        }
+        PageDTO<AccommodationDTO> accommodations = new PageDTO<>();
+        accommodations.setEntries(accDTOList);
+        return accommodations;
+      }catch(Exception e){
+          throw new BusinessException("Search Failed");
+      }finally{
+          documentAccDAO.closeConnection();
+      }
     }
 
-    public AccommodationDetailsDTO showAccDetails(Accommodation acc){
+    public AccommodationDetailsDTO showAccDetails(Accommodation acc) throws BusinessException{
         try{
 
             documentAccDAO = new MongoAccommodationDAO();
@@ -153,24 +171,24 @@ public class UserServices {
             return accDetailsDTO;
 
         }catch(Exception e){
-            e.printStackTrace();
-            return null;
+            throw new BusinessException(e);
         }finally{
             documentAccDAO.closeConnection();
         }
     }
 
-
-    public void deleteReservation(Reservation reservation){
+    public void deleteReservation(Reservation reservation) throws BusinessException {
         try{
             documentResDAO = new MongoReservationDAO();
             documentAccDAO = new MongoAccommodationDAO();
+            documentResDAO.startTransaction();
+            documentAccDAO.startTransaction();
 
             documentResDAO.deleteReservation(reservation);
             documentAccDAO.deleteReservation(reservation.getAccommodation(),reservation);
-            documentAccDAO.decreaseNumReview(reservation.getAccommodation());
+
         }catch(Exception e){
-            e.printStackTrace();
+            throw new BusinessException(e);
         }finally {
             documentResDAO.closeConnection();
             documentAccDAO.closeConnection();

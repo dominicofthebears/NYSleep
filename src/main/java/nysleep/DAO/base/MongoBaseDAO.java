@@ -92,6 +92,7 @@ public abstract class MongoBaseDAO{
         
         return docs;
     }
+
     public static Document readDoc(Document query, String collectionName) {
         MongoDatabase db = client.getDatabase(dbName);
         MongoCollection<Document> collection = db.getCollection(collectionName);

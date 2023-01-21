@@ -1,5 +1,10 @@
 package nysleep.DAO.mongoDB;
 
+import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Sorts;
 import nysleep.DAO.ReservationDAO;
 import nysleep.DAO.base.MongoBaseDAO;
 
@@ -10,12 +15,13 @@ import nysleep.model.Accommodation;
 import nysleep.model.Customer;
 import nysleep.model.Reservation;
 
+import org.bson.BsonDocument;
 import org.bson.Document;
+import org.bson.conversions.Bson;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class MongoReservationDAO extends MongoBaseDAO implements ReservationDAO {
     private final String COLLECTION = "reservations";
@@ -77,6 +83,36 @@ public class MongoReservationDAO extends MongoBaseDAO implements ReservationDAO 
 
         Document searchQuery = new Document("accommodation.id",new Document("$eq",acc.getId()));
         ArrayList<Document> docs = readDocs(searchQuery,COLLECTION);
+        return docs;
+    }
+
+    public List<Document> customerWhoHasSpentTheMost(){
+        MongoDatabase db = client.getDatabase(dbName);
+        MongoCollection<Document> collection = db.getCollection(COLLECTION);
+
+        //String groupJson ="{\"$group\":{\"_id\":{\"cust_id\":\"$customer.id\",\"first_name\":\"$customer.first_name\",\"last_name\":\"$customer.last_name\",\"total_spent\":{\"$sum\":\"$cost\"}}}}";
+        //Document group = Document.parse(groupJson);
+        String groupIDJson ="{\"cust_id\":\"$customer.id\",\"first_name\":\"$customer.first_name\",\"last_name\":\"$customer.last_name\",\"total_spent\":{\"$sum\":\"$cost\"}}";
+        Document groupID = Document.parse(groupIDJson);
+        Bson group = Aggregates.group(groupID);
+
+        //String sortJson = "{\"$sort\":{\"_id.total_spent\":-1}}";
+        //Document sort  = Document.parse(sortJson)";
+        //Bson sort =  Aggregates.sort(Sorts.ascending());
+        Bson sort = Aggregates.sort(Sorts.descending("_id.total_spent"));
+
+        //String limitJson = "{\"$limit\":1}";
+        //Document limit = Document.parse(limitJson);
+        Bson limit = Aggregates.limit(1);
+        List<Bson> stages = Arrays.asList(group, sort, limit);
+        AggregateIterable docsIterable =  collection.aggregate(stages);
+
+        ArrayList<Document> docs = new ArrayList<>();
+        while(docsIterable.iterator().hasNext()){
+            Document doc = (Document) docsIterable.iterator().next();
+            System.out.println(doc);
+            docs.add(doc);
+        }
         return docs;
     }
 }

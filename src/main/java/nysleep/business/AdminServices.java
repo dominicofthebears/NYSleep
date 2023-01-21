@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 public class AdminServices extends UserServices{
@@ -35,28 +36,38 @@ public class AdminServices extends UserServices{
     public void removeAccommodation(Accommodation acc) throws BusinessException {
         try{
             documentAccDAO = new MongoAccommodationDAO();
-            graphAccDAO = new NeoAccommodationDAO();
-            documentAccDAO.deleteAccommodation(acc);
+            documentRevDAO = new MongoReviewDAO();
+            documentResDAO = new MongoReservationDAO();
+            documentAccDAO.startTransaction();
+            documentRevDAO.startTransaction();
+            documentResDAO.startTransaction();
 
+            documentAccDAO.deleteAccommodation(acc);
             //cancella reviews dell'acc
             documentRevDAO.deleteAccReview(acc);
-
             //cancella reservations dell'acc
             documentResDAO.deleteAccReservation(acc);
-            graphAccDAO.deleteAccommodation(acc);
 
+            graphAccDAO.deleteAccommodation(acc);
+            documentAccDAO.commitTransaction();
+            documentRevDAO.commitTransaction();
+            documentResDAO.commitTransaction();
         }catch(Exception e){
+            documentAccDAO.abortTransaction();
+            documentRevDAO.abortTransaction();
+            documentResDAO.abortTransaction();
             throw new BusinessException(e);
         }finally{
             documentAccDAO.closeConnection();
+            documentRevDAO.closeConnection();
+            documentResDAO.closeConnection();
         }
     }
-
     public PageDTO<ReservationDTO> showAccReservations(Accommodation acc) throws BusinessException {
         try{
             documentResDAO = new MongoReservationDAO();
-            ArrayList<Document> docs = (ArrayList<Document>) documentResDAO.getAccReservations(acc);
-            List<ReservationDTO> accReservations = new ArrayList<ReservationDTO>();
+            LinkedList<Document> docs = (LinkedList<Document>) documentResDAO.getAccReservations(acc);
+            List<ReservationDTO> accReservations = new LinkedList<ReservationDTO>();
             for(Document resDoc : docs){   //iterate all over the documents and extract reservation to put in the DTO
                 //Casting Date to LocalDate because mongoDB only return Date that is deprecated;
                 Date startDate = (Date) resDoc.get("start_date");
@@ -95,12 +106,18 @@ public class AdminServices extends UserServices{
         try{
             documentRevDAO = new MongoReviewDAO();
             documentAccDAO = new MongoAccommodationDAO();
+            documentRevDAO.startTransaction();
+            documentAccDAO.startTransaction();
 
             documentRevDAO.deleteReview(review);
             graphRevDAO.deleteReview(review);
             documentAccDAO.decreaseNumReview(review.getAccommodation());
 
+            documentRevDAO.commitTransaction();
+            documentAccDAO.commitTransaction();
         }catch(Exception e){
+            documentRevDAO.startTransaction();
+            documentAccDAO.abortTransaction();
             throw new BusinessException(e);
         }finally{
             documentRevDAO.closeConnection();
