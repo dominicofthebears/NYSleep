@@ -3,7 +3,9 @@ package nysleep.DAO.mongoDB;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.BsonField;
 import com.mongodb.client.model.Sorts;
 import nysleep.DAO.ReservationDAO;
 import nysleep.DAO.base.MongoBaseDAO;
@@ -92,7 +94,7 @@ public class MongoReservationDAO extends MongoBaseDAO implements ReservationDAO 
 
         //String groupJson ="{\"$group\":{\"_id\":{\"cust_id\":\"$customer.id\",\"first_name\":\"$customer.first_name\",\"last_name\":\"$customer.last_name\",\"total_spent\":{\"$sum\":\"$cost\"}}}}";
         //Document group = Document.parse(groupJson);
-        String groupIDJson ="{\"cust_id\":\"$customer.id\",\"first_name\":\"$customer.first_name\",\"last_name\":\"$customer.last_name\",\"total_spent\":{\"$sum\":\"$cost\"}}";
+        String groupIDJson ="{\"cust_id\":\"$customer.id\",\"first_name\":\"$customer.first_name\",\"last_name\":\"$customer.last_name\"}";//,\"total_spent\":{\"$sum\":\"$cost\"}}";
         Document groupID = Document.parse(groupIDJson);
         Bson group = Aggregates.group(groupID);
 
@@ -105,11 +107,17 @@ public class MongoReservationDAO extends MongoBaseDAO implements ReservationDAO 
         //Document limit = Document.parse(limitJson);
         Bson limit = Aggregates.limit(1);
         List<Bson> stages = Arrays.asList(group, sort, limit);
-        AggregateIterable docsIterable =  collection.aggregate(stages);
+        AggregateIterable<Document> docsIterable =  collection.aggregate(
+                Arrays.asList(
+                        Aggregates.group(groupID, Accumulators.sum("total_spent", "$cost")),
+                        Aggregates.sort(Sorts.descending("total_spent")),
+                        Aggregates.limit(1)
+                )
+        );
 
         ArrayList<Document> docs = new ArrayList<>();
         while(docsIterable.iterator().hasNext()){
-            Document doc = (Document) docsIterable.iterator().next();
+            Document doc =  docsIterable.iterator().next();
             System.out.println(doc);
             docs.add(doc);
         }

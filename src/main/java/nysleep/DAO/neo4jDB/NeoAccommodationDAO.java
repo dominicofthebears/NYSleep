@@ -124,21 +124,26 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
         int id2=-1;
         try(Session session = driver.session())
         {
-            Result result1 = session.run("CALL gds.graph.drop( 'reviews', false);" +
-                            "CALL gds.graph.project( 'reviews', ['customer','accommodation'], ['REVIEWS'])" +
-                            "YIELD graphName AS graph, relationshipProjection AS knowsProjection, nodeCount AS nodes, relationshipCount AS rels;" +
-                            "CALL gds.nodeSimilarity.stream('reviews')"+
-                            "YIELD node1, node2, similarity" +
-                            "WHERE gds.util.asNode(node1).id = $id" +
-                            "RETURN gds.util.asNode(node1).id AS Customer1, gds.util.asNode(node2).id AS Customer2, similarity" +
+            //deletes the projection, if it already exists
+            session.run("CALL gds.graph.drop( 'reviews', false);");
+            //creates a new projection
+            session.run("CALL gds.graph.project( 'reviews', ['customer','accommodation'], ['REVIEWS'])" +
+                    "YIELD graphName AS graph, relationshipProjection AS knowsProjection, nodeCount AS nodes, relationshipCount AS rels;");
+            //calculates the most similar customer
+            Result result1 = session.run("CALL gds.nodeSimilarity.stream('reviews') "+
+                            "YIELD node1, node2, similarity " +
+                            "WHERE gds.util.asNode(node1).id = $id " +
+                            "RETURN gds.util.asNode(node1).id AS Customer1, gds.util.asNode(node2).id AS Customer2, similarity " +
                             "ORDER BY similarity DESCENDING, Customer1, Customer2 LIMIT 1"
                     , parameters("id", customer.getId()));
             while(result1.hasNext()) {
                 Record record= result1.next();
                 id2=record.get("Customer2").asInt();
             }
-            Result result2 = session.run("MATCH (cc:customer)-[r:REVIEWS]->(aa:accommodation) WHERE cc.id=$id2 AND r.rate>=4 RETURN aa"
-                    , parameters("$id2", id2));
+            //retrieves the accommodation that the similar customer had rated well (4 or more)
+            Result result2 = session.run("MATCH (cc:customer)-[r:REVIEWS]->(aa:accommodation) WHERE cc.id=$id2 AND r.rate>=4 "+
+                            "RETURN aa.id AS id, aa.name AS name, aa.neighborhood as neighborhood, aa.rating as rating"
+                    , parameters("id2", id2));
             while(result2.hasNext()) {
                 Record record= result2.next();
                 recordList.add(record);
