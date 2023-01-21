@@ -2,6 +2,7 @@ package nysleep.DAO.mongoDB;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
 import nysleep.DAO.AccommodationDAO;
 import nysleep.DTO.AccommodationDTO;
 import nysleep.DTO.AccommodationDetailsDTO;
@@ -15,8 +16,10 @@ import nysleep.model.Renter;
 import nysleep.model.Reservation;
 import org.bson.Document;
 
+import java.sql.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MongoAccommodationDAO extends MongoBaseDAO implements AccommodationDAO {
@@ -91,9 +94,9 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
     }
 
 //Get accommodation based on
-    public List<Document> getAccHomePage(int skip, int limit) {
+    public List<Document> getAccHomePage() {
         Document searchQuery = new Document();
-        List<Document> docs = readDocs(searchQuery,COLLECTION,skip,limit);
+        List<Document> docs = readDocs(searchQuery,COLLECTION);
         return docs;
     }
 
@@ -105,7 +108,9 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
         return doc;
     }
 
-    public List<Document> getSearchedAcc(LocalDate startDate,LocalDate endDate,int numPeople,String neighborhood,double price,int skip,int limit) {
+    public List<Document> getSearchedAcc(LocalDate startDate,LocalDate endDate,int numPeople,String neighborhood,
+                                         double price) {
+
         return null;
     }
 
@@ -133,10 +138,11 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
     }
     public void insertReservation(Accommodation acc, Reservation res){
         Document searchQuery = new Document("_id",new Document("$eq",acc.getId()));
-
         Document resDoc = new Document("start_date",res.getStartDate()).append("end_date",res.getEndDate());
         Document updateQuery = new Document("$push", new Document("reservations",resDoc));
         updateDoc(searchQuery, updateQuery, COLLECTION);
     }
+
+
 
 }

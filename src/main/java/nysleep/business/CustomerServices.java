@@ -1,24 +1,24 @@
 package nysleep.business;
 
-import nysleep.DAO.mongoDB.*;
+import nysleep.DAO.mongoDB.MongoAccommodationDAO;
+import nysleep.DAO.mongoDB.MongoReservationDAO;
+import nysleep.DAO.mongoDB.MongoReviewDAO;
+import nysleep.DAO.mongoDB.MongoUserDAO;
 import nysleep.DAO.neo4jDB.NeoCustomerDAO;
 import nysleep.DAO.neo4jDB.NeoReviewDAO;
-import nysleep.DTO.AccommodationDetailsDTO;
 import nysleep.DTO.PageDTO;
 import nysleep.DTO.RenterDetailsDTO;
 import nysleep.DTO.ReservationDTO;
 import nysleep.business.exception.BusinessException;
 import nysleep.model.*;
-
 import org.bson.Document;
-import org.w3c.dom.traversal.DocumentTraversal;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class CustomerServices extends UserServices{
 
@@ -46,14 +46,25 @@ public class CustomerServices extends UserServices{
         try {
             documentRevDAO = new MongoReviewDAO();
             documentAccDAO = new MongoAccommodationDAO();
+            graphRevDAO = new NeoReviewDAO();
+
             review.setId(documentRevDAO.getLastId(documentRevDAO.getCollection()));
+            documentRevDAO.startTransaction();
+            documentAccDAO.startTransaction();
+
             documentRevDAO.createReview(review);
-            graphRevDAO.createReview(review);
             documentAccDAO.incrementNumReview(review.getAccommodation());
+
+            graphRevDAO.createReview(review);
+
+            documentRevDAO.commitTransaction();  //IF commit will fail MongoDB driver will retry the commit operation one time
+            documentAccDAO.commitTransaction();
+
         }catch(Exception e) {
+            documentRevDAO.abortTransaction();
+            documentAccDAO.abortTransaction();
             throw new BusinessException(e);
-        }
-        finally{
+        }finally{
             documentRevDAO.closeConnection();
             documentAccDAO.closeConnection();
         }
@@ -65,11 +76,18 @@ public class CustomerServices extends UserServices{
             documentRevDAO = new MongoReviewDAO();
             documentAccDAO = new MongoAccommodationDAO();
 
+            documentRevDAO.startTransaction();
+            documentAccDAO.startTransaction();
+
             documentRevDAO.deleteReview(review);
             graphRevDAO.deleteReview(review);
             documentAccDAO.decreaseNumReview(review.getAccommodation());
 
+            documentRevDAO.commitTransaction();
+            documentAccDAO.commitTransaction();
         }catch(Exception e){
+            documentRevDAO.abortTransaction();
+            documentAccDAO.abortTransaction();
             throw new BusinessException(e);
         }finally{
             documentRevDAO.closeConnection();
@@ -82,10 +100,11 @@ public class CustomerServices extends UserServices{
         try{
             documentResDAO = new MongoReservationDAO();
             documentAccDAO = new MongoAccommodationDAO();
+
             reservation.setId(documentResDAO.getLastId(documentResDAO.getCollection()));
             documentResDAO.createReservation(reservation);
             documentAccDAO.insertReservation(reservation.getAccommodation(),reservation);
-            documentAccDAO.incrementNumReview(reservation.getAccommodation());
+
         }catch(Exception e){
             throw new BusinessException(e);}
         finally{
@@ -98,8 +117,8 @@ public class CustomerServices extends UserServices{
     public  PageDTO<ReservationDTO> viewReservations(Customer customer) throws BusinessException {
         try{
             documentResDAO = new MongoReservationDAO();
-            ArrayList<Document>docs =  (ArrayList<Document>) documentResDAO.getCustomerReservations(customer);
-            List<ReservationDTO> resDTOList = new ArrayList<ReservationDTO>();
+            LinkedList<Document> docs =  (LinkedList<Document>) documentResDAO.getCustomerReservations(customer);
+            List<ReservationDTO> resDTOList = new LinkedList<ReservationDTO>();
             for(Document doc: docs){        //iterate all over the documents and extract reservation to put in the DTO
 
                 //Casting Date to LocalDate because mongoDB only return Date that is deprecated;
@@ -136,21 +155,19 @@ public class CustomerServices extends UserServices{
         try{
 
             documentUserDAO = new MongoUserDAO();
-            graphCustomerDAO = new NeoCustomerDAO();
+
+            documentUserDAO.startTransaction();
+
             newUser.setId(oldUser.getId());
             documentUserDAO.startTransaction();
             documentUserDAO.modifyAccountInfo(oldUser,newUser);
+            graphCustomerDAO.modifyAccountInfo(oldUser,newUser);
             documentUserDAO.commitTransaction();
         }catch(Exception e){
-            documentUserDAO.closeConnection();
-            throw new BusinessException(e);
-        }
-        try{
-            graphCustomerDAO.modifyAccountInfo(oldUser, newUser);
-        }catch (Exception e){
             documentUserDAO.abortTransaction();
-            documentUserDAO.closeConnection();
             throw new BusinessException(e);
+        }finally{
+            documentUserDAO.closeConnection();
         }
     }
 }

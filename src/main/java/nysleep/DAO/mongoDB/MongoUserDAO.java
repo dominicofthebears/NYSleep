@@ -14,6 +14,8 @@ import nysleep.model.Customer;
 
 import org.bson.Document;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MongoUserDAO extends MongoBaseDAO implements UserDAO {
     private static final String COLLECTION="users";
@@ -185,6 +187,7 @@ public class MongoUserDAO extends MongoBaseDAO implements UserDAO {
             return true;
         }
     }
+
 }
 
 

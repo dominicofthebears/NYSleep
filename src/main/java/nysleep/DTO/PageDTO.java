@@ -1,17 +1,18 @@
 package nysleep.DTO;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class PageDTO <T>{
-    private List<T> entries;
+    private LinkedList<T> entries;
     private int totCount;
 
-    public List<T> getEntries() {
+    public LinkedList<T> getEntries() {
         return entries;
     }
 
     public void setEntries(List<T> entries) {
-        this.entries = entries;
+        this.entries = new LinkedList<T>(entries);
         this.totCount=entries.size();
     }
 

@@ -3,6 +3,7 @@ package nysleep.DAO.neo4jDB;
 import nysleep.DAO.AccommodationDAO;
 import nysleep.DAO.base.Neo4jBaseDAO;
 import nysleep.model.Accommodation;
+import nysleep.model.Customer;
 import nysleep.model.Renter;
 import org.neo4j.driver.*;
 import org.neo4j.driver.Record;
@@ -109,6 +110,37 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
                 , parameters("id", renter.getId()));
             while(result.hasNext()) {
                 Record record= result.next();
+                recordList.add(record);
+            }
+            return recordList;
+        }finally {
+            close(driver);
+        }
+    }
+
+    public List<Record> showSuggestedAccommodation(Customer customer){
+        driver = initDriver(driver);
+        List<Record> recordList = new ArrayList<>();
+        int id2=-1;
+        try(Session session = driver.session())
+        {
+            Result result1 = session.run("CALL gds.graph.drop( 'reviews', false);" +
+                            "CALL gds.graph.project( 'reviews', ['customer','accommodation'], ['REVIEWS'])" +
+                            "YIELD graphName AS graph, relationshipProjection AS knowsProjection, nodeCount AS nodes, relationshipCount AS rels;" +
+                            "CALL gds.nodeSimilarity.stream('reviews')"+
+                            "YIELD node1, node2, similarity" +
+                            "WHERE gds.util.asNode(node1).id = $id" +
+                            "RETURN gds.util.asNode(node1).id AS Customer1, gds.util.asNode(node2).id AS Customer2, similarity" +
+                            "ORDER BY similarity DESCENDING, Customer1, Customer2 LIMIT 1"
+                    , parameters("id", customer.getId()));
+            while(result1.hasNext()) {
+                Record record= result1.next();
+                id2=record.get("Customer2").asInt();
+            }
+            Result result2 = session.run("MATCH (cc:customer)-[r:REVIEWS]->(aa:accommodation) WHERE cc.id=$id2 AND r.rate>=4 RETURN aa"
+                    , parameters("$id2", id2));
+            while(result2.hasNext()) {
+                Record record= result2.next();
                 recordList.add(record);
             }
             return recordList;

@@ -1,4 +1,7 @@
 import com.mongodb.client.ClientSession;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Sorts;
+import com.mongodb.internal.operation.AggregateResponseBatchCursor;
 import jdk.vm.ci.code.Register;
 import nysleep.DAO.mongoDB.MongoAccommodationDAO;
 import nysleep.DAO.mongoDB.MongoReservationDAO;
@@ -10,6 +13,8 @@ import nysleep.DAO.neo4jDB.NeoRenterDAO;
 import nysleep.DTO.RegisteredUserDTO;
 import nysleep.business.UnregisteredUserServices;
 import nysleep.model.*;
+import org.bson.Document;
+import org.neo4j.driver.Record;
 
 import javax.lang.model.type.ArrayType;
 import java.sql.Array;
@@ -22,26 +27,61 @@ import java.util.List;
 public class App
 {
     public static void main( String[] args ){
-        MongoUserDAO userDAO = new MongoUserDAO();
+
+        NeoAccommodationDAO accommodationDAO= new NeoAccommodationDAO();
+
         try{
+            ArrayList<Record> list =(ArrayList<Record>) accommodationDAO.showSuggestedAccommodation(customerD);
+            for (Record elem:list) {
+                System.out.println(elem);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        //MongoUserDAO userDAO = new MongoUserDAO();
+        //salvo  MongoReservationDAO resDAO;
+        //salvo  try{
             /*
-            userDAO.getSession().startTransaction();
+            resDAO = new MongoReservationDAO();
+            System.out.println(resDAO.customerWhoHasSpentTheMost());
+            */
+
+
+            //salvo   String groupJson ="{\"cust_id\":\"$customer.id\",\"first_name\":\"$customer.first_name\",\"last_name\":\"$customer.last_name\",\"total_spent\":{\"$sum\":\"$cost\"}}";
+            //salvo   Document groupID = Document.parse(groupJson);
+            //salvo   Aggregates.group(groupID);
+
+            //salvo   String sortJson = "{\"_id.total_spent\":-1}";
+            //salvo   Document sortDoc = Document.parse(sortJson);
+            //salvo   System.out.println(Aggregates.sort(sortDoc));
+
+            //salvo   System.out.println();
+
+        /*
+            useAO.getSession().startTransaction();
             userDAO.register(customer);
             if(customer.getId() == 20000) {
                 System.out.print("Dentro if");
-                userDAO.getSession().abortTransaction();*/
+                userDAO.getSession().abortTransaction();
             String username = "hajar.vanderperk@example.com";
             String password = "break";
             UnregisteredUserServices us = new UnregisteredUserServices();
             RegisteredUserDTO reg= us.login(username, password);
             System.out.println(reg.getFirstName());
-            }
-       catch (Exception e){
-            e.printStackTrace();
-        }
-        finally{
-            userDAO.getConnection().close();
-        }
+            */
+
+
+        //salvo  }
+        //salvo  catch (Exception e){
+        //salvo      e.printStackTrace();
+        //salvo  }
+        //salvo  finally{
+            //resDAO.closeConnection();
+        //salvo  }
+
+
+
 }
 
 
@@ -52,6 +92,17 @@ public class App
     private static LocalDate date4 = LocalDate.of(2008,2,11);
 
     public static Customer customer = new Customer(20000
+            ,"Kiona"
+            ,"Van Weelden"
+            , "kiona.vanweelden@example.com"
+            , "suzuki"
+            ,"https://randomuser.me/api/portraits/thumb/women/47.jpg"
+            ,"customer"
+            ,"4577 Bornerveldstraat"
+            ,"Netherlands"
+            ,"(083) 1847928");
+
+    public static Customer customerD = new Customer(64
             ,"Kiona"
             ,"Van Weelden"
             , "kiona.vanweelden@example.com"
