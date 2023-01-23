@@ -6,12 +6,11 @@ import nysleep.DAO.mongoDB.MongoReviewDAO;
 import nysleep.DAO.mongoDB.MongoUserDAO;
 import nysleep.DAO.neo4jDB.NeoCustomerDAO;
 import nysleep.DAO.neo4jDB.NeoReviewDAO;
-import nysleep.DTO.PageDTO;
-import nysleep.DTO.RenterDetailsDTO;
-import nysleep.DTO.ReservationDTO;
+import nysleep.DTO.*;
 import nysleep.business.exception.BusinessException;
 import nysleep.model.*;
 import org.bson.Document;
+import org.neo4j.driver.Record;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -54,8 +53,12 @@ public class CustomerServices extends UserServices{
 
             documentRevDAO.createReview(review);
             documentAccDAO.incrementNumReview(review.getAccommodation());
-
+            
             graphRevDAO.createReview(review);
+            double rate=graphAccDAO.recomputeRate(review.getAccommodation());
+
+            documentAccDAO.updateRating(review.getAccommodation(), rate);
+            graphAccDAO.updateRating(review.getAccommodation(), rate);
 
             documentRevDAO.commitTransaction();  //IF commit will fail MongoDB driver will retry the commit operation one time
             documentAccDAO.commitTransaction();
@@ -83,6 +86,11 @@ public class CustomerServices extends UserServices{
             graphRevDAO.deleteReview(review);
             documentAccDAO.decreaseNumReview(review.getAccommodation());
 
+            double rate=graphAccDAO.recomputeRate(review.getAccommodation());
+
+            documentAccDAO.updateRating(review.getAccommodation(), rate);
+            graphAccDAO.updateRating(review.getAccommodation(), rate);
+
             documentRevDAO.commitTransaction();
             documentAccDAO.commitTransaction();
         }catch(Exception e){
@@ -102,6 +110,7 @@ public class CustomerServices extends UserServices{
             documentAccDAO = new MongoAccommodationDAO();
 
             reservation.setId(documentResDAO.getLastId(documentResDAO.getCollection()));
+            documentAccDAO.cleanReservations(reservation.getAccommodation());
             documentResDAO.createReservation(reservation);
             documentAccDAO.insertReservation(reservation.getAccommodation(),reservation);
 
@@ -169,5 +178,71 @@ public class CustomerServices extends UserServices{
         }finally{
             documentUserDAO.closeConnection();
         }
+    }
+
+    public PageDTO<AccommodationDTO> showSuggestedAccommodations(Customer customer) throws BusinessException{
+        try{
+            LinkedList<Record> accommodations=(LinkedList<Record>) graphAccDAO.showSuggestedAccommodation(customer);
+            List<AccommodationDTO> accDTOList = new LinkedList<AccommodationDTO>();
+            for(Record rec : accommodations){
+                AccommodationDTO acc = new AccommodationDTO();
+                acc.setId(rec.get("id").asInt());
+                acc.setName(rec.get("name").asString());
+                acc.setNeighborhood(rec.get("neighborhood").asString());
+                acc.setRating(rec.get("rating").asDouble());
+                accDTOList.add(acc);
+            }
+            PageDTO<AccommodationDTO> resPage = new PageDTO<>();
+            resPage.setEntries(accDTOList);
+            return resPage;
+        }catch(Exception e){
+            throw new BusinessException(e);
+        }
+    }
+
+    //shows the accommodations owned by a renter who the customer rated 4 or more
+    public PageDTO<AccommodationDTO> showAccommodationOfSuggestedRenter(Customer customer) throws BusinessException{
+        try{
+            LinkedList<Record> accommodations=(LinkedList<Record>) graphAccDAO.showAccommodationOfLikedRenter(customer);
+            List<AccommodationDTO> accDTOList = new LinkedList<AccommodationDTO>();
+            for(Record rec : accommodations){
+                AccommodationDTO acc = new AccommodationDTO();
+                acc.setId(rec.get("id").asInt());
+                acc.setName(rec.get("name").asString());
+                acc.setNeighborhood(rec.get("neighborhood").asString());
+                acc.setRating(rec.get("rating").asDouble());
+                accDTOList.add(acc);
+            }
+            PageDTO<AccommodationDTO> resPage = new PageDTO<>();
+            resPage.setEntries(accDTOList);
+            return resPage;
+        }catch(Exception e){
+            throw new BusinessException(e);
+        }
+    }
+
+    public PageDTO<CustomerReviewDTO> getOwnReviews(Customer customer){
+        ArrayList<CustomerReviewDTO> customerReviewDTOList = new ArrayList<CustomerReviewDTO>();
+        documentRevDAO = new MongoReviewDAO();
+        List<Document> docs = documentRevDAO.getReviewsForCustomer(customer);
+        for(Document doc: docs){
+
+            Document accommodationDoc = (Document) doc.get("accommodation");
+
+            CustomerReviewDTO customerReviewDTO = new CustomerReviewDTO(
+                    (int) accommodationDoc.get("id")
+                    ,(String)accommodationDoc.get("name")
+                    ,(int) doc.get("rate")
+                    ,(String) doc.get("comment")
+            );
+
+            customerReviewDTOList.add(customerReviewDTO);
+        }
+
+        PageDTO<CustomerReviewDTO> pageDTO = new PageDTO<CustomerReviewDTO>();
+        pageDTO.setEntries(customerReviewDTOList);
+
+        return pageDTO;
+
     }
 }

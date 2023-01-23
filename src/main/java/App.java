@@ -22,11 +22,16 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 public class App
 {
     public static void main( String[] args ){
+
+        MongoAccommodationDAO accDAO = new MongoAccommodationDAO();
+        accDAO.mostExpensiveAndLeastExpensiveAccommodationForPropertyType();
+
 
         /*NeoAccommodationDAO accommodationDAO= new NeoAccommodationDAO();
 
@@ -38,14 +43,15 @@ public class App
         }catch (Exception e){
             e.printStackTrace();
         }*/
-
+/*
         //MongoUserDAO userDAO = new MongoUserDAO();
-            MongoReservationDAO resDAO;
-            resDAO = new MongoReservationDAO();
-            System.out.println(resDAO.customerWhoHasSpentTheMost());
-
-
-
+        LinkedList list = new LinkedList();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        LinkedList list2 = list;
+        System.out.println(list2);
+*/
 
         /*
             useAO.getSession().startTransaction();

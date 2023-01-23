@@ -1,5 +1,10 @@
 package nysleep.DAO.mongoDB;
 
+import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.model.Aggregates;
 import nysleep.DAO.ReviewsDAO;
 import nysleep.DAO.base.MongoBaseDAO;
 
@@ -14,6 +19,8 @@ import nysleep.model.Review;
 import org.bson.Document;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 public class MongoReviewDAO extends MongoBaseDAO implements ReviewsDAO {
@@ -66,53 +73,34 @@ public class MongoReviewDAO extends MongoBaseDAO implements ReviewsDAO {
     public List<Document> getReviewsForAcc(Accommodation acc) {
         Document searchQuery = new Document("accommodation.id", new Document("$eq",acc.getId()));
         List<Document> docs = readDocs(searchQuery,COLLECTION);
-        /*
-        ArrayList<AccReviewDTO> AccReviewDTOList = new ArrayList<AccReviewDTO>();
-        for(Document doc: docs){
-
-            Document customerDoc = (Document) doc.get("customer");
-
-            AccReviewDTO accReviewDTO = new AccReviewDTO(
-                    (int) customerDoc.get("id")
-                    ,(String)customerDoc.get("first_name")
-                    ,(String)customerDoc.get("last_name")
-                    ,(String)customerDoc.get("country")
-                    ,(int) doc.get("rate")
-                    ,(String)doc.get("comment"));
-
-            AccReviewDTOList.add(accReviewDTO);
-        }
-
-        PageDTO<AccReviewDTO> pageDTO = new PageDTO<AccReviewDTO>();
-        pageDTO.setEntries(AccReviewDTOList);
-        */
         return docs;
     }
-
 
     public List<Document> getReviewsForCustomer(Customer customer) {
         Document searchQuery = new Document("customer.id", new Document("$eq",customer.getId()));
         List<Document> docs = readDocs(searchQuery,COLLECTION);
-        /*ArrayList<CustomerReviewDTO> customerReviewDTOList = new ArrayList<CustomerReviewDTO>();
-        for(Document doc: docs){
-
-            Document accommodationDoc = (Document) doc.get("accommodation");
-
-            CustomerReviewDTO customerReviewDTO = new CustomerReviewDTO(
-                    (int) accommodationDoc.get("id")
-                    ,(String)accommodationDoc.get("name")
-                    ,(int) doc.get("rate")
-                    ,(String) doc.get("comment")
-            );
-
-            customerReviewDTOList.add(customerReviewDTO);
-        }
-
-        PageDTO<CustomerReviewDTO> pageDTO = new PageDTO<CustomerReviewDTO>();
-        pageDTO.setEntries(customerReviewDTOList);
-        */
         return docs;
+    }
 
+    public List<Document> avgRatingByCountry(){
+        MongoDatabase db = client.getDatabase(dbName);
+        MongoCollection<Document> collection = db.getCollection(COLLECTION);
+
+        String jsonGroupId = "{\"country\":\"$customer.country\"}";
+        Document groupId = Document.parse(jsonGroupId);
+        AggregateIterable docsIterable = collection.aggregate(
+                Arrays.asList(
+                        Aggregates.group(groupId, Accumulators.avg("average_rate","$rate"))
+                )
+        );
+
+        Iterator iterator = docsIterable.iterator();
+        List<Document> docs = new ArrayList<Document>();
+
+        while(iterator.hasNext()){
+            docs.add((Document) iterator.next());
+        }
+        return docs;
     }
 
 }

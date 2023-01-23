@@ -1,13 +1,14 @@
 package nysleep.DAO.mongoDB;
 
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Sorts;
 import nysleep.DAO.AccommodationDAO;
-import nysleep.DTO.AccommodationDTO;
-import nysleep.DTO.AccommodationDetailsDTO;
-import nysleep.DTO.PageDTO;
 
+import nysleep.business.exception.BusinessException;
 import nysleep.model.Accommodation;
 
 import nysleep.DAO.base.MongoBaseDAO;
@@ -16,11 +17,8 @@ import nysleep.model.Renter;
 import nysleep.model.Reservation;
 import org.bson.Document;
 
-import java.sql.Array;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class MongoAccommodationDAO extends MongoBaseDAO implements AccommodationDAO {
     private final String COLLECTION = "accommodations";
@@ -141,6 +139,55 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
         Document resDoc = new Document("start_date",res.getStartDate()).append("end_date",res.getEndDate());
         Document updateQuery = new Document("$push", new Document("reservations",resDoc));
         updateDoc(searchQuery, updateQuery, COLLECTION);
+    }
+
+    public void cleanReservations(Accommodation acc) throws BusinessException {
+        try{
+            List<Reservation> reservations = acc.getReservations();
+            for (Reservation res:reservations) {
+                if (res.getEndDate().isBefore(LocalDate.now())){
+                    reservations.remove(res);
+                }
+            }
+            acc.setReservations(reservations);
+            updateAccommodation(acc, acc);
+        }catch (Exception e){
+            throw new BusinessException(e);
+        }
+    }
+
+    public List<Document> mostExpensiveAndLeastExpensiveAccommodationForPropertyType(){
+        MongoDatabase db = client.getDatabase(dbName);
+        MongoCollection<Document> collection = db.getCollection(COLLECTION);
+
+
+        String jsonProject ="{\"id\":1,\"name\":1,\"neighborhood\":1,\"property_type\":1,\"price\":1}";
+        Document projectDoc = Document.parse(jsonProject);
+
+
+        AggregateIterable docsIterable = collection.aggregate(
+                Arrays.asList(
+                        Aggregates.project(projectDoc),
+                        Aggregates.sort(Sorts.descending("price")),
+                        Aggregates.group("$property_type",
+                                Accumulators.last("least_expensive","$name"),
+                                Accumulators.last("lowest_cost","$price"),
+                                Accumulators.last("least_expensive_neigh","$neighborhood"),
+                                Accumulators.first("most_expensive_name","$name"),
+                                Accumulators.first("most_expensive_neigh","$neighborhood"),
+                                Accumulators.first("highest_cost","$price")
+                                )
+                )
+        );
+
+        Iterator iterator = docsIterable.iterator();
+        List<Document> docs = new ArrayList<Document>();
+
+        while(iterator.hasNext()){
+            docs.add((Document) iterator.next());
+        }
+        return docs;
+
     }
 
 

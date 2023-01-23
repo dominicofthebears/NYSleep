@@ -3,10 +3,7 @@ package nysleep.DAO.mongoDB;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Accumulators;
-import com.mongodb.client.model.Aggregates;
-import com.mongodb.client.model.BsonField;
-import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.*;
 import nysleep.DAO.ReservationDAO;
 import nysleep.DAO.base.MongoBaseDAO;
 
@@ -21,9 +18,12 @@ import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.random.RandomGenerator;
+import java.util.random.RandomGeneratorFactory;
 
 public class MongoReservationDAO extends MongoBaseDAO implements ReservationDAO {
     private final String COLLECTION = "reservations";
@@ -88,25 +88,15 @@ public class MongoReservationDAO extends MongoBaseDAO implements ReservationDAO 
         return docs;
     }
 
-    public List<Document> customerWhoHasSpentTheMost(){
+
+    public List<Document> custWhoHasSpentTheMost(){
         MongoDatabase db = client.getDatabase(dbName);
         MongoCollection<Document> collection = db.getCollection(COLLECTION);
 
-        //String groupJson ="{\"$group\":{\"_id\":{\"cust_id\":\"$customer.id\",\"first_name\":\"$customer.first_name\",\"last_name\":\"$customer.last_name\",\"total_spent\":{\"$sum\":\"$cost\"}}}}";
-        //Document group = Document.parse(groupJson);
-        String groupIDJson ="{\"cust_id\":\"$customer.id\",\"first_name\":\"$customer.first_name\",\"last_name\":\"$customer.last_name\"}";//,\"total_spent\":{\"$sum\":\"$cost\"}}";
+
+        String groupIDJson ="{\"cust_id\":\"$customer.id\",\"first_name\":\"$customer.first_name\",\"last_name\":\"$customer.last_name\"}";
         Document groupID = Document.parse(groupIDJson);
-        Bson group = Aggregates.group(groupID);
 
-        //String sortJson = "{\"$sort\":{\"_id.total_spent\":-1}}";
-        //Document sort  = Document.parse(sortJson)";
-        //Bson sort =  Aggregates.sort(Sorts.ascending());
-        Bson sort = Aggregates.sort(Sorts.descending("_id.total_spent"));
-
-        //String limitJson = "{\"$limit\":1}";
-        //Document limit = Document.parse(limitJson);
-        Bson limit = Aggregates.limit(1);
-        List<Bson> stages = Arrays.asList(group, sort, limit);
         AggregateIterable<Document> docsIterable =  collection.aggregate(
                 Arrays.asList(
                         Aggregates.group(groupID, Accumulators.sum("total_spent", "$cost")),
@@ -115,12 +105,101 @@ public class MongoReservationDAO extends MongoBaseDAO implements ReservationDAO 
                 )
         );
 
+        Iterator iterator = docsIterable.iterator();
+
+
         ArrayList<Document> docs = new ArrayList<>();
-        while(docsIterable.iterator().hasNext()){
-            Document doc =  docsIterable.iterator().next();
+        while(iterator.hasNext()){
+            docs.add((Document) iterator.next());
+        }
+        return docs;
+    }
+
+
+    //most Reserved accommodation for each neighborhood
+    public List<Document> mostResAccForEachNeigh (){
+        MongoDatabase db = client.getDatabase(dbName);
+        MongoCollection<Document> collection = db.getCollection(COLLECTION);
+
+        String jsonGroupId1 = "{\"neighborhood\":\"$accommodation.neighborhood\",\"acc\":\"$accommodation.id\",\"accName\":\"$accommodation.name\"}";
+        Document groupId1 = Document.parse(jsonGroupId1);
+
+
+        AggregateIterable docsIterable = collection.aggregate(
+                Arrays.asList(
+                Aggregates.group(groupId1,Accumulators.sum("numRes",1)),
+                Aggregates.sort(Sorts.descending("numRes")),
+                Aggregates.group("$_id.neighborhood",Accumulators.first("most_res_acc","$_id.accName"),
+                                                        Accumulators.first("num_reservation","$numRes"))
+                )
+        );
+
+        Iterator iterator = docsIterable.iterator();
+        List<Document> docs = new ArrayList<Document>();
+        while(iterator.hasNext()){
+            docs.add((Document) iterator.next());
+        }
+        return docs;
+    }
+
+    //Customer with highest average expense
+    public Document custWithHighestAvgExpense(){
+        MongoDatabase db = client.getDatabase(dbName);
+        MongoCollection<Document> collection = db.getCollection(COLLECTION);
+
+        String jsonGroupId = "{\"cust_id\":\"$customer.id\",\"first_name\":\"$customer.first_name\",\"last_name\":\"$customer.last_name\",\"country\":\"$customer.country\"}";
+        Document groupId = Document.parse(jsonGroupId);
+
+        String jsonFilter = "{\"num_res\":{\"$gt\":5}}";
+        Document filter = Document.parse(jsonFilter);
+        AggregateIterable docsIterable = collection.aggregate(
+                Arrays.asList(
+                        Aggregates.group(groupId,
+                                Accumulators.avg("avg_cost","$cost"),
+                                Accumulators.sum("num_res",1)
+                        ),
+                        Aggregates.match(Filters.gt("num_res",5)),
+                        Aggregates.sort(Sorts.descending("avg_cost")),
+                        Aggregates.limit(1)
+                )
+        );
+
+        Iterator iterator = docsIterable.iterator();
+        Document doc = (Document)iterator.next();
+        return doc;
+    }
+
+    //Most reserving country for each neighborhood
+    public List<Document>  mostResCountryForNeigh(){
+        MongoDatabase db = client.getDatabase(dbName);
+        MongoCollection<Document> collection = db.getCollection(COLLECTION);
+
+        String jsonGroupId = "{\"neighborhood\":\"$accommodation.neighborhood\",\"country\":\"$customer.country\"}";
+        Document groupId = Document.parse(jsonGroupId);
+        AggregateIterable docsIterable = collection.aggregate(
+                Arrays.asList(
+                        Aggregates.group(groupId,Accumulators.sum("num_res",1)),
+                        Aggregates.sort(Sorts.descending("num_res")),
+                        Aggregates.group("$_id.neighborhood",
+                                Accumulators.first("most_res_country","$_id.country"),
+                                Accumulators.first("num_reservation","$num_res"))
+                )
+        );
+
+        Iterator iterator = docsIterable.iterator();
+        List<Document> docs = new ArrayList<Document>();
+
+        while(iterator.hasNext()){
+            Document doc = (Document) iterator.next();
             System.out.println(doc);
             docs.add(doc);
         }
         return docs;
+
     }
+
+
+
 }
+
+

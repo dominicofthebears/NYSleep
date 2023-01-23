@@ -13,6 +13,7 @@ import org.neo4j.driver.types.Path;
 import org.neo4j.driver.types.Relationship;
 import org.neo4j.driver.util.Pair;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -146,6 +147,40 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
                     , parameters("id2", id2));
             while(result2.hasNext()) {
                 Record record= result2.next();
+                recordList.add(record);
+            }
+            return recordList;
+        }finally {
+            close(driver);
+        }
+    }
+
+    public double recomputeRate(Accommodation acc) {
+        driver = initDriver(driver);
+        double res = -1;
+        LocalDate date = LocalDate.now();
+        int year = date.getYear();
+        int month = date.getMonthValue();
+        int day = date.getDayOfMonth();
+        try (Session session = driver.session()) {
+            Result result = session.run("MATCH (aa:accommodation)<-[R:REVIEWS]-() " +
+                            "WHERE aa.id=$id AND r.date>datetime({year: $year -1, month: $month, day: $day}) RETURN AVG(r.rate) AS rate"
+                    , parameters("id", acc.getId(), "year", year, "month", month, "day", day));
+            res = result.single().get("rate").asDouble();
+            return res;
+        }finally{
+            close(driver);
+        }
+    }
+
+    public List<Record> showAccommodationOfLikedRenter(Customer customer){
+        driver = initDriver(driver);
+        List<Record> recordList = new ArrayList<>();
+        try(Session session = driver.session()){
+            Result result = session.run("MATCH (cc:customer)-[r:REVIEWS]->(aa:accommodation)<-[o:OWNS]-(rr:renter)-[so:OWNS]->(sa:accommodation) "+"" +
+                    "WHERE r.rate>3 AND cc.id=$id  RETURN sa", parameters("id", customer.getId()));
+            while(result.hasNext()) {
+                Record record= result.next();
                 recordList.add(record);
             }
             return recordList;
