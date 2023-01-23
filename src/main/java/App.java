@@ -22,13 +22,18 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 public class App
 {
     public static void main( String[] args ){
 
-        NeoAccommodationDAO accommodationDAO= new NeoAccommodationDAO();
+        MongoAccommodationDAO accDAO = new MongoAccommodationDAO();
+        accDAO.mostExpensiveAndLeastExpensiveAccommodationForPropertyType();
+
+
+        /*NeoAccommodationDAO accommodationDAO= new NeoAccommodationDAO();
 
         try{
             ArrayList<Record> list =(ArrayList<Record>) accommodationDAO.showSuggestedAccommodation(customerD);
@@ -37,26 +42,16 @@ public class App
             }
         }catch (Exception e){
             e.printStackTrace();
-        }
-
+        }*/
+/*
         //MongoUserDAO userDAO = new MongoUserDAO();
-        //salvo  MongoReservationDAO resDAO;
-        //salvo  try{
-            /*
-            resDAO = new MongoReservationDAO();
-            System.out.println(resDAO.customerWhoHasSpentTheMost());
-            */
-
-
-            //salvo   String groupJson ="{\"cust_id\":\"$customer.id\",\"first_name\":\"$customer.first_name\",\"last_name\":\"$customer.last_name\",\"total_spent\":{\"$sum\":\"$cost\"}}";
-            //salvo   Document groupID = Document.parse(groupJson);
-            //salvo   Aggregates.group(groupID);
-
-            //salvo   String sortJson = "{\"_id.total_spent\":-1}";
-            //salvo   Document sortDoc = Document.parse(sortJson);
-            //salvo   System.out.println(Aggregates.sort(sortDoc));
-
-            //salvo   System.out.println();
+        LinkedList list = new LinkedList();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        LinkedList list2 = list;
+        System.out.println(list2);
+*/
 
         /*
             useAO.getSession().startTransaction();
@@ -82,10 +77,10 @@ public class App
 
 
 
-}
 
 
 
+/*
     private static LocalDate date1 = LocalDate.of(2003,4,12);
     private static LocalDate date2 = LocalDate.of(2004,5,13);
     private static LocalDate date3 = LocalDate.of(2006,7,23);
@@ -127,17 +122,5 @@ public class App
             accommodation);
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
 }

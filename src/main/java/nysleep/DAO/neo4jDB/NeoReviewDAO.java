@@ -49,7 +49,7 @@ public class NeoReviewDAO extends Neo4jBaseDAO implements ReviewsDAO {
         }
     }
 
-    public double getAvgRating(Accommodation acc) {
+    /*public double getAvgRating(Accommodation acc) {
         driver=initDriver(driver);
         try(Session session = driver.session())
         {
@@ -61,7 +61,7 @@ public class NeoReviewDAO extends Neo4jBaseDAO implements ReviewsDAO {
         }finally {
             close(driver);
         }
-    }
+    }*/
 
 
 }

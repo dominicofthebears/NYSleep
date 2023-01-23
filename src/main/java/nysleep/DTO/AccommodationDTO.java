@@ -7,6 +7,8 @@ public class AccommodationDTO {
     private double rating;
     private String mainPicUrl;
 
+    public AccommodationDTO(){}
+
     public AccommodationDTO(int id, String name, String neighborhood, double rating, String mainPicUrl) {
         this.id = id;
         this.name = name;
