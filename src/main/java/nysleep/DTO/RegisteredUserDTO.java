@@ -7,6 +7,8 @@ public abstract class RegisteredUserDTO {
     private String email;
     private String password;
 
+    public RegisteredUserDTO(){}
+
     public RegisteredUserDTO(int id, String firstName, String lastName, String email, String password){
         this.id=id;
         this.firstName=firstName;
