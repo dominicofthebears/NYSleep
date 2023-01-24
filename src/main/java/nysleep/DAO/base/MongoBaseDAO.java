@@ -1,7 +1,6 @@
 package nysleep.DAO.base;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.MongoException;
+import com.mongodb.ReadPreference;
 import com.mongodb.client.*;
 import org.bson.Document;
 
@@ -11,8 +10,11 @@ import java.util.Iterator;
 
 
 public abstract class MongoBaseDAO{
-    protected static String connection = "mongodb://localhost:27017";
+    protected static String connection = "mongodb://172.16.5.38:27017,172.16.5.39:27017,172.16.5.40:27017/" +
+            "?retryWrites=true&w=majority&readPreference=nearest";
     protected static String dbName = "NYSleep";
+    /*protected static String connection="mongodb://localhost:27017";
+    protected static String dbName = "NYTest";*/
     protected static MongoClient client;
     protected static ClientSession session;
     protected static String COLLECTION;
@@ -44,6 +46,11 @@ public abstract class MongoBaseDAO{
 
     public ClientSession getSession(){return this.session;}
 
+    public String getCollection(){
+        return COLLECTION;
+    }
+
+
     public void startTransaction(){session.startTransaction();}
 
     public void commitTransaction(){session.commitTransaction();}
@@ -70,22 +77,36 @@ public abstract class MongoBaseDAO{
 
     public static ArrayList<Document> readDocs(Document query, String collectionName) {
         MongoDatabase db = client.getDatabase(dbName);
-        MongoCollection<Document> collection = db.getCollection(collectionName);
+        MongoCollection<Document> collection;
 
-        Iterator docsIterator = collection.find(query).iterator();  //Extract all the document found
-        ArrayList<Document> docs = new ArrayList<Document>();
+        if(collectionName.equals("accommodations")){
+            collection = db.getCollection(collectionName).withReadPreference(ReadPreference.primary()); //reading accommodations from primary
+        }
+        else{
+            collection = db.getCollection(collectionName);
+        }
+
+        Iterator<Document> docsIterator = collection.find(query).iterator();  //Extract all the document found
+        ArrayList<Document> docs = new ArrayList<>();
         while (docsIterator.hasNext()) {                          //iterate all over the iterator of document
             docs.add((Document) docsIterator.next());
         }
-        
         return docs;
     }
+
     public static ArrayList<Document> readDocs(Document query, String collectionName,int skip,int limit) {
         MongoDatabase db = client.getDatabase(dbName);
-        MongoCollection<Document> collection = db.getCollection(collectionName);
+        MongoCollection<Document> collection;
 
-        Iterator docsIterator = collection.find(query).skip(skip).limit(limit).iterator();  //Extract all the document found
-        ArrayList<Document> docs = new ArrayList<Document>();
+        if(collectionName.equals("accommodations")){
+            collection = db.getCollection(collectionName).withReadPreference(ReadPreference.primary()); //reading accommodations from primary
+        }
+        else{
+            collection = db.getCollection(collectionName);
+        }
+
+        Iterator<Document> docsIterator = collection.find(query).skip(skip).limit(limit).iterator();  //Extract all the document found
+        ArrayList<Document> docs = new ArrayList<>();
         while(docsIterator.hasNext()){                          //iterate all over the iterator of document
                     docs.add((Document) docsIterator.next());
                 }
@@ -95,7 +116,14 @@ public abstract class MongoBaseDAO{
 
     public static Document readDoc(Document query, String collectionName) {
         MongoDatabase db = client.getDatabase(dbName);
-        MongoCollection<Document> collection = db.getCollection(collectionName);
+        MongoCollection<Document> collection;
+
+        if(collectionName.equals("accommodations")){
+            collection = db.getCollection(collectionName).withReadPreference(ReadPreference.primary()); //reading accommodations from primary
+        }
+        else{
+            collection = db.getCollection(collectionName);
+        }
 
         Document doc = collection.find(query).first();  //Extract all the document found
         return doc;
@@ -110,9 +138,7 @@ public abstract class MongoBaseDAO{
         return last.getInteger("_id");
     }
 
-    public String getCollection(){
-        return COLLECTION;
-    }
+
 
 
 }

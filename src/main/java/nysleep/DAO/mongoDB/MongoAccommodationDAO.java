@@ -18,6 +18,7 @@ import nysleep.model.Reservation;
 import org.bson.Document;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 public class MongoAccommodationDAO extends MongoBaseDAO implements AccommodationDAO {
@@ -107,17 +108,93 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
     }
 
     public List<Document> getSearchedAcc(LocalDate startDate,LocalDate endDate,int numPeople,String neighborhood,
-                                         double price) {
+                                         double price) throws BusinessException {
+        Document searchQuery;
+        if(numPeople == 0){
+            throw new BusinessException("Select a number of people");
+        }
 
-        return null;
+        if(startDate.isAfter(endDate)){
+            throw new BusinessException("Start date must come before end date");
+        }
+
+        if(price < 0){
+            throw new BusinessException("Maximum price must be a positive value");
+        }
+
+        try {
+            if (neighborhood.equals(" ") && price == 0) {
+                searchQuery = new Document("$and", Arrays.asList(new Document("$nor", Arrays.asList(new Document("reservations.start_date",
+                                        new Document("$gt", startDate)
+                                                .append("$lt", endDate)),
+                                new Document("reservations.end_date",
+                                        new Document("$gt",
+                                                startDate)
+                                                .append("$lt", endDate)),
+                                new Document("$and", Arrays.asList(new Document("reservations.start_date",
+                                                new Document("$gt", startDate)),
+                                        new Document("reservations.end_date",
+                                                new Document("$lt", endDate)))))),
+                        new Document("num_people", numPeople)));
+            } else if (neighborhood.equals(" ")) {
+                searchQuery = new Document("$and", Arrays.asList(new Document("$nor", Arrays.asList(new Document("reservations.start_date",
+                                        new Document("$gt", startDate)
+                                                .append("$lt", endDate)),
+                                new Document("reservations.end_date",
+                                        new Document("$gt",
+                                                startDate)
+                                                .append("$lt", endDate)),
+                                new Document("$and", Arrays.asList(new Document("reservations.start_date",
+                                                new Document("$gt", startDate)),
+                                        new Document("reservations.end_date",
+                                                new Document("$lt", endDate)))))),
+                        new Document("num_people", numPeople),
+                        new Document("price",
+                                new Document("$lt", price))));
+            }
+            else if (price == 0) {
+                searchQuery = new Document("$and", Arrays.asList(new Document("$nor", Arrays.asList(new Document("reservations.start_date",
+                                        new Document("$gt", startDate)
+                                                .append("$lt", endDate)),
+                                new Document("reservations.end_date",
+                                        new Document("$gt",
+                                                startDate)
+                                                .append("$lt", endDate)),
+                                new Document("$and", Arrays.asList(new Document("reservations.start_date",
+                                                new Document("$gt", startDate)),
+                                        new Document("reservations.end_date",
+                                                new Document("$lt", endDate)))))),
+                        new Document("neighborhood", neighborhood),
+                        new Document("num_people", numPeople)));
+                ArrayList<Document> docs = readDocs(searchQuery,COLLECTION);
+            }
+            else{
+                searchQuery = new Document("$and", Arrays.asList(new Document("$nor", Arrays.asList(new Document("reservations.start_date",
+                                        new Document("$gt", startDate)
+                                                .append("$lt", endDate)),
+                                new Document("reservations.end_date",
+                                        new Document("$gt",
+                                                startDate)
+                                                .append("$lt", endDate)),
+                                new Document("$and", Arrays.asList(new Document("reservations.start_date",
+                                                new Document("$gt", startDate)),
+                                        new Document("reservations.end_date",
+                                                new Document("$lt", endDate)))))),
+                        new Document("neighborhood", neighborhood),
+                        new Document("num_people", numPeople),
+                        new Document("price",
+                                new Document("$lt", price))));
+            }
+        }catch (Exception e){
+            throw new BusinessException(e);
+        }
+
+        ArrayList<Document> docs = readDocs(searchQuery,COLLECTION);
+        return docs;
     }
 
     //Get all the accommodations belonging to a renter
-    public List<Document> getSearchedAcc(Renter renter, int skip, int limit) {
-        Document searchQuery = new Document("renter.id",new Document("$eq",renter.getId()));
-        ArrayList<Document> docs = readDocs(searchQuery,COLLECTION,skip,limit);
-        return docs;
-    }
+
     public List<Document> getSearchedAcc(Renter renter) {
         Document searchQuery = new Document("renter.id",new Document("$eq",renter.getId()));
         ArrayList<Document> docs = readDocs(searchQuery,COLLECTION);
@@ -189,7 +266,6 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
         return docs;
 
     }
-
 
 
 }

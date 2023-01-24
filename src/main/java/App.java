@@ -11,6 +11,7 @@ import nysleep.DAO.neo4jDB.NeoAccommodationDAO;
 import nysleep.DAO.neo4jDB.NeoCustomerDAO;
 import nysleep.DAO.neo4jDB.NeoRenterDAO;
 import nysleep.DTO.RegisteredUserDTO;
+import nysleep.business.AdminServices;
 import nysleep.business.UnregisteredUserServices;
 import nysleep.model.*;
 import org.bson.Document;
@@ -29,8 +30,36 @@ public class App
 {
     public static void main( String[] args ){
 
-        MongoAccommodationDAO accDAO = new MongoAccommodationDAO();
-        accDAO.mostExpensiveAndLeastExpensiveAccommodationForPropertyType();
+        AdminServices as = new AdminServices();
+        Admin oldAdmin = new Admin();
+        oldAdmin.setId(12500);
+        Admin newAdmin = new Admin(12500,
+                "Ayşe",
+                "Nebioğlu",
+                "ayse.nebioglu@example.com",
+                "gerard",
+                "https://randomuser.me/api/portraits/thumb/women/74.jpg",
+                "admin",
+                "analyst"
+        );
+        try {
+            as.modifyUser(oldAdmin, newAdmin);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+
+        /*MongoReservationDAO resDao = new MongoReservationDAO();
+        List<Document> docs = resDao.accommodationRentedByMostNumberOfCountries();
+        for(Document doc:docs){
+            System.out.println(doc);
+        }*/
+
+        /*MongoReservationDAO resDAO = new MongoReservationDAO();
+        resDAO.deleteReservation(reservation);*/
+
+        /* accDAO = new MongoAccommodationDAO();
+        accDAO.mostExpensiveAndLeastExpensiveAccommodationForPropertyType();*/
 
 
         /*NeoAccommodationDAO accommodationDAO= new NeoAccommodationDAO();
@@ -120,7 +149,15 @@ public class App
             344,
             customer,
             accommodation);
+
+    private static  Accommodation acc = new Accommodation(0, null, null, null, 0,
+            0, 0, null, 0, null, 1, null, null);
 */
 
+
+
+
 }
+
+
 }

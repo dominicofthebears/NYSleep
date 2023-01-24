@@ -198,7 +198,27 @@ public class MongoReservationDAO extends MongoBaseDAO implements ReservationDAO 
 
     }
 
+    public List<Document> accommodationRentedByMostNumberOfCountries(){
+        MongoDatabase db = client.getDatabase(dbName);
+        MongoCollection<Document> collection = db.getCollection(COLLECTION);
+        String jsonGroupId = "{\"neighborhood\":\"$accommodation.neighborhood\",\"country\":\"$customer.country\"}";
+        AggregateIterable docsIterable = collection.aggregate(
+                Arrays.asList(
+                        Aggregates.group(jsonGroupId),
+                        Aggregates.group("$_id.neighborhood",
+                                Accumulators.sum("num_countries", 1)),
+                        Aggregates.sort(Sorts.descending("num_countries"))
+                )
+        );
 
+        Iterator iterator = docsIterable.iterator();
+        List<Document> docs = new ArrayList<Document>();
+
+        while(iterator.hasNext()){
+            docs.add((Document) iterator.next());
+        }
+        return docs;
+    }
 
 }
 

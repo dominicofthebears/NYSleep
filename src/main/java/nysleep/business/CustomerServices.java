@@ -189,7 +189,10 @@ public class CustomerServices extends UserServices{
                 acc.setId(rec.get("id").asInt());
                 acc.setName(rec.get("name").asString());
                 acc.setNeighborhood(rec.get("neighborhood").asString());
-                acc.setRating(rec.get("rating").asDouble());
+                if(rec.get("rating").isNull())
+                    acc.setRating(Double.NaN);
+                else
+                    acc.setRating(rec.get("rating").asDouble());
                 accDTOList.add(acc);
             }
             PageDTO<AccommodationDTO> resPage = new PageDTO<>();
@@ -210,7 +213,10 @@ public class CustomerServices extends UserServices{
                 acc.setId(rec.get("id").asInt());
                 acc.setName(rec.get("name").asString());
                 acc.setNeighborhood(rec.get("neighborhood").asString());
-                acc.setRating(rec.get("rating").asDouble());
+                if(rec.get("rating").isNull())
+                    acc.setRating(Double.NaN);
+                else
+                    acc.setRating(rec.get("rating").asDouble());
                 accDTOList.add(acc);
             }
             PageDTO<AccommodationDTO> resPage = new PageDTO<>();
@@ -244,5 +250,23 @@ public class CustomerServices extends UserServices{
 
         return pageDTO;
 
+    }
+
+    public void deleteReservation(Reservation reservation) throws BusinessException {
+        try{
+            documentResDAO = new MongoReservationDAO();
+            documentAccDAO = new MongoAccommodationDAO();
+            documentResDAO.startTransaction();
+            documentAccDAO.startTransaction();
+
+            documentResDAO.deleteReservation(reservation);
+            documentAccDAO.deleteReservation(reservation.getAccommodation(),reservation);
+
+        }catch(Exception e){
+            throw new BusinessException(e);
+        }finally {
+            documentResDAO.closeConnection();
+            documentAccDAO.closeConnection();
+        }
     }
 }

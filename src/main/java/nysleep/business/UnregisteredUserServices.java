@@ -1,14 +1,12 @@
 package nysleep.business;
 
 import nysleep.DAO.mongoDB.MongoAccommodationDAO;
-import nysleep.DAO.neo4jDB.NeoCustomerDAO;
-import nysleep.DAO.neo4jDB.NeoRenterDAO;
+import nysleep.DAO.mongoDB.MongoUserDAO;
 import nysleep.DTO.*;
 import nysleep.business.exception.BusinessException;
 import nysleep.model.Admin;
 import nysleep.model.Customer;
 import nysleep.model.RegisteredUser;
-import nysleep.DAO.mongoDB.MongoUserDAO;
 import nysleep.model.Renter;
 import org.bson.Document;
 
@@ -86,7 +84,7 @@ public class UnregisteredUserServices extends UserServices {
     public PageDTO<AccommodationDTO> showSearchAcc  (LocalDate startDate, LocalDate endDate, int numPeople, String neighborhood, double price) throws BusinessException{
         try{
             documentAccDAO = new MongoAccommodationDAO();
-            List<Document> results = documentAccDAO.getSearchedAcc(startDate,endDate, numPeople,neighborhood, price);
+            List<Document> results = documentAccDAO.getSearchedAcc(startDate, endDate, numPeople,neighborhood, price);
             LinkedList<AccommodationDTO> accDTOList = new LinkedList<>();
             for (Document doc : results) {
                 LinkedList<String> picsURL = (LinkedList<String>) doc.get("images_URL");

@@ -14,6 +14,7 @@ import nysleep.business.exception.BusinessException;
 import nysleep.model.Accommodation;
 import nysleep.model.RegisteredUser;
 import nysleep.model.Renter;
+import nysleep.model.Reservation;
 import org.bson.Document;
 
 import java.time.LocalDate;
@@ -155,7 +156,23 @@ public class RenterServices extends UserServices {
         }
     }
 
+    public void deleteReservation(Reservation reservation) throws BusinessException {
+        try{
+            documentResDAO = new MongoReservationDAO();
+            documentAccDAO = new MongoAccommodationDAO();
+            documentResDAO.startTransaction();
+            documentAccDAO.startTransaction();
 
+            documentResDAO.deleteReservation(reservation);
+            documentAccDAO.deleteReservation(reservation.getAccommodation(),reservation);
+
+        }catch(Exception e){
+            throw new BusinessException(e);
+        }finally {
+            documentResDAO.closeConnection();
+            documentAccDAO.closeConnection();
+        }
+    }
 
 
 }
