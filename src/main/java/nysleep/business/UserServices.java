@@ -90,35 +90,6 @@ public class UserServices {
         return pageDTO;
     }
 
-    public PageDTO<AccommodationDTO> showRenterAccommodations(Renter renter, int numPage) throws BusinessException {
-        PageDTO<AccommodationDTO> AccPage;
-        try {
-
-            documentAccDAO = new MongoAccommodationDAO();
-            List<Document> docs = documentAccDAO.getSearchedAcc(renter);
-
-            LinkedList<AccommodationDTO> accDTOList = new LinkedList<>();
-            for (Document doc : docs) {                                                    //iterate all over the documents and extract accommodations to put in the DTO
-                LinkedList<String> picsURL = (LinkedList<String>) doc.get("images_URL");
-                AccommodationDTO accDTO = new AccommodationDTO(
-                        (int) doc.get("_id"),
-                        (String) doc.get("name"),
-                        (String) doc.get("neighborhood"),
-                        (double) doc.get("rating"),
-                        picsURL.get(0));
-                accDTOList.add(accDTO);
-            }
-            AccPage = new PageDTO<>();
-            AccPage.setEntries(accDTOList);
-
-        } catch (Exception e) {
-            throw new BusinessException(e);
-        } finally {
-            documentAccDAO.closeConnection();
-        }
-        return AccPage;
-    }
-
 
 
     public PageDTO<AccommodationDTO> showSearchAcc  (LocalDate startDate, LocalDate endDate, int numPeople, String neighborhood,double price) throws BusinessException{
@@ -177,48 +148,8 @@ public class UserServices {
         }
     }
 
-    public void deleteReservation(Reservation reservation) throws BusinessException {
-        try{
-            documentResDAO = new MongoReservationDAO();
-            documentAccDAO = new MongoAccommodationDAO();
-            documentResDAO.startTransaction();
-            documentAccDAO.startTransaction();
+    /*public RenterDTO showAccRenter(Accommodation acc){
+        RenterDTO renterDTO=new RenterDTO();
 
-            documentResDAO.deleteReservation(reservation);
-            documentAccDAO.deleteReservation(reservation.getAccommodation(),reservation);
-
-        }catch(Exception e){
-            throw new BusinessException(e);
-        }finally {
-            documentResDAO.closeConnection();
-            documentAccDAO.closeConnection();
-        }
-    }
-
-
-    public PageDTO<AccReviewDTO> viewReviewsForAcc(Accommodation acc){
-        ArrayList<AccReviewDTO> AccReviewDTOList = new ArrayList<AccReviewDTO>();
-        documentRevDAO = new MongoReviewDAO();
-        List<Document> docs = documentRevDAO.getReviewsForAcc(acc);
-        for(Document doc: docs){
-
-            Document customerDoc = (Document) doc.get("customer");
-
-            AccReviewDTO accReviewDTO = new AccReviewDTO(
-                    (int) customerDoc.get("id")
-                    ,(String)customerDoc.get("first_name")
-                    ,(String)customerDoc.get("last_name")
-                    ,(String)customerDoc.get("country")
-                    ,(int) doc.get("rate")
-                    ,(String)doc.get("comment"));
-
-            AccReviewDTOList.add(accReviewDTO);
-        }
-
-        PageDTO<AccReviewDTO> pageDTO = new PageDTO<AccReviewDTO>();
-        pageDTO.setEntries(AccReviewDTOList);
-
-        return pageDTO;
-    }
-
+    }*/
 }

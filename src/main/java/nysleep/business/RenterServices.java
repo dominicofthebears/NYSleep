@@ -8,12 +8,14 @@ import nysleep.DAO.mongoDB.MongoUserDAO;
 import nysleep.DAO.neo4jDB.NeoAccommodationDAO;
 import nysleep.DAO.neo4jDB.NeoCustomerDAO;
 import nysleep.DAO.neo4jDB.NeoRenterDAO;
+import nysleep.DTO.AccommodationDTO;
 import nysleep.DTO.PageDTO;
 import nysleep.DTO.ReservationDTO;
 import nysleep.business.exception.BusinessException;
 import nysleep.model.Accommodation;
 import nysleep.model.RegisteredUser;
 import nysleep.model.Renter;
+import nysleep.model.Reservation;
 import org.bson.Document;
 
 import java.time.LocalDate;
@@ -155,8 +157,52 @@ public class RenterServices extends UserServices {
         }
     }
 
+    public void deleteReservation(Reservation reservation) throws BusinessException {
+        try{
+            documentResDAO = new MongoReservationDAO();
+            documentAccDAO = new MongoAccommodationDAO();
+            documentResDAO.startTransaction();
+            documentAccDAO.startTransaction();
 
+            documentResDAO.deleteReservation(reservation);
+            documentAccDAO.deleteReservation(reservation.getAccommodation(),reservation);
 
+        }catch(Exception e){
+            throw new BusinessException(e);
+        }finally {
+            documentResDAO.closeConnection();
+            documentAccDAO.closeConnection();
+        }
+    }
+
+    public PageDTO<AccommodationDTO> showRenterAccommodations(Renter renter, int numPage) throws BusinessException {
+        PageDTO<AccommodationDTO> AccPage;
+        try {
+
+            documentAccDAO = new MongoAccommodationDAO();
+            List<Document> docs = documentAccDAO.getSearchedAcc(renter);
+
+            LinkedList<AccommodationDTO> accDTOList = new LinkedList<>();
+            for (Document doc : docs) {                                                    //iterate all over the documents and extract accommodations to put in the DTO
+                LinkedList<String> picsURL = (LinkedList<String>) doc.get("images_URL");
+                AccommodationDTO accDTO = new AccommodationDTO(
+                        (int) doc.get("_id"),
+                        (String) doc.get("name"),
+                        (String) doc.get("neighborhood"),
+                        (double) doc.get("rating"),
+                        picsURL.get(0));
+                accDTOList.add(accDTO);
+            }
+            AccPage = new PageDTO<>();
+            AccPage.setEntries(accDTOList);
+
+        } catch (Exception e) {
+            throw new BusinessException(e);
+        } finally {
+            documentAccDAO.closeConnection();
+        }
+        return AccPage;
+    }
 
 }
 

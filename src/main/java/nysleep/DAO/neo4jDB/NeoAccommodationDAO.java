@@ -178,7 +178,8 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
         List<Record> recordList = new ArrayList<>();
         try(Session session = driver.session()){
             Result result = session.run("MATCH (cc:customer)-[r:REVIEWS]->(aa:accommodation)<-[o:OWNS]-(rr:renter)-[so:OWNS]->(sa:accommodation) "+"" +
-                    "WHERE r.rate>3 AND cc.id=$id  RETURN sa", parameters("id", customer.getId()));
+                    "WHERE r.rate>3 AND cc.id=$id  RETURN sa.id AS id, sa.name AS name, sa.neighborhood as neighborhood, sa.rating as rating"
+                    , parameters("id", customer.getId()));
             while(result.hasNext()) {
                 Record record= result.next();
                 recordList.add(record);

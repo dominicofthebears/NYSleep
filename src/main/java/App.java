@@ -15,6 +15,7 @@ import nysleep.business.UnregisteredUserServices;
 import nysleep.model.*;
 import org.bson.Document;
 import org.neo4j.driver.Record;
+import org.neo4j.driver.internal.value.NullValue;
 
 import javax.lang.model.type.ArrayType;
 import java.sql.Array;
@@ -29,8 +30,19 @@ public class App
 {
     public static void main( String[] args ){
 
-        MongoAccommodationDAO accDAO = new MongoAccommodationDAO();
-        accDAO.mostExpensiveAndLeastExpensiveAccommodationForPropertyType();
+        NeoAccommodationDAO neoAccommodationDAO = new NeoAccommodationDAO();
+        ArrayList<Record> list= (ArrayList<Record>) neoAccommodationDAO.showAccommodationOfLikedRenter(customerD);
+        for(Record rec : list){
+            double rate;
+            if(!rec.get("rating").isNull()){
+                rate=rec.get("rating").asDouble();}
+            else
+                rate=0;
+            System.out.println(rec.get("id").asInt() + rec.get("name").asString() + rec.get("neighborhood").asString() + rate);
+        }
+
+        /*MongoAccommodationDAO accDAO = new MongoAccommodationDAO();
+        accDAO.mostExpensiveAndLeastExpensiveAccommodationForPropertyType();*/
 
 
         /*NeoAccommodationDAO accommodationDAO= new NeoAccommodationDAO();
@@ -123,4 +135,15 @@ public class App
 */
 
 }
+
+    public static Customer customerD = new Customer(36
+            ,"Kiona"
+            ,"Van Weelden"
+            , "kiona.vanweelden@example.com"
+            , "suzuki"
+            ,"https://randomuser.me/api/portraits/thumb/women/47.jpg"
+            ,"customer"
+            ,"4577 Bornerveldstraat"
+            ,"Netherlands"
+            ,"(083) 1847928");
 }
