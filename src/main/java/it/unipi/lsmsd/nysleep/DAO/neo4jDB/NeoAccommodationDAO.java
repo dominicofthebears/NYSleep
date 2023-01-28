@@ -114,7 +114,7 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
 
     public List<Record> showSuggestedAccommodation(Customer customer){
         driver = initDriver(driver);
-        List<Record> recordList = new ArrayList<>();
+        List<Record> recordList = new LinkedList<>();
         int id2=-1;
         try(Session session = driver.session())
         {
@@ -171,7 +171,7 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
 
     public List<Record> showAccommodationOfLikedRenter(Customer customer){
         driver = initDriver(driver);
-        List<Record> recordList = new ArrayList<>();
+        List<Record> recordList = new LinkedList<>();
         try(Session session = driver.session()){
             Result result = session.run("MATCH (cc:customer)-[r:REVIEWS]->(aa:accommodation)<-[o:OWNS]-(rr:renter)-[so:OWNS]->(sa:accommodation) "+"" +
                     "WHERE r.rate>3 AND cc.id=$id  RETURN sa.id AS id, sa.name AS name, sa.neighborhood as neighborhood, sa.rating as rating"

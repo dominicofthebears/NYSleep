@@ -18,11 +18,11 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 
 public abstract class MongoBaseDAO{
-        protected static String connection = "mongodb://172.16.5.38:27017,172.16.5.39:27017,172.16.5.40:27017/" +
-            "?retryWrites=true&w=majority&readPreference=nearest";
+       // protected static String connection = "mongodb://172.16.5.38:27017,172.16.5.39:27017,172.16.5.40:27017/" +
+       //     "?retryWrites=true&w=majority&readPreference=nearest";
     protected static String dbName = "NYSleep";
-    /*protected static String connection="mongodb://localhost:27017";
-    protected static String dbName = "NYTest";*/
+    protected static String connection="mongodb://localhost:27017";
+    //protected static String dbName = "NYTest";
     protected static MongoClient client;
     protected static ClientSession session;
     protected static CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),
