@@ -81,30 +81,35 @@ public class AdminServices extends UserServices implements AdminServicesRMI {
             acc.setId(accDTO.getId());
             LinkedList<Document> docs = (LinkedList<Document>) documentResDAO.getAccReservations(acc);
             List<ReservationDTO> accReservations = new LinkedList<ReservationDTO>();
-            for(Document resDoc : docs){   //iterate all over the documents and extract reservation to put in the DTO
-                //Casting Date to LocalDate because mongoDB only return Date that is deprecated;
-                Date startDate = (Date) resDoc.get("start_date");
-                LocalDate startDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            if(!docs.isEmpty()) {
+                for (Document resDoc : docs) {   //iterate all over the documents and extract reservation to put in the DTO
 
-                Date endDate =  (Date) resDoc.get("end_date");
-                LocalDate endDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    //Casting Date to LocalDate because mongoDB only return Date that is deprecated;
+                    Date startDate = (Date) resDoc.get("start_date");
+                    LocalDate startDateCasted = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-                Document customerDoc = (Document) resDoc.get("customer");
-                Document accommodationDoc = (Document) resDoc.get("accommodation");
+                    Date endDate = (Date) resDoc.get("end_date");
+                    LocalDate endDateCasted = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-                //Create DTO
-                ReservationDTO resDTO = new ReservationDTO(
-                        (Integer) resDoc.get("_id"), startDateCasted,
-                        endDateCasted,
-                        (double) resDoc.get("cost"),
-                        (int) customerDoc.get("id"),
-                        (String) customerDoc.get("first_name"),
-                        (String) customerDoc.get("last_name"),
-                        (String) customerDoc.get("country"),
-                        (int) accommodationDoc.get("id"),
-                        (String) accommodationDoc.get("name"),
-                        (String) accommodationDoc.get("neighborhood"));
-                accReservations.add(resDTO);
+                    Document customerDoc = (Document) resDoc.get("customer");
+                    Document accommodationDoc = (Document) resDoc.get("accommodation");
+
+                    //Create DTO
+                    Double cost = new Double((Integer)resDoc.get("cost"));
+                    ReservationDTO resDTO = new ReservationDTO(
+                            (int) resDoc.get("_id"),
+                            startDateCasted,
+                            endDateCasted,
+                            cost,
+                            (int) customerDoc.get("id"),
+                            (String) customerDoc.get("first_name"),
+                            (String) customerDoc.get("last_name"),
+                            (String) customerDoc.get("country"),
+                            (int) accommodationDoc.get("id"),
+                            (String) accommodationDoc.get("name"),
+                            (String) accommodationDoc.get("neighborhood"));
+                    accReservations.add(resDTO);
+                }
             }
             PageDTO<ReservationDTO> resPage = new PageDTO<ReservationDTO>();
             resPage.setEntries(accReservations);

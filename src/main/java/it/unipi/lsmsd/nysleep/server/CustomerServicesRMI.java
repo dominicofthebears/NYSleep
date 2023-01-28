@@ -14,6 +14,6 @@ public interface CustomerServicesRMI extends Remote {
     public void modifyUser(ModifiedCustomerDTO oldUserDTO, ModifiedCustomerDTO newUserDTO) throws BusinessException, RemoteException;
     public PageDTO<AccommodationDTO> showSuggestedAccommodations(CustomerDTO customerDTO) throws BusinessException, RemoteException;
     public PageDTO<AccommodationDTO> showAccommodationOfSuggestedRenter(CustomerDTO customerDTO) throws BusinessException, RemoteException;
-    public PageDTO<CustomerReviewDTO> getOwnReviews(CustomerDTO customerDTO) throws RemoteException;
+    public PageDTO<CustomerReviewDTO> getOwnReviews(CustomerDTO customerDTO) throws BusinessException,RemoteException;
     public void deleteReservation(ReservationDTO reservationDTO) throws BusinessException, RemoteException;
 }

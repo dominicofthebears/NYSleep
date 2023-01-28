@@ -315,31 +315,35 @@ public class CustomerServices extends UserServices implements CustomerServicesRM
         }
     }
 
-    public PageDTO<CustomerReviewDTO> getOwnReviews(CustomerDTO customerDTO) throws RemoteException{
-        Customer customer = new Customer();
-        customer.setId(customerDTO.getId());
-        ArrayList<CustomerReviewDTO> customerReviewDTOList = new ArrayList<CustomerReviewDTO>();
-        documentRevDAO = new MongoReviewDAO();
-        List<Document> docs = documentRevDAO.getReviewsForCustomer(customer);
-        for(Document doc: docs){
+    public PageDTO<CustomerReviewDTO> getOwnReviews(CustomerDTO customerDTO) throws BusinessException,RemoteException{
+        try {
+            Customer customer = new Customer();
+            customer.setId(customerDTO.getId());
+            LinkedList<CustomerReviewDTO> customerReviewDTOList = new LinkedList<CustomerReviewDTO>();
+            documentRevDAO = new MongoReviewDAO();
+            List<Document> docs = documentRevDAO.getReviewsForCustomer(customer);
+            if(!docs.isEmpty()) {
+                for (Document doc : docs) {
 
-            Document accommodationDoc = (Document) doc.get("accommodation");
+                    Document accommodationDoc = (Document) doc.get("accommodation");
 
-            CustomerReviewDTO customerReviewDTO = new CustomerReviewDTO(
-                    (int) doc.get("_id"),
-                    (int) accommodationDoc.get("id")
-                    ,(String)accommodationDoc.get("name")
-                    ,(int) doc.get("rate")
-                    ,(String) doc.get("comment")
-            );
+                    CustomerReviewDTO customerReviewDTO = new CustomerReviewDTO(
+                            (int) doc.get("_id"),
+                            (int) accommodationDoc.get("id"),
+                            (String) accommodationDoc.get("name"),
+                            (int) doc.get("rate"),
+                            (String) doc.get("comment")
+                    );
 
-            customerReviewDTOList.add(customerReviewDTO);
-        }
-
+                    customerReviewDTOList.add(customerReviewDTO);
+                }
+            }
         PageDTO<CustomerReviewDTO> pageDTO = new PageDTO<CustomerReviewDTO>();
         pageDTO.setEntries(customerReviewDTOList);
-
         return pageDTO;
+        }catch(Exception e){
+            throw new BusinessException(e);
+        }
 
     }
 
@@ -354,7 +358,6 @@ public class CustomerServices extends UserServices implements CustomerServicesRM
             reservation.setAccommodation(acc);
             documentResDAO.deleteReservation(reservation);
             documentAccDAO.deleteReservation(reservation.getAccommodation(),reservation);
-
         }catch(Exception e){
             throw new BusinessException(e);
         }finally {
