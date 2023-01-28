@@ -1,49 +1,109 @@
-import com.mongodb.client.ClientSession;
-import com.mongodb.client.model.Aggregates;
-import com.mongodb.client.model.Sorts;
-import com.mongodb.internal.operation.AggregateResponseBatchCursor;
-import jdk.vm.ci.code.Register;
-import nysleep.DAO.mongoDB.MongoAccommodationDAO;
-import nysleep.DAO.mongoDB.MongoReservationDAO;
-import nysleep.DAO.mongoDB.MongoReviewDAO;
-import nysleep.DAO.mongoDB.MongoUserDAO;
-import nysleep.DAO.neo4jDB.NeoAccommodationDAO;
-import nysleep.DAO.neo4jDB.NeoCustomerDAO;
-import nysleep.DAO.neo4jDB.NeoRenterDAO;
-import nysleep.DTO.RegisteredUserDTO;
-import nysleep.business.AdminServices;
-import nysleep.business.UnregisteredUserServices;
-import nysleep.model.*;
-import org.bson.Document;
-import org.neo4j.driver.Record;
+import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoReservationDAO;
+import it.unipi.lsmsd.nysleep.DAO.neo4jDB.NeoReviewDAO;
+import it.unipi.lsmsd.nysleep.DTO.*;
+import it.unipi.lsmsd.nysleep.business.CustomerServices;
+import it.unipi.lsmsd.nysleep.business.RenterServices;
+import it.unipi.lsmsd.nysleep.business.exception.BusinessException;
+import it.unipi.lsmsd.nysleep.model.*;
 
-import javax.lang.model.type.ArrayType;
-import java.sql.Array;
+import java.io.*;
+import java.util.Scanner;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
 public class App
 {
-    public static void main( String[] args ){
+    public static void main( String[] args ) throws BusinessException, FileNotFoundException {
 
-        AdminServices as = new AdminServices();
-        Admin oldAdmin = new Admin();
-        oldAdmin.setId(12500);
-        Admin newAdmin = new Admin(12500,
-                "Ayşe",
-                "Nebioğlu",
-                "ayse.nebioglu@example.com",
-                "gerard",
-                "https://randomuser.me/api/portraits/thumb/women/74.jpg",
-                "admin",
-                "analyst"
+        /*MongoReservationDAO resDAO = new MongoReservationDAO();
+        System.out.println(resDAO.mostReservedAccommodationForSeason()  );*/
+
+
+
+
+        RenterServices rs = new RenterServices();
+        CustomerServices cs = new CustomerServices();
+        RenterDetailsDTO renterDetailsDTO = new RenterDetailsDTO(
+                10258,
+                "Raymond",
+                "Forest",
+                "Raymond.Forest@NYSleep.com",
+                "031-040-5894"
         );
+        AccommodationDetailsDTO accommodationDetailsDTO = new AccommodationDetailsDTO(
+                16481,
+                "pisa_merda",
+                "Bronx",
+                0,
+                null,
+                3,
+                null,
+                430,
+                renterDetailsDTO,
+                "Entire_townhouse",
+                3
+        );
+        ReservationDTO reservationDTO = new ReservationDTO(
+                1001010101,
+                LocalDate.of(2023, 01, 28),
+                LocalDate.of(2023, 01, 31),
+                900,
+                0,
+                "Kiona",
+                "Van Weelden",
+                "Netherlands",
+                16481,
+                "pisa_merda",
+                "Bronx"
+        );
+
+        AccReviewDTO accReviewDTO = new AccReviewDTO(
+                1010912,
+                0,
+                "Kiona",
+                "Van Weelden",
+                "Netherlands",
+                1,
+                "la torre crollera"
+        );
+
+        CustomerReviewDTO customerReviewDTO=new CustomerReviewDTO(
+                1010912,
+                16481,
+                "pisa_merda",
+                1,
+                "la torre crollera"
+        );
+
         try {
-            as.modifyUser(oldAdmin, newAdmin);
+            System.out.println("app");
+            cs.insertReview(accReviewDTO, customerReviewDTO);
+            //rs.removeAccommodation(accommodationDetailsDTO);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+        /*MongoReservationDAO docReservationDAO = new MongoReservationDAO();
+        System.out.println(docReservationDAO.neighborhoodRentedByMostNumberOfCountries());*/
+        /*Reservation newRes = new Reservation();
+        Reservation oldRes = new Reservation();
+        oldRes.setId(23);
+        newRes.setId(23);
+        Customer cust = new Customer();
+        cust.setId(2897);
+        cust.setFirstName("Jessica");
+        cust.setLastName("Bradley");
+        cust.setCountry("United States");
+        newRes.setCustomer(cust);
+        docReservationDAO.modifyReservation(oldRes, newRes);*/
+
+
+    }
+        /*
+        CustomerServices cs = new CustomerServices();
+        try {
+            PageDTO<AccommodationDTO> pageDTO =cs.showSearchAcc(date1, date2, 4, " ", 0);
+            System.out.println(pageDTO.toString());
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -150,14 +210,11 @@ public class App
             customer,
             accommodation);
 
-    private static  Accommodation acc = new Accommodation(0, null, null, null, 0,
-            0, 0, null, 0, null, 1, null, null);
+
 */
 
-
-
-
-}
-
-
+    private static LocalDate date1 = LocalDate.of(2015,8,18);
+    private static LocalDate date2 = LocalDate.of(2023,9,13);
+    private static  Accommodation acc = new Accommodation(0, null, null, null, 0,
+            0, 0, null, 0, null, 1, null, null);
 }

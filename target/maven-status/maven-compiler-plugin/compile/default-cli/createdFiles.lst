@@ -1,0 +1,9 @@
+it\unipi\lsmsd\nysleep\server\UserServicesRMI.class
+it\unipi\lsmsd\nysleep\server\UnregisteredUserServicesRMI.class
+it\unipi\lsmsd\nysleep\DTO\ModifiedCustomerDTO.class
+it\unipi\lsmsd\nysleep\server\RenterServicesRMI.class
+it\unipi\lsmsd\nysleep\server\CustomerServicesRMI.class
+it\unipi\lsmsd\nysleep\DTO\ModifiedAccDTO.class
+it\unipi\lsmsd\nysleep\DTO\ModifiedRenterDTO.class
+secondoMain.class
+it\unipi\lsmsd\nysleep\server\AdminServicesRMI.class
