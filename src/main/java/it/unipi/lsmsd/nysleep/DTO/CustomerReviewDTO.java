@@ -1,13 +1,18 @@
 package it.unipi.lsmsd.nysleep.DTO;
+
+import it.unipi.lsmsd.nysleep.model.Customer;
+
+import java.io.Serializable;
+
 //reviews made by a customer
-public class CustomerReviewDTO {
+public class CustomerReviewDTO implements Serializable {
     private int id;
     private int accommodationId;
     private String accommodationName;
     private int rate;
     private String comment;
 
-
+    public CustomerReviewDTO(){}
     public CustomerReviewDTO(int id, int accommodationId, String accommodationName, int rate, String comment) {
         this.id=id;
         this.accommodationId = accommodationId;

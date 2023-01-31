@@ -1,6 +1,8 @@
 package it.unipi.lsmsd.nysleep.DTO;
 
-public class ModifiedRenterDTO extends RenterDTO {
+import java.io.Serializable;
+
+public class ModifiedRenterDTO extends RenterDTO implements Serializable {
     private String url_profile_pic;
 
     public ModifiedRenterDTO(){}

@@ -1,6 +1,8 @@
 package it.unipi.lsmsd.nysleep.DTO;
 
-public class AdminDTO extends RegisteredUserDTO{
+import java.io.Serializable;
+
+public class AdminDTO extends RegisteredUserDTO implements Serializable {
     private int id;
     private String firstName;
     private String lastName;

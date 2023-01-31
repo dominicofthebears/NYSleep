@@ -1,6 +1,9 @@
 package it.unipi.lsmsd.nysleep.DTO;
+
+import java.io.Serializable;
+
 //reviews about an accommodation
-public class AccReviewDTO {
+public class AccReviewDTO implements Serializable {
     private int id;
     private int customerId;
     private String customerFirstName;
@@ -9,6 +12,7 @@ public class AccReviewDTO {
     private int rate;
     private String comment;
 
+    public AccReviewDTO(){}
     public AccReviewDTO(int id, int customerId, String customerFirstName, String customerLastName, String customerCountry, int rate, String comment) {
         this.id = id;
         this.customerId = customerId;

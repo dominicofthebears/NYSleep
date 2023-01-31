@@ -1,3 +1,5 @@
+
+
 package it.unipi.lsmsd.nysleep.business;
 
 import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoAccommodationDAO;
@@ -5,10 +7,10 @@ import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoReservationDAO;
 import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoReviewDAO;
 import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoUserDAO;
 import it.unipi.lsmsd.nysleep.DTO.*;
+import it.unipi.lsmsd.nysleep.business.RMI.RenterServicesRMI;
 import it.unipi.lsmsd.nysleep.business.exception.BusinessException;
 import it.unipi.lsmsd.nysleep.model.*;
 
-import it.unipi.lsmsd.nysleep.server.RenterServicesRMI;
 import org.bson.Document;
 
 import java.rmi.RemoteException;
@@ -21,7 +23,8 @@ import java.util.List;
 
 public class RenterServices extends UserServices implements RenterServicesRMI {
 
-    public RenterServices(){}
+    public RenterServices(){
+    }
 
     public void modifyUser(ModifiedRenterDTO oldRenterDTO, ModifiedRenterDTO newRenterDTO)
             throws BusinessException, RemoteException {
@@ -156,8 +159,9 @@ public class RenterServices extends UserServices implements RenterServicesRMI {
         Accommodation newAcc = new Accommodation();
 
         try{
-
+            documentRevDAO = new MongoReviewDAO();
             documentAccDAO = new MongoAccommodationDAO();
+            documentResDAO = new MongoReservationDAO();
             Renter rent = new Renter();
 
             oldAcc.setId(oldAccDTO.getId());
@@ -187,32 +191,48 @@ public class RenterServices extends UserServices implements RenterServicesRMI {
 
             documentAccDAO.startTransaction();
             if(!oldAcc.getName().equals(newAcc.getName())){
-                documentRevDAO = new MongoReviewDAO();
+
                 LinkedList<Document> accDocs = (LinkedList<Document>) documentRevDAO.getReviewsForAcc(oldAcc);
                 Customer cus = new Customer();
                 for(Document doc: accDocs){
+                    Document custDoc = (Document) doc.get("customer");
+
                     Review r = new Review();
+                    Date date = (Date) doc.get("date");
+                    LocalDate dateCasted= date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                     r.setId((int) doc.get("_id"));
-                    cus.setId((int) doc.get("customer.id"));
-                    cus.setFirstName((String) doc.get("customer.first_name"));
-                    cus.setLastName((String) doc.get("customer.last_name"));
-                    cus.setCountry((String) doc.get("customer.country"));
-                    Review newr = new Review((int)doc.get("_id"), newAcc, cus,
-                            (String) doc.get("comment"), (int) doc.get("rate"), (LocalDate) doc.get("date"));
+                    cus.setId((int) custDoc.get("id"));
+                    cus.setFirstName((String) custDoc.get("first_name"));
+                    cus.setLastName((String) custDoc.get("last_name"));
+                    cus.setCountry((String) custDoc.get("country"));
+                    Review newr = new Review((int) doc.get("_id"), newAcc, cus,
+                            (String) doc.get("comment"), (int) doc.get("rate"), dateCasted);
                     documentRevDAO.modifyReview(r, newr);
                 }
 
-                documentResDAO = new MongoReservationDAO();
+
                 LinkedList<Document> resDocs = (LinkedList<Document>) documentResDAO.getAccReservations(oldAcc);
                 for(Document doc: resDocs){
+
+                    Document custDoc = (Document) doc.get("customer");
+
                     Reservation res = new Reservation();
+
+                    //Casting Date returned from mongodb to LocalDate attribute type
+                    Date startDate = (Date) doc.get("start_date");
+                    LocalDate startDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                    Date endDate =  (Date) doc.get("end_date");
+                    LocalDate endDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+
                     res.setId((int) doc.get("_id"));
-                    cus.setId((int) doc.get("customer.id"));
-                    cus.setFirstName((String) doc.get("customer.first_name"));
-                    cus.setLastName((String) doc.get("customer.last_name"));
-                    cus.setCountry((String) doc.get("customer.country"));
-                    Reservation newRes = new Reservation((int)doc.get("_id"), (LocalDate) doc.get("start_date"), (LocalDate) doc.get("end_date"),
-                            (int) doc.get("cost"), cus, newAcc);
+                    cus.setId((int) custDoc.get("id"));
+                    cus.setFirstName((String) custDoc.get("first_name"));
+                    cus.setLastName((String) custDoc.get("last_name"));
+                    cus.setCountry((String) custDoc.get("country"));
+                    Reservation newRes = new Reservation((int)doc.get("_id"), startDateCasted, endDateCasted,
+                            (double) doc.get("cost"), cus, newAcc);
                     documentResDAO.modifyReservation(res, newRes);
                 }
             }
@@ -224,6 +244,8 @@ public class RenterServices extends UserServices implements RenterServicesRMI {
             throw new BusinessException(e);
         }finally{
             documentAccDAO.closeConnection();
+            documentResDAO.closeConnection();
+            documentRevDAO.closeConnection();
         }
     }
 
@@ -239,8 +261,8 @@ public class RenterServices extends UserServices implements RenterServicesRMI {
             List<ReservationDTO> resDTOList = new LinkedList<ReservationDTO>();
             Accommodation accTemp = new Accommodation();
             for (Document accDoc: accDocs){
-                accTemp.setId(accDoc.getInteger("id"));
-                for(Document resDoc :( ArrayList<Document>)  documentResDAO.getAccReservations(accTemp)){   //iterate all over the documents and extract reservation to put in the DTO
+                accTemp.setId(accDoc.getInteger("_id"));
+                for(Document resDoc : documentResDAO.getAccReservations(accTemp)){   //iterate all over the documents and extract reservation to put in the DTO
                     //Casting Date to LocalDate because mongoDB only return Date that is deprecated;
                     Date startDate = (Date) resDoc.get("start_date");
                     LocalDate startDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -255,7 +277,7 @@ public class RenterServices extends UserServices implements RenterServicesRMI {
                     ReservationDTO resDTO = new ReservationDTO((int) resDoc.get("_id"),
                             startDateCasted,
                             endDateCasted,
-                            (Integer) resDoc.get("cost"),
+                            (double) resDoc.get("cost"),
                             (int) customerDoc.get("id"),
                             (String) customerDoc.get("first_name"),
                             (String) customerDoc.get("last_name"),
@@ -300,7 +322,7 @@ public class RenterServices extends UserServices implements RenterServicesRMI {
     }
 
 
-    public PageDTO<AccommodationDTO> showRenterAccommodation(RenterDTO renterDTO) throws BusinessException, RemoteException {
+        public PageDTO<AccommodationDTO> showRenterAccommodation(RenterDTO renterDTO) throws BusinessException, RemoteException {
         try{
             documentResDAO = new MongoReservationDAO();
             documentAccDAO = new MongoAccommodationDAO();

@@ -9,12 +9,12 @@ import it.unipi.lsmsd.nysleep.DAO.neo4jDB.NeoCustomerDAO;
 import it.unipi.lsmsd.nysleep.DAO.neo4jDB.NeoRenterDAO;
 import it.unipi.lsmsd.nysleep.DAO.neo4jDB.NeoReviewDAO;
 import it.unipi.lsmsd.nysleep.DTO.*;
+import it.unipi.lsmsd.nysleep.business.RMI.UserServicesRMI;
 import it.unipi.lsmsd.nysleep.business.exception.BusinessException;
 import it.unipi.lsmsd.nysleep.model.Accommodation;
 import it.unipi.lsmsd.nysleep.model.Renter;
 
 
-import it.unipi.lsmsd.nysleep.server.UserServicesRMI;
 import org.bson.Document;
 
 import java.rmi.RemoteException;
@@ -35,23 +35,25 @@ public class UserServices implements UserServicesRMI {
     protected NeoAccommodationDAO graphAccDAO = new NeoAccommodationDAO();
     protected NeoReviewDAO graphRevDAO  = new NeoReviewDAO();
 
-    public UserServices(){}
+    public UserServices() {
+    }
 
-    public PageDTO<AccommodationDTO> showHomePage(int numPage) throws BusinessException, RemoteException {
+    public PageDTO<AccommodationDTO> showHomePage(int skip, int limit) throws BusinessException, RemoteException {
         try{
 
             documentAccDAO = new MongoAccommodationDAO();
-            LinkedList<Document> docs = (LinkedList<Document>) documentAccDAO.getAccHomePage();
+            LinkedList<Document> docs = (LinkedList<Document>) documentAccDAO.getAccHomePage(skip, limit);
 
             List<AccommodationDTO> accDTOList = new LinkedList<>();
             for(Document doc: docs){ //iterate all over the documents and extract accommodations to put in the DTO
-                LinkedList<String> picsURL = (LinkedList<String>) doc.get("images_URL");
+               // LinkedList<String> picsURL = (LinkedList<String>) doc.get("images_URL")
                 AccommodationDTO accDTO = new AccommodationDTO(
                         (int) doc.get("_id"),
                         (String) doc.get("name"),
                         (String) doc.get("neighborhood"),
                         (double) doc.get("rating"),
-                        picsURL.get(0));
+                        /*picsURL.get(0)*/null,
+                        (double) doc.get("price"));
                 accDTOList.add(accDTO);
             }
 
@@ -99,7 +101,7 @@ public class UserServices implements UserServicesRMI {
         return pageDTO;
     }
 
-    public PageDTO<AccommodationDTO> showRenterAccommodations(RenterDTO renterDTO, int numPage) throws BusinessException, RemoteException {
+    public PageDTO<AccommodationDTO> showRenterAccommodations(RenterDTO renterDTO) throws BusinessException, RemoteException {
         Renter renter = new Renter();
         renter.setId(renterDTO.getId());
         PageDTO<AccommodationDTO> AccPage;
@@ -110,13 +112,14 @@ public class UserServices implements UserServicesRMI {
 
             LinkedList<AccommodationDTO> accDTOList = new LinkedList<>();
             for (Document doc : docs) { //iterate all over the documents and extract accommodations to put in the DTO
-                LinkedList<String> picsURL = (LinkedList<String>) doc.get("images_URL");
+                //LinkedList<String> picsURL = (LinkedList<String>) doc.get("images_URL");
                 AccommodationDTO accDTO = new AccommodationDTO(
                         (int) doc.get("_id"),
                         (String) doc.get("name"),
                         (String) doc.get("neighborhood"),
                         (double) doc.get("rating"),
-                        picsURL.get(0));
+                        /*picsURL.get(0)*/null,
+                        (double) doc.get("price"));
                 accDTOList.add(accDTO);
             }
             AccPage = new PageDTO<>();
@@ -132,10 +135,11 @@ public class UserServices implements UserServicesRMI {
 
 
 
-    public PageDTO<AccommodationDTO> showSearchAcc  (LocalDate startDate, LocalDate endDate, int numPeople, String neighborhood,double price) throws BusinessException, RemoteException {
+    public PageDTO<AccommodationDTO> showSearchAcc  (LocalDate startDate, LocalDate endDate, int numPeople, String neighborhood,double price,
+                                                     int skip, int limit) throws BusinessException, RemoteException {
       try{
         documentAccDAO = new MongoAccommodationDAO();
-        LinkedList<Document> results = (LinkedList<Document>) documentAccDAO.getSearchedAcc(startDate,endDate, numPeople,neighborhood, price);
+        LinkedList<Document> results = (LinkedList<Document>) documentAccDAO.getSearchedAcc(startDate,endDate, numPeople,neighborhood, price, skip, limit);
         LinkedList<AccommodationDTO> accDTOList = new LinkedList<>();
         for (Document doc : results) {
             AccommodationDTO accDTO = new AccommodationDTO();
@@ -143,6 +147,8 @@ public class UserServices implements UserServicesRMI {
             accDTO.setId((int) doc.get("_id"));
             accDTO.setName((String) doc.get("name"));
             accDTO.setNeighborhood((String) doc.get("neighborhood"));
+            accDTO.setRating((double) doc.get("rating"));
+            accDTO.setPrice((double) doc.get("price"));
             accDTOList.add(accDTO);
         }
         PageDTO<AccommodationDTO> accommodations = new PageDTO<>();
@@ -163,7 +169,7 @@ public class UserServices implements UserServicesRMI {
             Document doc = documentAccDAO.getAccommodation(acc);
             Document renterDoc = (Document) doc.get("renter");
             RenterDetailsDTO renterDetailsDTO = new RenterDetailsDTO(
-                    (int) renterDoc.get("_id"),
+                    (int) renterDoc.get("id"),
                     (String) renterDoc.get("first_name"),
                     (String) renterDoc.get("last_name"),
                     (String) renterDoc.get("work_email"),

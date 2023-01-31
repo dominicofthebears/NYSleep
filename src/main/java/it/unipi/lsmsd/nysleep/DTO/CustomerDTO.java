@@ -1,6 +1,8 @@
 package it.unipi.lsmsd.nysleep.DTO;
 
-public class CustomerDTO extends RegisteredUserDTO{
+import java.io.Serializable;
+
+public class CustomerDTO  extends RegisteredUserDTO implements Serializable {
     private String country;
 
 

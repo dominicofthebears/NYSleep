@@ -1,8 +1,9 @@
-package it.unipi.lsmsd.nysleep.server;
+package it.unipi.lsmsd.nysleep.business.RMI;
 
 import it.unipi.lsmsd.nysleep.DTO.*;
 import it.unipi.lsmsd.nysleep.business.exception.BusinessException;
 import org.bson.Document;
+import org.neo4j.driver.Record;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -22,4 +23,13 @@ public interface AdminServicesRMI extends Remote {
     public List<Document> mostReservingCountryForNeighborhood() throws BusinessException, RemoteException;
     public List<Document> mostAndLeastExpensiveAccommodationForPropertyType() throws BusinessException, RemoteException;
     public List<Document> averageRatingByCountry() throws BusinessException, RemoteException;
-}
+    public Record mostActiveUser() throws BusinessException, RemoteException;
+    public Record renterWithMostAccommodation() throws BusinessException, RemoteException;
+    public Record bestReviewedRenter(int min) throws BusinessException, RemoteException;
+    public Record renterWithMostAccommodationForNeighborhood(String neighborhood) throws BusinessException, RemoteException;
+    public Document neighborhoodRentedByMostNumberOfCountries() throws BusinessException, RemoteException;
+    public List<Document> mostReservedAccommodationForSeason() throws BusinessException, RemoteException;
+
+
+
+    }

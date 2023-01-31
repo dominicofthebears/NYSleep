@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MongoUserDAO extends MongoBaseDAO implements UserDAO {
-    private static final String COLLECTION="users";
+    private  final String COLLECTION= "users";
 
     private static Document toDoc(RegisteredUser registeredUser) {
         //Convert the model object in a document

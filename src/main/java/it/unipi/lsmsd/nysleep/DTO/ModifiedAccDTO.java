@@ -1,8 +1,9 @@
 package it.unipi.lsmsd.nysleep.DTO;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ModifiedAccDTO {
+public class ModifiedAccDTO implements Serializable {
     private int id;
     private String name;
     private List<String> imagesURL;

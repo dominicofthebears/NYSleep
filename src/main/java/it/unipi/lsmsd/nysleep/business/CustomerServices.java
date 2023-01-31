@@ -6,23 +6,23 @@ import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoAccommodationDAO;
 import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoReservationDAO;
 import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoReviewDAO;
 import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoUserDAO;
+import it.unipi.lsmsd.nysleep.business.RMI.CustomerServicesRMI;
 import it.unipi.lsmsd.nysleep.model.*;
 import it.unipi.lsmsd.nysleep.business.exception.BusinessException;
-import it.unipi.lsmsd.nysleep.server.CustomerServicesRMI;
 import org.bson.Document;
 import org.neo4j.driver.Record;
 
 import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 public class CustomerServices extends UserServices implements CustomerServicesRMI {
 
-    public CustomerServices(){}
+    public CustomerServices(){
+    }
 
     public void insertReview(AccReviewDTO accReviewDTO, CustomerReviewDTO customerReviewDTO) throws BusinessException, RemoteException {
         try {
@@ -190,6 +190,8 @@ public class CustomerServices extends UserServices implements CustomerServicesRM
     public void modifyUser(ModifiedCustomerDTO oldUserDTO, ModifiedCustomerDTO newUserDTO) throws BusinessException, RemoteException {
 
         try{
+            documentResDAO = new MongoReservationDAO();
+            documentRevDAO = new MongoReviewDAO();
             documentUserDAO = new MongoUserDAO();
             if(!oldUserDTO.getEmail().equals(newUserDTO.getEmail()) && documentUserDAO.checkEmail(newUserDTO.getEmail())){
                 throw new BusinessException("Email already in use");
@@ -206,14 +208,13 @@ public class CustomerServices extends UserServices implements CustomerServicesRM
             newUser.setAddress(newUserDTO.getAddress());
             newUser.setPhone(newUserDTO.getPhone());
             newUser.setEmail(newUserDTO.getEmail());
-            newUser.setPassword(newUser.getPassword());
+            newUser.setPassword(newUserDTO.getPassword());
             newUser.setType("customer");
             documentUserDAO.startTransaction();
             if(!newUserDTO.getFirstName().equals(oldUserDTO.getFirstName()) ||
                 !newUserDTO.getLastName().equals(oldUserDTO.getLastName()) ||
                 !newUserDTO.getCountry().equals(oldUserDTO.getCountry())){
-                documentResDAO = new MongoReservationDAO();
-                documentRevDAO = new MongoReviewDAO();
+
                 LinkedList<Document> resDocs = (LinkedList<Document>) documentResDAO.getCustomerReservations(newUser);
                 LinkedList<Document> revDocs = (LinkedList<Document>) documentRevDAO.getReviewsForCustomer(newUser);
                 Reservation oldRes = new Reservation();
@@ -221,40 +222,57 @@ public class CustomerServices extends UserServices implements CustomerServicesRM
                 Review oldRev = new Review();
                 Review newRev = new Review();
                 Accommodation acc = new Accommodation();
-                if(resDocs.isEmpty()){
+                if(!resDocs.isEmpty()){
                     for(Document doc : resDocs){
+
+                        Document accDoc =(Document) doc.get("accommodation");
                         oldRes.setId(doc.getInteger("_id"));
                         newRes.setId(oldRes.getId());
-                        acc.setId((doc.getInteger("accommodation.id")));
-                        acc.setNeighborhood(doc.getString("accommodation.neighborhood"));
-                        acc.setName(doc.getString("accommodation.name"));
+                        acc.setId((accDoc.getInteger("id")));
+                        acc.setNeighborhood(accDoc.getString("neighborhood"));
+                        acc.setName(accDoc.getString("name"));
                         newRes.setAccommodation(acc);
                         newRes.setCustomer(newUser);
-                        newRes.setStartDate((LocalDate) doc.get("start_date"));
-                        newRes.setEndDate((LocalDate) doc.get("end_date"));
+
+                        Date startDate = (Date) doc.get("start_date");
+                        LocalDate startDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                        Date endDate =  (Date) doc.get("end_date");
+                        LocalDate endDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                        newRes.setStartDate(startDateCasted);
+                        newRes.setEndDate(endDateCasted);
+
+
                         newRes.setTotalCost(doc.getDouble("cost"));
                         newRes.setCustomer(newUser);
                         documentResDAO.modifyReservation(oldRes, newRes);
                     }
                 }
-                if(revDocs.isEmpty()){
+                if(!revDocs.isEmpty()){
                     for(Document doc : revDocs){
+                        Document accDoc =(Document) doc.get("accommodation");
                         oldRev.setId(doc.getInteger("_id"));
                         newRev.setId(oldRev.getId());
-                        acc.setId((doc.getInteger("accommodation.id")));
-                        acc.setName(doc.getString("accommodation.name"));
+                        acc.setId((accDoc.getInteger("id")));
+                        acc.setName(accDoc.getString("name"));
                         newRev.setAccommodation(acc);
                         newRev.setCustomer(newUser);
                         newRev.setComment((String) doc.get("comment"));
-                        newRev.setDate((LocalDate) doc.get("date"));
+
+                        Date date = (Date) doc.get("date");
+                        LocalDate dateCasted= date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        newRev.setDate(dateCasted);
+
                         newRev.setRate(doc.getInteger("rate"));
                         documentRevDAO.modifyReview(oldRev, newRev);
                     }
                 }
             }
-
             documentUserDAO.modifyAccountInfo(oldUser,newUser);
             graphCustomerDAO.modifyAccountInfo(oldUser,newUser);
+            documentResDAO.commitTransaction();
+            documentRevDAO.commitTransaction();
             documentUserDAO.commitTransaction();
         }catch(Exception e){
             documentUserDAO.abortTransaction();

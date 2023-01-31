@@ -1,20 +1,24 @@
 package it.unipi.lsmsd.nysleep.DTO;
 
-public class AccommodationDTO {
+import java.io.Serializable;
+
+public class AccommodationDTO implements Serializable {
     private int id;
     private String name;
     private String neighborhood;
     private double rating;
     private String mainPicUrl;
+    private double price;
 
     public AccommodationDTO(){}
 
-    public AccommodationDTO(int id, String name, String neighborhood, double rating, String mainPicUrl) {
+    public AccommodationDTO(int id, String name, String neighborhood, double rating, String mainPicUrl, double price) {
         this.id = id;
         this.name = name;
         this.neighborhood = neighborhood;
         this.rating = rating;
         this.mainPicUrl = mainPicUrl;
+        this.price = price;
     }
 
     public int getId() {
@@ -65,6 +69,15 @@ public class AccommodationDTO {
                ", neighborhood='" + neighborhood + '\'' +
                ", rating=" + rating +
                ", mainPicUrl='" + mainPicUrl + '\'' +
-               '}';
+               ", price=" + price +
+                '}';
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 }
