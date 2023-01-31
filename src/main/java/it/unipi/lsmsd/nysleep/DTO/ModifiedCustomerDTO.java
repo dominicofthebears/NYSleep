@@ -1,7 +1,9 @@
 package it.unipi.lsmsd.nysleep.DTO;
 
 
-public class ModifiedCustomerDTO extends CustomerDTO {
+import java.io.Serializable;
+
+public class ModifiedCustomerDTO extends CustomerDTO implements Serializable {
 
     private String phone;
     private String url_profile_pic;

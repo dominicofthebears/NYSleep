@@ -1,4 +1,4 @@
-package it.unipi.lsmsd.nysleep.server;
+package it.unipi.lsmsd.nysleep.business.RMI;
 
 import it.unipi.lsmsd.nysleep.DTO.AccommodationDTO;
 import it.unipi.lsmsd.nysleep.DTO.PageDTO;
@@ -15,8 +15,6 @@ public interface UnregisteredUserServicesRMI extends Remote {
                                       String phone, String workEmail) throws BusinessException, RemoteException;
 
     public RegisteredUserDTO login(String email, String password) throws BusinessException, RemoteException;
-
-    public PageDTO<AccommodationDTO> showSearchAcc  (LocalDate startDate, LocalDate endDate, int numPeople, String neighborhood, double price) throws BusinessException, RemoteException;
 
 
 }

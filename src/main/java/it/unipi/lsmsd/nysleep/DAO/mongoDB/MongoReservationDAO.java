@@ -226,38 +226,52 @@ public class MongoReservationDAO extends MongoBaseDAO implements ReservationDAO 
         if(iterator.hasNext()) {
             doc = (Document) iterator.next();
             return doc;
+
         }else
         {return null;}
     }
 
-    public Document mostReservedAccommodationForSeason(){
+    public List<Document> mostReservedAccommodationForSeason(){
         MongoDatabase db = client.getDatabase(dbName);
         MongoCollection<Document> collection = db.getCollection(COLLECTION);
 
         String jsonProject = "{\"acc\":\"$accommodation.id\",\"month\":{$month:\"$start_date\"},\"neighborhood\":\"$accommodation.neighborhood\",\"accName\":\"$accommodation.name\"}";
         Document projectDoc = Document.parse(jsonProject);
 
-        String jsonMatch = "{\"$or\":[{\"month\":12},{\"month\":1},{\"month\":2}]}";
-        Document matchDoc = Document.parse(jsonMatch);
+        String jsonMatchWinter = "{\"$or\":[{\"month\":12},{\"month\":1},{\"month\":2}]}";
+        Document matchDocWinter = Document.parse(jsonMatchWinter);
+        String jsonMatchSpring = "{\"$or\":[{\"month\":3},{\"month\":4},{\"month\":5}]}";
+        Document matchDocSpring = Document.parse(jsonMatchSpring);
+        String jsonMatchSummer = "{\"$or\":[{\"month\":6},{\"month\":7},{\"month\":8}]}";
+        Document matchDocSummer = Document.parse(jsonMatchSummer);
+        String jsonMatchAutumn = "{\"$or\":[{\"month\":9},{\"month\":10},{\"month\":11}]}";
+        Document matchDocAutumn = Document.parse(jsonMatchAutumn);
 
         String jsonAddToSetDoc = "{\"name\":\"$accName\",\"neighborhood\":\"$neighborhood\"}";
         Document addToSetDoc = Document.parse(jsonAddToSetDoc);
-        AggregateIterable docsIterable = collection.aggregate(
-                Arrays.asList(
-                    Aggregates.project(projectDoc),
-                        Aggregates.match(matchDoc),
-                        Aggregates.group("$acc",Accumulators.sum("num_res",1),Accumulators.addToSet("accommodation",addToSetDoc)),
-                        Aggregates.sort(Sorts.descending("num_res")),
-                        Aggregates.limit(1)
-                )
-        );
-        Document doc;
-        Iterator iterator = docsIterable.iterator();
-        if(iterator.hasNext()) {
+        LinkedList<Document> matchDocs = new LinkedList<>();
+        matchDocs.add(matchDocWinter);
+        matchDocs.add(matchDocSpring);
+        matchDocs.add(matchDocSummer);
+        matchDocs.add(matchDocAutumn);
+        List<Document> docs = new LinkedList<>();
+        for(Document matchDoc : matchDocs) {
+
+            AggregateIterable docsIterable = collection.aggregate(
+                    Arrays.asList(
+                            Aggregates.project(projectDoc),
+                            Aggregates.match(matchDoc),
+                            Aggregates.group("$acc", Accumulators.sum("num_res", 1), Accumulators.addToSet("accommodation", addToSetDoc)),
+                            Aggregates.sort(Sorts.descending("num_res")),
+                            Aggregates.limit(1)
+                    )
+            );
+            Document doc;
+            Iterator iterator = docsIterable.iterator();
             doc = (Document) iterator.next();
-            return doc;
-        }else
-        {return null;}
+            docs.add(doc);
+        }
+        return docs;
     }
 
 }

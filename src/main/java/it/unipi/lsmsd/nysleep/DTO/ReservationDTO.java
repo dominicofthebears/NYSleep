@@ -1,8 +1,9 @@
 package it.unipi.lsmsd.nysleep.DTO;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class ReservationDTO {
+public class ReservationDTO implements Serializable {
 
     private int id;
     private LocalDate startDate;

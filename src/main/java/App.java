@@ -1,5 +1,3 @@
-import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoReservationDAO;
-import it.unipi.lsmsd.nysleep.DAO.neo4jDB.NeoReviewDAO;
 import it.unipi.lsmsd.nysleep.DTO.*;
 import it.unipi.lsmsd.nysleep.business.CustomerServices;
 import it.unipi.lsmsd.nysleep.business.RenterServices;
@@ -7,12 +5,12 @@ import it.unipi.lsmsd.nysleep.business.exception.BusinessException;
 import it.unipi.lsmsd.nysleep.model.*;
 
 import java.io.*;
-import java.util.Scanner;
+import java.rmi.RemoteException;
 import java.time.LocalDate;
 
 public class App
 {
-    public static void main( String[] args ) throws BusinessException, FileNotFoundException {
+    public static void main( String[] args ) throws BusinessException, FileNotFoundException, RemoteException {
 
         /*MongoReservationDAO resDAO = new MongoReservationDAO();
         System.out.println(resDAO.mostReservedAccommodationForSeason()  );*/
@@ -75,9 +73,11 @@ public class App
         );
 
         try {
-            System.out.println("app");
-            cs.insertReview(accReviewDTO, customerReviewDTO);
+            /*System.out.println("app");
+            cs.insertReview(accReviewDTO, customerReviewDTO);*/
             //rs.removeAccommodation(accommodationDetailsDTO);
+            PageDTO<AccommodationDTO> pageDTO =cs.showSearchAcc(date1, date2, 4, " ", 0, 0, 10);
+            System.out.println(pageDTO.toString());
         }catch (Exception e){
             e.printStackTrace();
         }

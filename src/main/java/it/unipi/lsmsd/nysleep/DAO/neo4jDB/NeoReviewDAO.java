@@ -44,19 +44,5 @@ public class NeoReviewDAO extends Neo4jBaseDAO implements ReviewsDAO {
         }
     }
 
-    /*public double getAvgRating(Accommodation acc) {
-        driver=initDriver(driver);
-        try(Session session = driver.session())
-        {
-            double avgRating = session.readTransaction((TransactionWork<Double>) tx-> {
-                Result result = tx.run("MATCH (cc:customer)-[r:REVIEWS]->(aa:accommodation) WHERE aa.id = $id" + " RETURN AVG(r.rate) AS avg_rate", parameters("id", acc.getId()));
-                return result.single().get("avg_rate").asDouble();
-            });
-            return avgRating;
-        }finally {
-            close(driver);
-        }
-    }*/
-
 
 }

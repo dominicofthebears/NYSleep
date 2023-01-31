@@ -2,16 +2,19 @@ package it.unipi.lsmsd.nysleep.business;
 
 import it.unipi.lsmsd.nysleep.DTO.*;
 import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoUserDAO;
+import it.unipi.lsmsd.nysleep.business.RMI.UnregisteredUserServicesRMI;
 import it.unipi.lsmsd.nysleep.business.exception.BusinessException;
 import it.unipi.lsmsd.nysleep.model.Admin;
 import it.unipi.lsmsd.nysleep.model.Customer;
 import it.unipi.lsmsd.nysleep.model.RegisteredUser;
 import it.unipi.lsmsd.nysleep.model.Renter;
-import it.unipi.lsmsd.nysleep.server.UnregisteredUserServicesRMI;
 
 import java.rmi.RemoteException;
 
 public class UnregisteredUserServices extends UserServices implements UnregisteredUserServicesRMI {
+
+    public UnregisteredUserServices(){
+    }
 
     public void UnregisteredUserServices(){};
     //fixare con le transazioni

@@ -6,8 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="untitled" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="NYSleepClient" target="19" />
+    </bytecodeTargetLevel>
   </component>
   <component name="RmicSettings">
     <option name="IS_EANABLED" value="true" />

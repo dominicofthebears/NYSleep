@@ -63,10 +63,8 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
         driver = initDriver(driver);
         try(Session session = driver.session())
         {
-            session.run("MATCH (aa: accommodation {id: $oldId"+" }) SET aa.name = $newName"+
-                    ", aa.neighborhood = $newNeighborhood"+", aa.rating = $newRating"
-                , parameters("oldId", oldAcc.getId(), "newName", newAcc.getName(),
-                            "newNeighborhood", newAcc.getNeighborhood(), "newRating", newAcc.getRating()));
+            session.run("MATCH (aa: accommodation {id: $oldId"+" }) SET aa.name = $newName"
+                , parameters("oldId", oldAcc.getId(), "newName", newAcc.getName()));
         }finally {
             close(driver);
         }

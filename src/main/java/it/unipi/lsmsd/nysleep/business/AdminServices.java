@@ -5,9 +5,9 @@ import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoReservationDAO;
 import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoReviewDAO;
 import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoUserDAO;
 import it.unipi.lsmsd.nysleep.DTO.*;
+import it.unipi.lsmsd.nysleep.business.RMI.AdminServicesRMI;
 import it.unipi.lsmsd.nysleep.business.exception.BusinessException;
 import it.unipi.lsmsd.nysleep.model.*;
-import it.unipi.lsmsd.nysleep.server.AdminServicesRMI;
 import org.bson.Document;
 import org.neo4j.driver.Record;
 
@@ -20,7 +20,8 @@ import java.util.List;
 
 public class AdminServices extends UserServices implements AdminServicesRMI {
 
-    public AdminServices(){};
+    public AdminServices(){
+    };
 
     public void modifyUser(AdminDTO oldAdminDTO, AdminDTO newAdminDTO) throws BusinessException, RemoteException {
         try{
@@ -275,6 +276,26 @@ public class AdminServices extends UserServices implements AdminServicesRMI {
         try{
             Record record = graphRenterDAO.renterWithMostAccommodationForNeighborhood(neighborhood);
             return record;
+        }catch (Exception e){
+            throw new BusinessException(e);
+        }
+    }
+
+    public Document neighborhoodRentedByMostNumberOfCountries() throws BusinessException, RemoteException{
+        try{
+            documentResDAO = new MongoReservationDAO();
+            Document doc = documentResDAO.neighborhoodRentedByMostNumberOfCountries();
+            return doc;
+        }catch (Exception e){
+            throw new BusinessException(e);
+        }
+    }
+
+    public List<Document> mostReservedAccommodationForSeason() throws BusinessException, RemoteException{
+        try{
+            documentResDAO = new MongoReservationDAO();
+            List<Document> docs = documentResDAO.mostReservedAccommodationForSeason();
+            return docs;
         }catch (Exception e){
             throw new BusinessException(e);
         }

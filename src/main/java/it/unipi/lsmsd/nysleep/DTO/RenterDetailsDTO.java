@@ -1,6 +1,8 @@
 package it.unipi.lsmsd.nysleep.DTO;
 
-public class RenterDetailsDTO {
+import java.io.Serializable;
+
+public class RenterDetailsDTO implements Serializable {
     private int id;
     private String firstName;
     private String lastName;

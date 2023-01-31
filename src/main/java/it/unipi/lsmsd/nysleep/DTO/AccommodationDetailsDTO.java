@@ -1,9 +1,10 @@
 package it.unipi.lsmsd.nysleep.DTO;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class AccommodationDetailsDTO {
+public class AccommodationDetailsDTO implements Serializable {
     private int id;
     private String name;
     private String neighborhood;

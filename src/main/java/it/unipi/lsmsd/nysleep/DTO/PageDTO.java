@@ -1,9 +1,10 @@
 package it.unipi.lsmsd.nysleep.DTO;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class PageDTO <T>{
+public class PageDTO <T> implements Serializable {
     private LinkedList<T> entries;
     private int totCount;
 

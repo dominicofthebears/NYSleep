@@ -34,10 +34,12 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
                 .append("property_type", acc.getPropertyType())
                 .append("amenities", acc.getAmenities())
                 .append("rating", acc.getRating());
-        List<Document> reservations = new ArrayList<Document>();
-        for (Reservation res : acc.getReservations()) {
-            reservations.add(new Document("start_Date", res.getStartDate())
-                    .append("end_Date", res.getEndDate()));
+        List<Document> reservations = new LinkedList<Document>();
+        if(acc.getReservations() != null ) {
+            for (Reservation res : acc.getReservations()) {
+                reservations.add(new Document("start_Date", res.getStartDate())
+                        .append("end_Date", res.getEndDate()));
+            }
         }
         Document renterDoc =  new Document("id",acc.getRenter().getId())
                 .append("first_name",acc.getRenter().getFirstName())
@@ -107,9 +109,9 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
     }
 
 //Get accommodation based on
-    public List<Document> getAccHomePage() {
+    public List<Document> getAccHomePage(int skip, int limit) {
         Document searchQuery = new Document();
-        List<Document> docs = readDocs(searchQuery,COLLECTION);
+        List<Document> docs = readDocs(searchQuery,COLLECTION, skip, limit);
         return docs;
     }
 
@@ -122,7 +124,7 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
     }
 
     public List<Document> getSearchedAcc(LocalDate startDate,LocalDate endDate,int numPeople,String neighborhood,
-                                         double price) throws BusinessException {
+                                         double price, int skip, int limit) throws BusinessException {
         Document searchQuery;
         if(numPeople == 0){
             throw new BusinessException("Select a number of people");
@@ -149,7 +151,7 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
                                                 new Document("$lt", startDate)),
                                         new Document("reservations.end_date",
                                                 new Document("$gt", endDate)))))),
-                        new Document("num_people", numPeople)));
+                        new Document("num_beds", numPeople)));
             } else if (neighborhood.equals(" ")) {
                 searchQuery = new Document("$and", Arrays.asList(new Document("$nor", Arrays.asList(new Document("reservations.start_date",
                                         new Document("$gt", startDate)
@@ -162,7 +164,7 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
                                                 new Document("$lt", startDate)),
                                         new Document("reservations.end_date",
                                                 new Document("$gt", endDate)))))),
-                        new Document("num_people", numPeople),
+                        new Document("num_beds", numPeople),
                         new Document("price",
                                 new Document("$lt", price))));
             }
@@ -179,7 +181,7 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
                                         new Document("reservations.end_date",
                                                 new Document("$gt", endDate)))))),
                         new Document("neighborhood", neighborhood),
-                        new Document("num_people", numPeople)));
+                        new Document("num_beds", numPeople)));
 
             }
             else{
@@ -195,7 +197,7 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
                                         new Document("reservations.end_date",
                                                 new Document("$gt", endDate)))))),
                         new Document("neighborhood", neighborhood),
-                        new Document("num_people", numPeople),
+                        new Document("num_beds", numPeople),
                         new Document("price",
                                 new Document("$lt", price))));
             }
@@ -203,7 +205,7 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
             throw new BusinessException(e);
         }
 
-        return readDocs(searchQuery,COLLECTION);
+        return readDocs(searchQuery,COLLECTION,skip, limit);
     }
 
     //Get all the accommodations belonging to a renter
