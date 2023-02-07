@@ -9,7 +9,7 @@ import it.unipi.lsmsd.nysleep.DAO.neo4jDB.NeoCustomerDAO;
 import it.unipi.lsmsd.nysleep.DAO.neo4jDB.NeoRenterDAO;
 import it.unipi.lsmsd.nysleep.DAO.neo4jDB.NeoReviewDAO;
 import it.unipi.lsmsd.nysleep.DTO.*;
-import it.unipi.lsmsd.nysleep.business.RMI.UserServicesRMI;
+import it.unipi.lsmsd.nysleep.RMI.UserServicesRMI;
 import it.unipi.lsmsd.nysleep.business.exception.BusinessException;
 import it.unipi.lsmsd.nysleep.model.Accommodation;
 import it.unipi.lsmsd.nysleep.model.Renter;

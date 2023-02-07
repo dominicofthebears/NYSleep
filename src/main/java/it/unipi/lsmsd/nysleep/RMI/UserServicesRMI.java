@@ -1,4 +1,4 @@
-package it.unipi.lsmsd.nysleep.business.RMI;
+package it.unipi.lsmsd.nysleep.RMI;
 
 import it.unipi.lsmsd.nysleep.DTO.*;
 import it.unipi.lsmsd.nysleep.business.exception.BusinessException;

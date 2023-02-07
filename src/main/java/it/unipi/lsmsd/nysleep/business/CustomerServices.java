@@ -6,7 +6,7 @@ import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoAccommodationDAO;
 import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoReservationDAO;
 import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoReviewDAO;
 import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoUserDAO;
-import it.unipi.lsmsd.nysleep.business.RMI.CustomerServicesRMI;
+import it.unipi.lsmsd.nysleep.RMI.CustomerServicesRMI;
 import it.unipi.lsmsd.nysleep.model.*;
 import it.unipi.lsmsd.nysleep.business.exception.BusinessException;
 import org.bson.Document;
@@ -161,7 +161,7 @@ public class CustomerServices extends UserServices implements CustomerServicesRM
                 LocalDate startDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
                 Date endDate =  (Date) doc.get("end_date");
-                LocalDate endDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate endDateCasted= endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
                 org.bson.Document customerDoc = (org.bson.Document) doc.get("customer");
                 org.bson.Document accommodationDoc = (org.bson.Document) doc.get("accommodation");
@@ -238,7 +238,7 @@ public class CustomerServices extends UserServices implements CustomerServicesRM
                         LocalDate startDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
                         Date endDate =  (Date) doc.get("end_date");
-                        LocalDate endDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        LocalDate endDateCasted= endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
                         newRes.setStartDate(startDateCasted);
                         newRes.setEndDate(endDateCasted);

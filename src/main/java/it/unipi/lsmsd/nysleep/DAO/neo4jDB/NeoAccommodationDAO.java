@@ -2,6 +2,7 @@ package it.unipi.lsmsd.nysleep.DAO.neo4jDB;
 
 import it.unipi.lsmsd.nysleep.DAO.AccommodationDAO;
 import it.unipi.lsmsd.nysleep.DAO.base.Neo4jBaseDAO;
+import it.unipi.lsmsd.nysleep.business.exception.BusinessException;
 import it.unipi.lsmsd.nysleep.model.Accommodation;
 import it.unipi.lsmsd.nysleep.model.Customer;
 import it.unipi.lsmsd.nysleep.model.Renter;
@@ -147,23 +148,27 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
         }
     }
 
-    public double recomputeRate(Accommodation acc) {
+    public double recomputeRate(Accommodation acc) throws BusinessException {
         driver = initDriver(driver);
-        double res = -1;
+        double res;
         LocalDate date = LocalDate.now();
-        int year = date.getYear();
+        int year = date.getYear() - 1;
         int month = date.getMonthValue();
         int day = date.getDayOfMonth();
         try (Session session = driver.session()) {
             Result result = session.run("MATCH (aa:accommodation)<-[r:REVIEWS]-() " +
-                            "WHERE aa.id=$id AND r.date>datetime({year: $year -1, month: $month, day: $day}) RETURN AVG(r.rate) AS rate"
+                            "WHERE aa.id=$id AND r.date>date({year: $year, month: $month, day: $day}) RETURN AVG(r.rate) AS rate"
                     , parameters("id", acc.getId(), "year", year, "month", month, "day", day));
-            if(!result.single().get("rate").isNull())
-                res = result.single().get("rate").asDouble();
+            Value v = result.single().get("rate");
+            if(!v.isNull())
+                res = v.asDouble();
             else
-                res = Double.NaN;
+               res = Double.NaN;
             return res;
-        }finally{
+        }catch (Exception e){
+            throw new BusinessException(e);
+        }
+        finally{
             close(driver);
         }
     }
