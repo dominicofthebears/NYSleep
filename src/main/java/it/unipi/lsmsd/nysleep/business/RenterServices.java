@@ -7,7 +7,7 @@ import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoReservationDAO;
 import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoReviewDAO;
 import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoUserDAO;
 import it.unipi.lsmsd.nysleep.DTO.*;
-import it.unipi.lsmsd.nysleep.business.RMI.RenterServicesRMI;
+import it.unipi.lsmsd.nysleep.RMI.RenterServicesRMI;
 import it.unipi.lsmsd.nysleep.business.exception.BusinessException;
 import it.unipi.lsmsd.nysleep.model.*;
 
@@ -223,7 +223,7 @@ public class RenterServices extends UserServices implements RenterServicesRMI {
                     LocalDate startDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
                     Date endDate =  (Date) doc.get("end_date");
-                    LocalDate endDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate endDateCasted= endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
 
                     res.setId((int) doc.get("_id"));
@@ -268,7 +268,7 @@ public class RenterServices extends UserServices implements RenterServicesRMI {
                     LocalDate startDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
                     Date endDate =  (Date) resDoc.get("end_date");
-                    LocalDate endDateCasted= startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate endDateCasted= endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
                     Document customerDoc = (Document) resDoc.get("customer");
                     Document accommodationDoc = (Document) resDoc.get("accommodation");
@@ -321,34 +321,6 @@ public class RenterServices extends UserServices implements RenterServicesRMI {
         }
     }
 
-
-        public PageDTO<AccommodationDTO> showRenterAccommodation(RenterDTO renterDTO) throws BusinessException, RemoteException {
-        try{
-            documentResDAO = new MongoReservationDAO();
-            documentAccDAO = new MongoAccommodationDAO();
-
-            Renter renter = new Renter();
-            renter.setId(renterDTO.getId());
-
-            LinkedList<Document> accDocs = (LinkedList<Document>) documentAccDAO.getSearchedAcc(renter);
-            LinkedList<AccommodationDTO> accDTOList = new LinkedList<>();
-            for (Document accDoc: accDocs){
-                AccommodationDTO acc = new AccommodationDTO();
-                acc.setId(accDoc.getInteger("_id"));
-                acc.setName(accDoc.getString("name"));
-                acc.setNeighborhood(accDoc.getString("neighborhood"));
-                acc.setRating(accDoc.getDouble("rating"));
-            }
-            PageDTO<AccommodationDTO> accPage = new PageDTO<AccommodationDTO>();
-            accPage.setEntries(accDTOList);
-            return accPage;
-        }catch(Exception e){
-            throw new BusinessException(e);
-        }finally{
-            documentResDAO.closeConnection();
-            documentAccDAO.closeConnection();
-        }
-    }
 
 }
 

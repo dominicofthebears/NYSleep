@@ -1,7 +1,6 @@
-package it.unipi.lsmsd.nysleep.business.RMI;
+package it.unipi.lsmsd.nysleep.RMI;
 
 import it.unipi.lsmsd.nysleep.business.*;
-import it.unipi.lsmsd.nysleep.business.RMI.*;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -28,7 +27,7 @@ public class ServerRegistry {
 
 }
 
-    public static void main(String [] args) {
+    public static void exposeObjects() {
         try {
 
             System.out.println("Server is booting....");

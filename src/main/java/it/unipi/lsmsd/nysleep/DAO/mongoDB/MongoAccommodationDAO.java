@@ -126,6 +126,11 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
     public List<Document> getSearchedAcc(LocalDate startDate,LocalDate endDate,int numPeople,String neighborhood,
                                          double price, int skip, int limit) throws BusinessException {
         Document searchQuery;
+
+        if(startDate == null || endDate == null){
+            throw new BusinessException("Select start date and end date");
+        }
+
         if(numPeople == 0){
             throw new BusinessException("Select a number of people");
         }
@@ -139,63 +144,48 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
         }
 
         try {
-            if (neighborhood.equals(" ") && price == 0) {
-                searchQuery = new Document("$and", Arrays.asList(new Document("$nor", Arrays.asList(new Document("reservations.start_date",
-                                        new Document("$gt", startDate)
-                                                .append("$lt", endDate)),
+            if (neighborhood.equals("") && price == 0) {
+                searchQuery = new Document("$and", Arrays.asList(new Document("$or", Arrays.asList(new Document("reservations.start_date",
+                                        new Document("$not",
+                                                new Document("$lte", endDate))),
                                 new Document("reservations.end_date",
-                                        new Document("$gt",
-                                                startDate)
-                                                .append("$lt", endDate)),
-                                new Document("$and", Arrays.asList(new Document("reservations.start_date",
-                                                new Document("$lt", startDate)),
-                                        new Document("reservations.end_date",
-                                                new Document("$gt", endDate)))))),
+                                        new Document("$not",
+                                                new Document("$gte", startDate))))),
                         new Document("num_beds", numPeople)));
-            } else if (neighborhood.equals(" ")) {
-                searchQuery = new Document("$and", Arrays.asList(new Document("$nor", Arrays.asList(new Document("reservations.start_date",
-                                        new Document("$gt", startDate)
-                                                .append("$lt", endDate)),
+
+            } else if (neighborhood.equals("")) {
+                searchQuery = new Document("$and", Arrays.asList(new Document("$or", Arrays.asList(new Document("reservations.start_date",
+                                        new Document("$not",
+                                                new Document("$lte",
+                                                        endDate))),
                                 new Document("reservations.end_date",
-                                        new Document("$gt",
-                                                startDate)
-                                                .append("$lt", endDate)),
-                                new Document("$and", Arrays.asList(new Document("reservations.start_date",
-                                                new Document("$lt", startDate)),
-                                        new Document("reservations.end_date",
-                                                new Document("$gt", endDate)))))),
+                                        new Document("$not", new Document("$gte", startDate))))),
                         new Document("num_beds", numPeople),
                         new Document("price",
                                 new Document("$lt", price))));
             }
             else if (price == 0) {
-                searchQuery = new Document("$and", Arrays.asList(new Document("$nor", Arrays.asList(new Document("reservations.start_date",
-                                        new Document("$gt", startDate)
-                                                .append("$lt", endDate)),
+                searchQuery = new Document("$and", Arrays.asList(new Document("$or", Arrays.asList(new Document("reservations.start_date",
+                                        new Document("$not",
+                                                new Document("$lte",
+                                                        endDate))),
                                 new Document("reservations.end_date",
-                                        new Document("$gt",
-                                                startDate)
-                                                .append("$lt", endDate)),
-                                new Document("$and", Arrays.asList(new Document("reservations.start_date",
-                                                new Document("$lt", startDate)),
-                                        new Document("reservations.end_date",
-                                                new Document("$gt", endDate)))))),
+                                        new Document("$not",
+                                                new Document("$gte",
+                                                        startDate))))),
                         new Document("neighborhood", neighborhood),
                         new Document("num_beds", numPeople)));
 
             }
             else{
-                searchQuery = new Document("$and", Arrays.asList(new Document("$nor", Arrays.asList(new Document("reservations.start_date",
-                                        new Document("$gt", startDate)
-                                                .append("$lt", endDate)),
+                searchQuery = new Document("$and", Arrays.asList(new Document("$or", Arrays.asList(new Document("reservations.start_date",
+                                        new Document("$not",
+                                                new Document("$lte",
+                                                        endDate))),
                                 new Document("reservations.end_date",
-                                        new Document("$gt",
-                                                startDate)
-                                                .append("$lt", endDate)),
-                                new Document("$and", Arrays.asList(new Document("reservations.start_date",
-                                                new Document("$lt", startDate)),
-                                        new Document("reservations.end_date",
-                                                new Document("$gt", endDate)))))),
+                                        new Document("$not",
+                                                new Document("$gte",
+                                                        startDate))))),
                         new Document("neighborhood", neighborhood),
                         new Document("num_beds", numPeople),
                         new Document("price",

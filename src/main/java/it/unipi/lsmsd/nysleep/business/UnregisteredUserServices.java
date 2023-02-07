@@ -2,7 +2,7 @@ package it.unipi.lsmsd.nysleep.business;
 
 import it.unipi.lsmsd.nysleep.DTO.*;
 import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoUserDAO;
-import it.unipi.lsmsd.nysleep.business.RMI.UnregisteredUserServicesRMI;
+import it.unipi.lsmsd.nysleep.RMI.UnregisteredUserServicesRMI;
 import it.unipi.lsmsd.nysleep.business.exception.BusinessException;
 import it.unipi.lsmsd.nysleep.model.Admin;
 import it.unipi.lsmsd.nysleep.model.Customer;

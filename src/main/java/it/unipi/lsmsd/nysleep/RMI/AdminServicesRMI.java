@@ -1,4 +1,4 @@
-package it.unipi.lsmsd.nysleep.business.RMI;
+package it.unipi.lsmsd.nysleep.RMI;
 
 import it.unipi.lsmsd.nysleep.DTO.*;
 import it.unipi.lsmsd.nysleep.business.exception.BusinessException;
@@ -9,7 +9,8 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-public interface AdminServicesRMI extends Remote {
+public interface AdminServicesRMI extends Remote, UserServicesRMI {
+
 
     public void modifyUser(AdminDTO oldAdminDTO, AdminDTO newAdminDTO) throws BusinessException, RemoteException;
     public void removeAccommodation(AccommodationDTO accDTO) throws BusinessException, RemoteException;

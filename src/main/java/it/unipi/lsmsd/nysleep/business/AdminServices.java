@@ -5,7 +5,7 @@ import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoReservationDAO;
 import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoReviewDAO;
 import it.unipi.lsmsd.nysleep.DAO.mongoDB.MongoUserDAO;
 import it.unipi.lsmsd.nysleep.DTO.*;
-import it.unipi.lsmsd.nysleep.business.RMI.AdminServicesRMI;
+import it.unipi.lsmsd.nysleep.RMI.AdminServicesRMI;
 import it.unipi.lsmsd.nysleep.business.exception.BusinessException;
 import it.unipi.lsmsd.nysleep.model.*;
 import org.bson.Document;
@@ -21,7 +21,7 @@ import java.util.List;
 public class AdminServices extends UserServices implements AdminServicesRMI {
 
     public AdminServices(){
-    };
+    }
 
     public void modifyUser(AdminDTO oldAdminDTO, AdminDTO newAdminDTO) throws BusinessException, RemoteException {
         try{
@@ -90,7 +90,7 @@ public class AdminServices extends UserServices implements AdminServicesRMI {
                     LocalDate startDateCasted = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
                     Date endDate = (Date) resDoc.get("end_date");
-                    LocalDate endDateCasted = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    LocalDate endDateCasted = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
                     Document customerDoc = (Document) resDoc.get("customer");
                     Document accommodationDoc = (Document) resDoc.get("accommodation");

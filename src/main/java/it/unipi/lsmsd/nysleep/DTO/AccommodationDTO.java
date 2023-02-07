@@ -63,14 +63,9 @@ public class AccommodationDTO implements Serializable {
 
     @Override
     public String toString(){
-        return "AccommodationDTO{" +
-               "id=" + id +
-               ", name='" + name + '\'' +
-               ", neighborhood='" + neighborhood + '\'' +
-               ", rating=" + rating +
-               ", mainPicUrl='" + mainPicUrl + '\'' +
-               ", price=" + price +
-                '}';
+        return name  + " \nneighborhood: " + neighborhood +
+                        " \nrating=" + rating +
+                        " \nprice=" + price;
     }
 
     public double getPrice() {
