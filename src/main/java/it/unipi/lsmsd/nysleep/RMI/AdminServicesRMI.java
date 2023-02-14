@@ -8,6 +8,7 @@ import org.neo4j.driver.Record;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.Map;
 
 public interface AdminServicesRMI extends Remote, UserServicesRMI {
 
@@ -24,12 +25,13 @@ public interface AdminServicesRMI extends Remote, UserServicesRMI {
     public List<Document> mostReservingCountryForNeighborhood() throws BusinessException, RemoteException;
     public List<Document> mostAndLeastExpensiveAccommodationForPropertyType() throws BusinessException, RemoteException;
     public List<Document> averageRatingByCountry() throws BusinessException, RemoteException;
-    public Record mostActiveUser() throws BusinessException, RemoteException;
-    public Record renterWithMostAccommodation() throws BusinessException, RemoteException;
-    public Record bestReviewedRenter(int min) throws BusinessException, RemoteException;
-    public Record renterWithMostAccommodationForNeighborhood(String neighborhood) throws BusinessException, RemoteException;
+    public Map<String, Object> mostActiveUser() throws BusinessException, RemoteException;
+    public Map<String, Object> renterWithMostAccommodation() throws BusinessException, RemoteException;
+    public Map<String, Object> bestReviewedRenter(int min) throws BusinessException, RemoteException;
+    public Map<String, Object> renterWithMostAccommodationForNeighborhood(String neighborhood) throws BusinessException, RemoteException;
     public Document neighborhoodRentedByMostNumberOfCountries() throws BusinessException, RemoteException;
     public List<Document> mostReservedAccommodationForSeason() throws BusinessException, RemoteException;
+    public List<String>  getNeighborhoods() throws BusinessException, RemoteException;
 
 
 

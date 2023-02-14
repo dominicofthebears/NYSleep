@@ -1,6 +1,7 @@
 package it.unipi.lsmsd.nysleep.DTO;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 //reviews about an accommodation
 public class AccReviewDTO implements Serializable {
@@ -11,9 +12,10 @@ public class AccReviewDTO implements Serializable {
     private String customerCountry;
     private int rate;
     private String comment;
+    private LocalDate date;
 
     public AccReviewDTO(){}
-    public AccReviewDTO(int id, int customerId, String customerFirstName, String customerLastName, String customerCountry, int rate, String comment) {
+    public AccReviewDTO(int id, int customerId, String customerFirstName, String customerLastName, String customerCountry, int rate, String comment, LocalDate date) {
         this.id = id;
         this.customerId = customerId;
         this.customerFirstName = customerFirstName;
@@ -21,6 +23,7 @@ public class AccReviewDTO implements Serializable {
         this.customerCountry = customerCountry;
         this.rate = rate;
         this.comment = comment;
+        this.date = date;
     }
 
     public int getCustomerId() {
@@ -73,14 +76,11 @@ public class AccReviewDTO implements Serializable {
 
     @Override
     public String toString(){
-        return "ReviewAccDTO{" +
-               "customerID=" + customerId +
-               ", customerFirstName='"+ customerFirstName + '\'' +
-               ", customerLastName='"+ customerLastName +'\'' +
-               ", customerCountry='"+ customerCountry +'\'' +
-               ", rate=" + rate +
-               ", comment='" + comment +'\'' +
-               '}';
+        return "Customer: "+ customerFirstName + ' ' + customerLastName +
+               "\nFrom: "+ customerCountry +
+               "\nrate: " + rate +
+               "\ncomment: " + comment +
+               "\ndate: " + date ;
     }
 
     public int getId() {
@@ -89,5 +89,13 @@ public class AccReviewDTO implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 }

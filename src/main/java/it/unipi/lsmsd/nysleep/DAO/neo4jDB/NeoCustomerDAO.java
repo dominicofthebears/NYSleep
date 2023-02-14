@@ -82,21 +82,4 @@ public class NeoCustomerDAO extends Neo4jBaseDAO implements UserDAO {
             close(driver);
         }
     }
-
-    public List<Record> getSuggestedAccommodation(Customer customer){
-        driver = initDriver(driver);
-        List<Record> recordList = new ArrayList<>();
-        try(Session session = driver.session())
-        {
-            Result result= session.run("MATCH (cc:customer)-[r:REVIEWS]->(aa:accommodation)<-[o:OWNS]-(rr:renter)-[so:OWNS]->(sa:accommodation)" +
-                    " WHERE r.rate>3 AND cc.id=$id  RETURN sa", parameters("id", customer.getId()));
-            while(result.hasNext()) {
-                Record record=result.next();
-                recordList.add(record);
-            }
-            return recordList;
-        }finally {
-            close(driver);
-        }
-    }
 }

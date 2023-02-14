@@ -7,7 +7,7 @@ public class CustomerDTO  extends RegisteredUserDTO implements Serializable {
 
 
     public CustomerDTO(int id, String firstName, String lastName, String country, String email, String password){
-        super(id, firstName, lastName, email, password);
+        super(id, firstName, lastName, email, password, "customer");
         this.country=country;
     }
 

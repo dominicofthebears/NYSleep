@@ -71,7 +71,7 @@ public class UnregisteredUserServices extends UserServices implements Unregister
                             ((Renter) logged_in).getWorkEmail(), ((Renter) logged_in).getPhone(), logged_in.getEmail(), logged_in.getPassword());
                 } else {
                     reg_user = new AdminDTO(logged_in.getId(), logged_in.getFirstName(), logged_in.getLastName(),
-                            ((Admin) logged_in).getTitle(), logged_in.getEmail(), logged_in.getPassword());
+                            logged_in.getEmail(), logged_in.getPassword(), ((Admin) logged_in).getTitle());
                 }
                 documentUserDAO.closeConnection();
                 return reg_user;

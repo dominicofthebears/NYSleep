@@ -19,12 +19,12 @@ public class MongoReservationDAO extends MongoBaseDAO implements ReservationDAO 
     private static Document toDoc(Reservation res){
         //Convert the model object in a document
 
-        Document customerDoc = new Document("_id",res.getCustomer().getId())
+        Document customerDoc = new Document("id",res.getCustomer().getId())
                 .append("first_name",res.getCustomer().getFirstName())
                 .append("last_name",res.getCustomer().getLastName())
                 .append("country",res.getCustomer().getCountry());
 
-        Document accDoc = new Document("_id",res.getAccommodation().getId())
+        Document accDoc = new Document("id",res.getAccommodation().getId())
                 .append("name",res.getAccommodation().getName())
                 .append("neighborhood",res.getAccommodation().getNeighborhood());
 
@@ -190,7 +190,7 @@ public class MongoReservationDAO extends MongoBaseDAO implements ReservationDAO 
         MongoCollection<Document> collection = db.getCollection(COLLECTION);
         AggregateIterable docsIterable = collection.aggregate(Arrays.asList(new Document("$group",
                         new Document("_id", new Document("neighborhood", "$accommodation.neighborhood") .append("country", "$customer.country"))),
-                new Document("$group", new Document("_id", new Document("neigborhood", "$_id.neighborhood")) .append("num_countries", new Document("$sum", 1L))),
+                new Document("$group", new Document("_id", new Document("neighborhood", "$_id.neighborhood")) .append("num_countries", new Document("$sum", 1L))),
                 new Document("$sort", new Document("num_countries", -1L)),
                 new Document("$limit", 1L)));
 

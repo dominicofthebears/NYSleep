@@ -33,6 +33,10 @@ public class AccommodationDetailsDTO implements Serializable {
         this.numRooms = num_rooms;
     }
 
+    public AccommodationDetailsDTO() {
+
+    }
+
     public int getId() {
         return id;
     }
@@ -69,7 +73,7 @@ public class AccommodationDetailsDTO implements Serializable {
         return imagesURL;
     }
 
-    public void setImagesURL(LinkedList<String> imagesURL) {
+    public void setImagesURL(List<String> imagesURL) {
         this.imagesURL = imagesURL;
     }
 
@@ -85,7 +89,7 @@ public class AccommodationDetailsDTO implements Serializable {
         return amenities;
     }
 
-    public void setAmenities(LinkedList<String> amenities) {
+    public void setAmenities(List<String> amenities) {
         this.amenities = amenities;
     }
 

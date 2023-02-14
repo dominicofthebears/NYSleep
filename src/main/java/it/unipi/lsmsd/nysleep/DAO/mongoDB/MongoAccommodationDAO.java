@@ -1,6 +1,7 @@
 package it.unipi.lsmsd.nysleep.DAO.mongoDB;
 
 import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Accumulators;
@@ -8,6 +9,7 @@ import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Sorts;
 import it.unipi.lsmsd.nysleep.DAO.AccommodationDAO;
 import it.unipi.lsmsd.nysleep.DAO.base.MongoBaseDAO;
+import it.unipi.lsmsd.nysleep.DTO.AccommodationDTO;
 import it.unipi.lsmsd.nysleep.business.exception.BusinessException;
 import it.unipi.lsmsd.nysleep.model.Accommodation;
 
@@ -198,6 +200,33 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
         return readDocs(searchQuery,COLLECTION,skip, limit);
     }
 
+    public boolean checkDates(AccommodationDTO acc, LocalDate startDate,LocalDate endDate) throws BusinessException {
+        if(startDate == null || endDate == null){
+            throw new BusinessException("Select start date and end date");
+        }
+
+        if(startDate.isAfter(endDate)){
+            throw new BusinessException("Start date must come before end date");
+        }
+        Document searchQuery = new Document("$and", Arrays.asList(new Document("$or", Arrays.asList(new Document("reservations.start_date",
+                                new Document("$not",
+                                        new Document("$lte", endDate))),
+                        new Document("reservations.end_date",
+                                new Document("$not",
+                                        new Document("$gte", startDate))))),
+                new Document("_id", acc.getId())));
+
+
+        Document doc = readDoc(searchQuery,COLLECTION);
+        if(doc == null){
+            return false;
+        }
+        else{
+            return true;
+        }
+
+    }
+
     //Get all the accommodations belonging to a renter
 
     public List<Document> getSearchedAcc(Renter renter) {
@@ -276,6 +305,10 @@ public class MongoAccommodationDAO extends MongoBaseDAO implements Accommodation
 
     public String getCollection(){
         return COLLECTION;
+    }
+
+    public List<String>  getNeighborhoods(){
+        return getUniqueValues("neighborhood", getCollection());
     }
 
 

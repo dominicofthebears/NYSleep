@@ -10,7 +10,7 @@ public class ModifiedAccDTO implements Serializable {
     private int numBeds;
     private int numReviews;
     private int numRooms;
-    private java.util.List<String> amenities;
+    private List<String> amenities;
     private double price;
 
     public ModifiedAccDTO(int id,
@@ -19,7 +19,8 @@ public class ModifiedAccDTO implements Serializable {
                           int numBeds,
                           int numReviews,
                           int numRooms,
-                          List<String> amenities){
+                          List<String> amenities,
+                          double price){
         this.id = id;
         this.name = name;
         this.imagesURL = imagesURL;
@@ -27,6 +28,7 @@ public class ModifiedAccDTO implements Serializable {
         this.numReviews = numReviews;
         this.numRooms = numRooms;
         this.amenities = amenities;
+        this.price = price;
     }
 
     public int getId() {

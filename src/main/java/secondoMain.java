@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class secondoMain {
+public class secondoMain {/*
     public static void main(String[] args) throws RemoteException {
         AdminServices ad =  new AdminServices();
         UserServices user = new UserServices();
@@ -37,7 +37,7 @@ public class secondoMain {
             /*System.out.println(docs.size());
             for(Document doc:docs) {
                 System.out.println(docs);
-            }*/
+            }
             PageDTO<AccommodationDTO> pageDTO=user.showHomePage(0, 10);
             System.out.println(pageDTO.toString());
 
@@ -149,5 +149,5 @@ public class secondoMain {
     private static LocalDate date1 = LocalDate.of(2023,8,18);
     private static LocalDate date2 = LocalDate.of(2023,9,13);
     private static Accommodation acc = new Accommodation(0, null, null, null, 0,
-            0, 0, null, 0, null, 1, null, null);
+            0, 0, null, 0, null, 1, null, null);*/
 }

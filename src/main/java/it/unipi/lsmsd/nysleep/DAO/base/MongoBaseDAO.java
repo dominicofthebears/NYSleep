@@ -21,8 +21,6 @@ public abstract class MongoBaseDAO{
     protected static String connection = "mongodb://172.16.5.38:27017,172.16.5.39:27017,172.16.5.40:27017/" +
             "?retryWrites=true&w=majority&readPreference=nearest";
     protected static String dbName = "NYSleep";
-    //protected static String connection="mongodb://localhost:27017";
-    //protected static String dbName = "NYTest";
     protected static MongoClient client;
     public static ClientSession session;
     protected static CodecRegistry pojoCodecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(),fromProviders(PojoCodecProvider.builder().automatic(true).build()));
@@ -138,15 +136,24 @@ public abstract class MongoBaseDAO{
     }
 
     public int getLastId(String COLLECTION){
-        System.out.println("coll: "+COLLECTION);
         MongoClient myClient = MongoClients.create(connection);
         MongoDatabase db = myClient.getDatabase(dbName).withCodecRegistry(pojoCodecRegistry);
         MongoCollection<Document> collection = db.getCollection(COLLECTION);
         Document sort = new Document("_id",-1);
         Iterator iterator = collection.find().sort(sort).limit(1).iterator();
         Document doc = (Document) iterator.next();
-        System.out.println("id preso");
         return ((int)doc.get("_id")+1);
+    }
+
+    public static List<String>  getUniqueValues(String field, String COLLECTION){
+        MongoDatabase db = client.getDatabase(dbName).withCodecRegistry(pojoCodecRegistry);
+        MongoCollection<Document> collection = db.getCollection(COLLECTION);
+        DistinctIterable<String> neighborhoods = collection.distinct(field, String.class);
+        List<String> result = new ArrayList<>();
+        for(String s : neighborhoods){
+            result.add(s);
+        }
+        return result;
     }
 
 

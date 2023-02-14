@@ -14,9 +14,7 @@ import org.neo4j.driver.Record;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class AdminServices extends UserServices implements AdminServicesRMI {
 
@@ -96,7 +94,7 @@ public class AdminServices extends UserServices implements AdminServicesRMI {
                     Document accommodationDoc = (Document) resDoc.get("accommodation");
 
                     //Create DTO
-                    Double cost = new Double((Integer)resDoc.get("cost"));
+                    Double cost = ((Double) resDoc.get("cost"));
                     ReservationDTO resDTO = new ReservationDTO(
                             (int) resDoc.get("_id"),
                             startDateCasted,
@@ -112,6 +110,7 @@ public class AdminServices extends UserServices implements AdminServicesRMI {
                     accReservations.add(resDTO);
                 }
             }
+            accReservations.sort(Comparator.comparing(ReservationDTO::getendDate).reversed());
             PageDTO<ReservationDTO> resPage = new PageDTO<ReservationDTO>();
             resPage.setEntries(accReservations);
             return resPage;
@@ -140,6 +139,11 @@ public class AdminServices extends UserServices implements AdminServicesRMI {
             graphRevDAO.deleteReview(review);
             documentAccDAO.decreaseNumReview(review.getAccommodation());
 
+            double rate=graphAccDAO.recomputeRate(review.getAccommodation());
+
+            documentAccDAO.updateRating(review.getAccommodation(), rate);
+            graphAccDAO.updateRating(review.getAccommodation(), rate);
+
             documentRevDAO.commitTransaction();
             documentAccDAO.commitTransaction();
         }catch(Exception e){
@@ -159,13 +163,17 @@ public class AdminServices extends UserServices implements AdminServicesRMI {
             reservation.setId(reservationDTO.getId());
             reservation.setStartDate(reservationDTO.getstartDate());
             reservation.setEndDate(reservationDTO.getendDate());
+            Accommodation acc = new Accommodation();
+            acc.setId(reservationDTO.getAccommodationId());
             documentResDAO.startTransaction();
 
             documentResDAO.deleteReservation(reservation);
-            documentAccDAO.deleteReservation(reservation.getAccommodation(),reservation);
+            documentAccDAO.deleteReservation(acc,reservation);
 
             documentResDAO.commitTransaction();
+            documentAccDAO.commitTransaction();
         }catch(Exception e){
+            documentResDAO.abortTransaction();
             throw new BusinessException(e);
         }finally {
             documentResDAO.closeConnection();
@@ -245,37 +253,53 @@ public class AdminServices extends UserServices implements AdminServicesRMI {
         }
     }
 
-    public Record mostActiveUser() throws BusinessException, RemoteException{
+    public Map<String, Object> mostActiveUser() throws BusinessException, RemoteException{
         try{
             Record record = graphCustomerDAO.mostActiveUser();
-            return record;
+            Map<String, Object> recordData = new HashMap<>();
+            for (String key : record.keys()) {
+                recordData.put(key, record.get(key).asObject());
+            }
+            return recordData;
         }catch (Exception e){
             throw new BusinessException(e);
         }
     }
 
-    public Record renterWithMostAccommodation() throws BusinessException, RemoteException{
+    public Map<String, Object> renterWithMostAccommodation() throws BusinessException, RemoteException{
         try{
             Record record = graphRenterDAO.renterWithMostAccommodation();
-            return record;
+            Map<String, Object> recordData = new HashMap<>();
+            for (String key : record.keys()) {
+                recordData.put(key, record.get(key).asObject());
+            }
+            return recordData;
         }catch (Exception e){
             throw new BusinessException(e);
         }
     }
 
-    public Record bestReviewedRenter(int min) throws BusinessException, RemoteException{
+    public Map<String, Object> bestReviewedRenter(int min) throws BusinessException, RemoteException{
         try{
             Record record = graphRenterDAO.bestReviewedRenter(min);
-            return record;
+            Map<String, Object> recordData = new HashMap<>();
+            for (String key : record.keys()) {
+                recordData.put(key, record.get(key).asObject());
+            }
+            return recordData;
         }catch (Exception e){
             throw new BusinessException(e);
         }
     }
 
-    public Record renterWithMostAccommodationForNeighborhood(String neighborhood) throws BusinessException, RemoteException{
+    public Map<String, Object> renterWithMostAccommodationForNeighborhood(String neighborhood) throws BusinessException, RemoteException{
         try{
             Record record = graphRenterDAO.renterWithMostAccommodationForNeighborhood(neighborhood);
-            return record;
+            Map<String, Object> recordData = new HashMap<>();
+            for (String key : record.keys()) {
+                recordData.put(key, record.get(key).asObject());
+            }
+            return recordData;
         }catch (Exception e){
             throw new BusinessException(e);
         }
@@ -299,5 +323,15 @@ public class AdminServices extends UserServices implements AdminServicesRMI {
         }catch (Exception e){
             throw new BusinessException(e);
         }
+    }
+
+    public List<String>  getNeighborhoods() throws BusinessException {
+        try {
+            documentAccDAO = new MongoAccommodationDAO();
+            return documentAccDAO.getNeighborhoods();
+        }catch (Exception e){
+            throw new BusinessException(e);
+        }
+
     }
 }

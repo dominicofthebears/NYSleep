@@ -15,6 +15,7 @@ import org.neo4j.driver.Record;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,6 +48,12 @@ public class CustomerServices extends UserServices implements CustomerServicesRM
             review.setRate(accReviewDTO.getRate());
             review.setDate(LocalDate.now());
             documentRevDAO.startTransaction();
+
+            if(documentRevDAO.checkExistingReview(accReviewDTO.getCustomerId(), customerReviewDTO.getAccommodationId())){
+                documentRevDAO.closeConnection();
+                documentAccDAO.closeConnection();
+                throw new BusinessException("You have already reviewed this accommodation");
+            }
 
             documentRevDAO.createReview(review);
             documentAccDAO.incrementNumReview(review.getAccommodation());
@@ -113,7 +120,6 @@ public class CustomerServices extends UserServices implements CustomerServicesRM
 
             Reservation reservation = new Reservation();
             reservation.setId(documentResDAO.getLastId(documentResDAO.getCollection()));
-            System.out.println("id: "+ reservation.getId());
             reservation.setStartDate(reservationDTO.getstartDate());
             reservation.setEndDate(reservationDTO.getendDate());
             reservation.setTotalCost(reservationDTO.getTotalCost());
@@ -193,6 +199,8 @@ public class CustomerServices extends UserServices implements CustomerServicesRM
             documentResDAO = new MongoReservationDAO();
             documentRevDAO = new MongoReviewDAO();
             documentUserDAO = new MongoUserDAO();
+            documentUserDAO.startTransaction();
+
             if(!oldUserDTO.getEmail().equals(newUserDTO.getEmail()) && documentUserDAO.checkEmail(newUserDTO.getEmail())){
                 throw new BusinessException("Email already in use");
             }
@@ -210,7 +218,6 @@ public class CustomerServices extends UserServices implements CustomerServicesRM
             newUser.setEmail(newUserDTO.getEmail());
             newUser.setPassword(newUserDTO.getPassword());
             newUser.setType("customer");
-            documentUserDAO.startTransaction();
             if(!newUserDTO.getFirstName().equals(oldUserDTO.getFirstName()) ||
                 !newUserDTO.getLastName().equals(oldUserDTO.getLastName()) ||
                 !newUserDTO.getCountry().equals(oldUserDTO.getCountry())){
@@ -297,8 +304,10 @@ public class CustomerServices extends UserServices implements CustomerServicesRM
                     acc.setRating(Double.NaN);
                 else
                     acc.setRating(rec.get("rating").asDouble());
+                acc.setPrice(rec.get("price").asDouble());
                 accDTOList.add(acc);
             }
+
             PageDTO<AccommodationDTO> resPage = new PageDTO<>();
             resPage.setEntries(accDTOList);
             return resPage;
@@ -323,6 +332,7 @@ public class CustomerServices extends UserServices implements CustomerServicesRM
                     acc.setRating(Double.NaN);
                 else
                     acc.setRating(rec.get("rating").asDouble());
+                acc.setPrice(rec.get("price").asDouble());
                 accDTOList.add(acc);
             }
             PageDTO<AccommodationDTO> resPage = new PageDTO<>();
@@ -345,17 +355,22 @@ public class CustomerServices extends UserServices implements CustomerServicesRM
 
                     Document accommodationDoc = (Document) doc.get("accommodation");
 
+                    Date date = (Date) doc.get("date");
+                    LocalDate dateCasted= date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
                     CustomerReviewDTO customerReviewDTO = new CustomerReviewDTO(
                             (int) doc.get("_id"),
                             (int) accommodationDoc.get("id"),
                             (String) accommodationDoc.get("name"),
                             (int) doc.get("rate"),
-                            (String) doc.get("comment")
+                            (String) doc.get("comment"),
+                            dateCasted
                     );
 
                     customerReviewDTOList.add(customerReviewDTO);
                 }
             }
+            customerReviewDTOList.sort(Comparator.comparing(CustomerReviewDTO::getDate).reversed());
         PageDTO<CustomerReviewDTO> pageDTO = new PageDTO<CustomerReviewDTO>();
         pageDTO.setEntries(customerReviewDTOList);
         return pageDTO;
@@ -381,6 +396,33 @@ public class CustomerServices extends UserServices implements CustomerServicesRM
         }finally {
             documentResDAO.closeConnection();
             documentAccDAO.closeConnection();
+        }
+    }
+
+    public boolean checkAvailability(AccommodationDTO acc, LocalDate startDate, LocalDate endDate) throws BusinessException {
+        try{
+            documentAccDAO = new MongoAccommodationDAO();
+            return documentAccDAO.checkDates(acc, startDate, endDate);
+        }catch(Exception e){
+            throw new BusinessException(e);
+        }finally {
+            documentAccDAO.closeConnection();
+        }
+
+    }
+
+    public ModifiedCustomerDTO getAdditionalInformation (CustomerDTO cust) throws BusinessException {
+        try{
+            documentUserDAO = new MongoUserDAO();
+            Document doc = documentUserDAO.getUser(new Customer(cust.getId()));
+            ModifiedCustomerDTO modifiedCust = new ModifiedCustomerDTO(cust.getId(), cust.getFirstName(), cust.getLastName(),
+                    cust.getCountry(), cust.getEmail(), cust.getPassword(), (String )doc.get("phone"),
+                    (String) doc.get("url_profile_pic"), (String) doc.get("address"));
+            return modifiedCust;
+        }catch(Exception e){
+            throw new BusinessException(e);
+        }finally {
+            documentUserDAO.closeConnection();
         }
     }
 }

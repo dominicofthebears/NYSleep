@@ -16,10 +16,8 @@ import org.bson.Document;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class RenterServices extends UserServices implements RenterServicesRMI {
 
@@ -32,20 +30,14 @@ public class RenterServices extends UserServices implements RenterServicesRMI {
         Renter newRenter = new Renter();
         try{
         documentUserDAO = new MongoUserDAO();
+        documentAccDAO = new MongoAccommodationDAO();
+        documentUserDAO.startTransaction();
 
         if(!oldRenterDTO.getEmail().equals(newRenterDTO.getEmail()) && documentUserDAO.checkEmail(newRenterDTO.getEmail())){
             throw new BusinessException("Email already in use");
         }
 
         oldRenter.setId(oldRenterDTO.getId());
-        /*oldRenter.setFirstName(oldRenterDTO.getFirstName());
-        oldRenter.setLastName(oldRenterDTO.getLastName());
-        oldRenter.setPhoneNumber(oldRenterDTO.getPhone());
-        oldRenter.setWorkEmail(oldRenterDTO.getWorkEmail());
-        oldRenter.setPassword(oldRenterDTO.getPassword());
-        oldRenter.setEmail(oldRenterDTO.getEmail());
-        oldRenter.setType("renter");
-        oldRenter.setUrl_prof_pic(oldRenterDTO.getUrl_profile_pic());*/
 
         newRenter.setId(oldRenterDTO.getId());
         newRenter.setFirstName(newRenterDTO.getFirstName());
@@ -57,13 +49,13 @@ public class RenterServices extends UserServices implements RenterServicesRMI {
         newRenter.setType("renter");
         newRenter.setUrl_prof_pic(newRenterDTO.getUrl_profile_pic());
 
-        newRenter.setId(oldRenter.getId());
+
         if(!oldRenterDTO.getFirstName().equals(newRenterDTO.getFirstName())||
            !oldRenterDTO.getLastName().equals(newRenterDTO.getLastName())||
            !oldRenterDTO.getWorkEmail().equals(newRenterDTO.getWorkEmail())||
            !oldRenterDTO.getPhone().equals(newRenterDTO.getPhone()))
         {
-            documentAccDAO = new MongoAccommodationDAO();
+
             LinkedList<Document> accDocs = (LinkedList<Document>) documentAccDAO.getSearchedAcc(newRenter);
             for(Document doc: accDocs){
                 Accommodation acc = new Accommodation();
@@ -72,7 +64,7 @@ public class RenterServices extends UserServices implements RenterServicesRMI {
                 documentAccDAO.updateAccommodationRenter(acc);
             }
         }
-        documentUserDAO.startTransaction();
+
         documentUserDAO.modifyAccountInfo(oldRenter,newRenter);
         graphRenterDAO.modifyAccountInfo(oldRenter,newRenter);
         documentUserDAO.commitTransaction();
@@ -125,7 +117,7 @@ public class RenterServices extends UserServices implements RenterServicesRMI {
     }
 
 
-    public void removeAccommodation(AccommodationDetailsDTO accDTO) throws BusinessException, RemoteException {
+    public void removeAccommodation(AccommodationDTO accDTO) throws BusinessException, RemoteException {
         Accommodation acc = new Accommodation();
         acc.setId(accDTO.getId());
         try{
@@ -288,6 +280,7 @@ public class RenterServices extends UserServices implements RenterServicesRMI {
                     resDTOList.add(resDTO);
                 }
             }
+            resDTOList.sort(Comparator.comparing(ReservationDTO::getendDate).reversed());
             PageDTO<ReservationDTO> resPage = new PageDTO<ReservationDTO>();
             resPage.setEntries(resDTOList);
             return resPage;
@@ -307,19 +300,26 @@ public class RenterServices extends UserServices implements RenterServicesRMI {
             reservation.setId(reservationDTO.getId());
             reservation.setStartDate(reservationDTO.getstartDate());
             reservation.setEndDate(reservationDTO.getendDate());
+
+            Accommodation acc = new Accommodation();
+            acc.setId(reservationDTO.getAccommodationId());
+
             documentResDAO.startTransaction();
 
             documentResDAO.deleteReservation(reservation);
-            documentAccDAO.deleteReservation(reservation.getAccommodation(),reservation);
+            documentAccDAO.deleteReservation(acc,reservation);
 
             documentResDAO.commitTransaction();
         }catch(Exception e){
+            documentResDAO.abortTransaction();
             throw new BusinessException(e);
         }finally {
             documentResDAO.closeConnection();
             documentAccDAO.closeConnection();
         }
     }
+
+
 
 
 }
