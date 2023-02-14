@@ -111,4 +111,16 @@ public class MongoReviewDAO extends MongoBaseDAO implements ReviewsDAO {
         return COLLECTION;
     }
 
+    public boolean checkExistingReview(int customerId, int accommodationId) {
+        Document searchQuery = new Document("customer.id", customerId)
+                .append("accommodation.id", accommodationId);
+        Document doc = readDoc(searchQuery,COLLECTION);
+        if(doc == null){
+            return false;
+        }
+        else{
+            return true;
+        }
+
+    }
 }

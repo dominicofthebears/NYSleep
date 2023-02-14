@@ -19,6 +19,9 @@ import org.bson.Document;
 
 import java.rmi.RemoteException;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -75,10 +78,13 @@ public class UserServices implements UserServicesRMI {
         try {
             documentRevDAO = new MongoReviewDAO();
             List<Document> docs = documentRevDAO.getReviewsForAcc(acc);
-            LinkedList<AccReviewDTO> AccReviewDTOList = new LinkedList<>();
+            LinkedList<AccReviewDTO> accReviewDTOList = new LinkedList<>();
             for (Document doc : docs) {
 
                 Document customerDoc = (Document) doc.get("customer");
+
+                Date date = (Date) doc.get("date");
+                LocalDate dateCasted= date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
                 AccReviewDTO accReviewDTO = new AccReviewDTO(
                         (int) doc.get("_id")
@@ -87,12 +93,14 @@ public class UserServices implements UserServicesRMI {
                         , (String) customerDoc.get("last_name")
                         , (String) customerDoc.get("country")
                         , (int) doc.get("rate")
-                        , (String) doc.get("comment"));
+                        , (String) doc.get("comment")
+                        , dateCasted);
 
-                AccReviewDTOList.add(accReviewDTO);
+                accReviewDTOList.add(accReviewDTO);
             }
+            accReviewDTOList.sort(Comparator.comparing(AccReviewDTO::getDate).reversed());
             pageDTO = new PageDTO<>();
-            pageDTO.setEntries(AccReviewDTOList);
+            pageDTO.setEntries(accReviewDTOList);
         } catch (Exception e) {
             throw new BusinessException(e);
         } finally {

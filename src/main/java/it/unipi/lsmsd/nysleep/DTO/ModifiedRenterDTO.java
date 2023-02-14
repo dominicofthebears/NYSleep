@@ -7,7 +7,7 @@ public class ModifiedRenterDTO extends RenterDTO implements Serializable {
 
     public ModifiedRenterDTO(){}
     public ModifiedRenterDTO(int id, String firstName, String lastName, String workEmail, String phone, String email, String password,String url_profile_pic){
-        super(id, firstName, lastName, email, password,workEmail,phone);
+        super(id, firstName, lastName, workEmail, phone, email, password);
         this.url_profile_pic = url_profile_pic;
     }
 

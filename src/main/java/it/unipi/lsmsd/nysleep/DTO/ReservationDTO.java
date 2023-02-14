@@ -85,16 +85,11 @@ public class ReservationDTO implements Serializable {
     }
 
     public String toString(){
-        return"ReservationDTO{" +
-              " startDate='" + startDate + '\'' +
-              ", endDate='" + endDate + '\'' +
-              ", totalCost=" + totalCost +
-              ", customerID=" + customerId +
-              ", customerFirstName='"+ customerFirstName + '\'' +
-              ", customerLastName='"+ customerLastName +'\'' +
-              ", accommodationId=" + accommodationId +
-              ", accommodationName='"+ accommodationName + '\'' +
-              '}';
+        return"From: " + startDate +
+              "\nto: " + endDate +
+              "\nTotal Cost=" + totalCost +
+              "\nCustomer: "+ customerFirstName + ' ' + customerLastName +
+              "\nAccommodation: "+ accommodationName ;
     }
 
     public int getId() {

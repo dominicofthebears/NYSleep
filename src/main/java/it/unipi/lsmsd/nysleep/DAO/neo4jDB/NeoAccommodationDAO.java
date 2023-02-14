@@ -25,8 +25,8 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
         try(Session session = driver.session())
         {
             session.run("CREATE (aa:accommodation {id: $id"+", name: $name"+
-                        ", neighborhood: $neighborhood"+", rating: $rating"+" })"
-                , parameters("id", acc.getId(), "name", acc.getName(), "neighborhood", acc.getNeighborhood(), "rating", acc.getRating()));
+                        ", neighborhood: $neighborhood"+", rating: $rating"+", price: $price"+" })"
+                , parameters("id", acc.getId(), "name", acc.getName(), "neighborhood", acc.getNeighborhood(), "rating", acc.getRating(), "price", acc.getPrice()));
             linkRenter(acc);
         }finally {
             close(driver);
@@ -64,8 +64,8 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
         driver = initDriver(driver);
         try(Session session = driver.session())
         {
-            session.run("MATCH (aa: accommodation {id: $oldId"+" }) SET aa.name = $newName"
-                , parameters("oldId", oldAcc.getId(), "newName", newAcc.getName()));
+            session.run("MATCH (aa: accommodation {id: $oldId"+" }) SET aa.name = $newName, aa.price = $newPrice"
+                , parameters("oldId", oldAcc.getId(), "newName", newAcc.getName(), "newPrice", newAcc.getPrice()));
         }finally {
             close(driver);
         }
@@ -87,8 +87,12 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
         driver = initDriver(driver);
         try(Session session = driver.session())
         {
-            session.run("MATCH(cc:customer)-[r:REVIEWS]->(aa:accommodation)<-[o:OWNS]-(rr:renter) WHERE aa.id= $id"+" DELETE o, r"
+            session.run("MATCH (cc:customer)-[r:REVIEWS]->(aa:accommodation)<-[o:OWNS]-(rr:renter) WHERE aa.id= $id"+" DELETE o, r"
                 , parameters("id", acc.getId()));
+
+            //running two times, since we may have that the accommodation we are looking for has no reviews
+            session.run("MATCH (aa:accommodation)<-[o:OWNS]-(rr:renter) WHERE aa.id= $id"+" DELETE o"
+                    , parameters("id", acc.getId()));
         }finally {
             close(driver);
         }
@@ -136,7 +140,7 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
             }
             //retrieves the accommodation that the similar customer had rated well (4 or more)
             Result result2 = session.run("MATCH (cc:customer)-[r:REVIEWS]->(aa:accommodation) WHERE cc.id=$id2 AND r.rate>=4 "+
-                            "RETURN aa.id AS id, aa.name AS name, aa.neighborhood as neighborhood, aa.rating as rating"
+                            "RETURN aa.id AS id, aa.name AS name, aa.neighborhood as neighborhood, aa.rating as rating, aa.price as price"
                     , parameters("id2", id2));
             while(result2.hasNext()) {
                 Record record= result2.next();
@@ -178,7 +182,7 @@ public class NeoAccommodationDAO extends Neo4jBaseDAO implements AccommodationDA
         List<Record> recordList = new LinkedList<>();
         try(Session session = driver.session()){
             Result result = session.run("MATCH (cc:customer)-[r:REVIEWS]->(aa:accommodation)<-[o:OWNS]-(rr:renter)-[so:OWNS]->(sa:accommodation) "+"" +
-                    "WHERE r.rate>3 AND cc.id=$id  RETURN sa.id AS id, sa.name AS name, sa.neighborhood as neighborhood, sa.rating as rating"
+                    "WHERE r.rate>3 AND cc.id=$id  RETURN sa.id AS id, sa.name AS name, sa.neighborhood as neighborhood, sa.rating as rating, sa.price as price"
                     , parameters("id", customer.getId()));
             while(result.hasNext()) {
                 Record record= result.next();

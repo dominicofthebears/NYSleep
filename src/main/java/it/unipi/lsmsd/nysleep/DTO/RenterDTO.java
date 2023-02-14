@@ -8,8 +8,9 @@ public class RenterDTO extends RegisteredUserDTO implements Serializable {
 
     public RenterDTO(){}
 
-    public RenterDTO(int id, String firstName, String lastName, String workEmail, String phone, String email, String password){
-        super(id, firstName, lastName, email, password);
+    public RenterDTO(int id, String firstName, String lastName, String workEmail,
+                     String phone, String email, String password){
+        super(id, firstName, lastName, email, password, "renter");
         this.workEmail=workEmail;
         this.phone=phone;
 

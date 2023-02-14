@@ -3,6 +3,7 @@ package it.unipi.lsmsd.nysleep.DTO;
 import it.unipi.lsmsd.nysleep.model.Customer;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 //reviews made by a customer
 public class CustomerReviewDTO implements Serializable {
@@ -11,14 +12,16 @@ public class CustomerReviewDTO implements Serializable {
     private String accommodationName;
     private int rate;
     private String comment;
+    private LocalDate date;
 
     public CustomerReviewDTO(){}
-    public CustomerReviewDTO(int id, int accommodationId, String accommodationName, int rate, String comment) {
+    public CustomerReviewDTO(int id, int accommodationId, String accommodationName, int rate, String comment, LocalDate date) {
         this.id=id;
         this.accommodationId = accommodationId;
         this.accommodationName = accommodationName;
         this.rate = rate;
         this.comment = comment;
+        this.date = date;
     }
 
     public int getAccommodationId() {
@@ -53,14 +56,11 @@ public class CustomerReviewDTO implements Serializable {
         this.comment = comment;
     }
 
-    @Override
     public String toString(){
-        return "CustomerReviewDTO{" +
-                "accommodationId=" + accommodationId +
-                ", accommodationName='"+ accommodationName + '\'' +
-                ", rate=" + rate +
-                ", comment='" + comment +'\'' +
-                '}';
+        return  "Accommodation: "+ accommodationName +
+                "\nrate: " + rate +
+                "\ncomment: " + comment +
+                "\ndate: " + date ;
     }
 
     public int getId() {
@@ -69,5 +69,13 @@ public class CustomerReviewDTO implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 }

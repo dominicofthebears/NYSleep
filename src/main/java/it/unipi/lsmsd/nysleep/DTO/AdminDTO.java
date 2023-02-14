@@ -11,8 +11,12 @@ public class AdminDTO extends RegisteredUserDTO implements Serializable {
     private String title;
 
     public AdminDTO(int id, String firstName, String lastName, String email, String password, String title){
-        super(id, firstName, lastName, email, password);
+        super(id, firstName, lastName, email, password, "admin");
         this.title=title;
+    }
+
+    public AdminDTO() {
+
     }
 
 

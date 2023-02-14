@@ -9,7 +9,11 @@ public class ModifiedCustomerDTO extends CustomerDTO implements Serializable {
     private String url_profile_pic;
     private String address;
 
-    public ModifiedCustomerDTO(int id, String firstName, String lastName, String country, String email, String password, String phone, String url_profile_pic, String address){
+    public ModifiedCustomerDTO() {
+
+    }
+    public ModifiedCustomerDTO(int id, String firstName, String lastName, String country, String email, String password,
+                               String phone, String url_profile_pic, String address){
         super(id, firstName, lastName, country, email,password);
         this.phone = phone;
         this.url_profile_pic=url_profile_pic;

@@ -6,6 +6,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import it.unipi.lsmsd.nysleep.DAO.UserDAO;
 import it.unipi.lsmsd.nysleep.DAO.base.MongoBaseDAO;
+import it.unipi.lsmsd.nysleep.DTO.RegisteredUserDTO;
 import it.unipi.lsmsd.nysleep.model.Admin;
 import it.unipi.lsmsd.nysleep.model.Renter;
 
@@ -13,7 +14,7 @@ import it.unipi.lsmsd.nysleep.model.RegisteredUser;
 import it.unipi.lsmsd.nysleep.model.Customer;
 
 import org.bson.Document;
-import java.util.ArrayList;
+
 import java.util.List;
 
 public class MongoUserDAO extends MongoBaseDAO implements UserDAO {
@@ -67,8 +68,8 @@ public class MongoUserDAO extends MongoBaseDAO implements UserDAO {
                     (String) doc.get("first_name"),
                     (String) doc.get("last_name"),
                     (String) doc.get("email"),
+                     (String) doc.get("password"),
                     (String) doc.get("url_profile_pic"),
-                    (String) doc.get("password"),
                     (String) doc.get("type"),
                     (String) doc.get("address"),
                     (String) doc.get("country"),
@@ -80,20 +81,20 @@ public class MongoUserDAO extends MongoBaseDAO implements UserDAO {
                     (String) doc.get("first_name"),
                     (String) doc.get("last_name"),
                     (String) doc.get("email"),
-                    (String) doc.get("url_profile_pic"),
                     (String) doc.get("password"),
+                    (String) doc.get("url_profile_pic"),
                     (String) doc.get("type"),
                     (String) doc.get("work_email"),
                     (String) doc.get("phone")
             );
-        }else if(doc.get("type").equals("customer")){
+        }else if(doc.get("type").equals("admin")){
             registeredUser = new Admin(
                     (int) doc.get("_id"),
                     (String) doc.get("first_name"),
                     (String) doc.get("last_name"),
                     (String) doc.get("email"),
-                    (String) doc.get("url_profile_pic"),
                     (String) doc.get("password"),
+                    (String) doc.get("url_profile_pic"),
                     (String) doc.get("type"),
                     (String) doc.get("title")
             );
@@ -114,9 +115,9 @@ public class MongoUserDAO extends MongoBaseDAO implements UserDAO {
     public void modifyAccountInfo(RegisteredUser oldUser, RegisteredUser newUser) {
         Document searchQuery = new Document("_id",new Document("$eq",oldUser.getId()));  //search query
         Document newDoc = toDoc(newUser);  //updated doc
-        newDoc.remove("_id");
+        /*newDoc.remove("_id");
         newDoc.remove("url_profile_pic");
-        newDoc.remove("type");
+        newDoc.remove("type");*/
         Document updateQuery = new Document("$set",newDoc); //update query
         updateDoc(searchQuery,updateQuery, COLLECTION);
     }
@@ -131,9 +132,6 @@ public class MongoUserDAO extends MongoBaseDAO implements UserDAO {
 
     //controllo per verificare se una mail sia stata già utilizzata
     public boolean checkEmail(String email){
-        MongoClient myClient = MongoClients.create(connection);
-        MongoDatabase db = myClient.getDatabase(dbName);
-        MongoCollection<Document> collection = db.getCollection(COLLECTION);
         Document search_email = new Document("email", new Document("$eq",email));
         if (readDoc(search_email, COLLECTION) == null){
             return false;
