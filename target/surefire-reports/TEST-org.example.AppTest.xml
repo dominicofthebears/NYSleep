@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="1" failures="0" name="org.example.AppTest" time="0.003" errors="0" skipped="0">
+<testsuite tests="1" failures="0" name="org.example.AppTest" time="0.002" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="2022.2.3"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
@@ -28,11 +28,11 @@
     <property name="stderr.encoding" value="UTF-8"/>
     <property name="os.name" value="Windows 11"/>
     <property name="maven.ext.class.path" value="D:\IntelliJ IDEA 2022.2.3\plugins\maven\lib\maven-event-listener.jar"/>
-    <property name="classworlds.conf" value="D:\apache-maven-3.8.7\bin\m2.conf"/>
+    <property name="classworlds.conf" value="D:\IntelliJ IDEA 2022.2.3\plugins\maven\lib\maven3\bin\m2.conf"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
     <property name="stdout.encoding" value="UTF-8"/>
     <property name="java.library.path" value="C:\Users\domen\.jdks\openjdk-19\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\HWAudioDriverLibs;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Windows\system32\config\systemprofile\AppData\Local\Microsoft\WindowsApps;C:\Program Files\dotnet\;D:\Git\cmd;C:\ProgramData\chocolatey\bin;C:\Program Files\GitHub CLI\;C:\Users\domen\AppData\Local\Programs\Python\Python39\Scripts;C:\Users\domen\AppData\Local\Programs\Python\Python39;C:\Program Files\Mozilla Firefox;C:\Windows\System32\HWAudioDriverLibs;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Windows\system32\config\systemprofile\AppData\Local\Microsoft\WindowsApps;C:\Program Files\dotnet\;D:\GithubCLI\;D:\Git\cmd;C:\Windows\System32\HWAudioDriverLibs;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Windows\system32\config\systemprofile\AppData\Local\Microsoft\WindowsApps;C:\Program Files\dotnet\;D:\GithubCLI\;D:\Git\cmd;C:\Users\domen\AppData\Local\Microsoft\WindowsApps\python3.9.exe;C:\Program Files\mongodb-database-tools-win;C:\Users\domen\.jdks\corretto-11.0.17\bin;;."/>
-    <property name="maven.conf" value="D:\apache-maven-3.8.7/conf"/>
+    <property name="maven.conf" value="D:\IntelliJ IDEA 2022.2.3\plugins\maven\lib\maven3/conf"/>
     <property name="jdk.debug" value="release"/>
     <property name="java.class.version" value="63.0"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
@@ -43,7 +43,7 @@
     <property name="file.encoding" value="UTF-8"/>
     <property name="java.specification.version" value="19"/>
     <property name="user.name" value="domen"/>
-    <property name="java.class.path" value="D:\apache-maven-3.8.7\boot\plexus-classworlds-2.6.0.jar;D:\apache-maven-3.8.7\boot\plexus-classworlds.license"/>
+    <property name="java.class.path" value="D:\IntelliJ IDEA 2022.2.3\plugins\maven\lib\maven3\boot\plexus-classworlds-2.6.0.jar;D:\IntelliJ IDEA 2022.2.3\plugins\maven\lib\maven3\boot\plexus-classworlds.license"/>
     <property name="java.vm.specification.version" value="19"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="sun.java.command" value="org.codehaus.classworlds.Launcher -Didea.version=2022.2.3 install --non-recursive"/>
@@ -55,7 +55,7 @@
     <property name="native.encoding" value="Cp1252"/>
     <property name="java.vendor" value="Oracle Corporation"/>
     <property name="sun.stderr.encoding" value="UTF-8"/>
-    <property name="maven.home" value="D:\apache-maven-3.8.7"/>
+    <property name="maven.home" value="D:\IntelliJ IDEA 2022.2.3\plugins\maven\lib\maven3"/>
     <property name="file.separator" value="\"/>
     <property name="java.version.date" value="2022-09-20"/>
     <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
@@ -64,5 +64,5 @@
     <property name="sun.stdout.encoding" value="UTF-8"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="org.example.AppTest" name="testApp" time="0.003"/>
+  <testcase classname="org.example.AppTest" name="testApp" time="0.002"/>
 </testsuite>

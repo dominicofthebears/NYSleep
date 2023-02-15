@@ -44,7 +44,6 @@ D:\Git\NYSleep\src\main\java\App.java
 D:\Git\NYSleep\src\main\java\it\unipi\lsmsd\nysleep\model\Renter.java
 D:\Git\NYSleep\src\main\java\it\unipi\lsmsd\nysleep\DTO\RegisteredUserDTO.java
 D:\Git\NYSleep\src\main\java\it\unipi\lsmsd\nysleep\DAO\mongoDB\MongoReservationDAO.java
-D:\Git\NYSleep\src\main\java\secondoMain.java
 D:\Git\NYSleep\src\main\java\it\unipi\lsmsd\nysleep\business\RenterServices.java
 D:\Git\NYSleep\src\main\java\it\unipi\lsmsd\nysleep\DTO\RenterDetailsDTO.java
 D:\Git\NYSleep\src\main\java\it\unipi\lsmsd\nysleep\DAO\neo4jDB\NeoCustomerDAO.java
