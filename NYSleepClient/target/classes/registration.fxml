@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<ScrollPane fx:id="ScrollPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.RegistrationController">
+   <content>
+      <AnchorPane fx:id="AnchorPane" prefHeight="384.0" prefWidth="599.0">
+         <children>
+            <Label fx:id="RegisterTitle" layoutX="230.0" layoutY="14.0" text="Registration">
+               <font>
+                  <Font size="26.0" />
+               </font>
+            </Label>
+            <VBox fx:id="VBox" layoutX="34.0" layoutY="63.0" prefHeight="314.0" prefWidth="530.0" spacing="2.0" style="-fx-background-color: blue;">
+               <children>
+                  <HBox fx:id="HBoxNS" alignment="CENTER" prefHeight="60.0" prefWidth="530.0">
+                     <children>
+                        <VBox fx:id="VBoxFN" alignment="CENTER" prefHeight="60.0" prefWidth="265.0">
+                           <children>
+                              <Label fx:id="LabelFN" alignment="CENTER" prefHeight="34.0" prefWidth="203.0" text="First Name" textFill="WHITE" />
+                              <TextField fx:id="FirstName" prefHeight="26.0" prefWidth="118.0" promptText="Name" />
+                           </children>
+                        </VBox>
+                        <VBox fx:id="VBoxLN" alignment="CENTER" prefHeight="60.0" prefWidth="264.0">
+                           <children>
+                              <Label fx:id="LabelLN" alignment="CENTER" prefHeight="34.0" prefWidth="198.0" text="Last Name" textFill="WHITE" />
+                              <TextField fx:id="LastName" alignment="TOP_LEFT" prefHeight="26.0" prefWidth="138.0" promptText="Surname" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="HBoxEP" prefHeight="66.0" prefWidth="530.0">
+                     <children>
+                        <VBox fx:id="VBoxEmail" alignment="CENTER" prefHeight="82.0" prefWidth="265.0">
+                           <children>
+                              <Label fx:id="LabelEmail" alignment="CENTER" prefHeight="25.0" prefWidth="206.0" text="Email" textFill="WHITE" />
+                              <TextField fx:id="Email" prefHeight="26.0" prefWidth="204.0" promptText="Name.surname@example.com" />
+                           </children>
+                        </VBox>
+                        <VBox fx:id="VBoxPassword" alignment="CENTER" prefHeight="82.0" prefWidth="264.0">
+                           <children>
+                              <Label fx:id="LabelPassword" alignment="CENTER" prefHeight="25.0" prefWidth="198.0" text="Password" textFill="WHITE" />
+                              <PasswordField fx:id="Password" prefHeight="26.0" prefWidth="263.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="HBoxTP" prefHeight="66.0" prefWidth="530.0">
+                     <children>
+                        <VBox fx:id="VBoxType" alignment="CENTER" prefHeight="82.0" prefWidth="265.0">
+                           <children>
+                              <Label fx:id="LabelType" alignment="CENTER" prefHeight="26.0" prefWidth="199.0" text="Type" textFill="WHITE" />
+                              <ChoiceBox fx:id="Types" prefHeight="26.0" prefWidth="255.0" />
+                           </children>
+                        </VBox>
+                        <VBox fx:id="VBoxPhone" alignment="CENTER" prefHeight="82.0" prefWidth="265.0">
+                           <children>
+                              <Label fx:id="LabelPhone" alignment="CENTER" prefHeight="26.0" prefWidth="203.0" text="Phone" textFill="WHITE" />
+                              <TextField fx:id="Phone" prefHeight="28.0" prefWidth="203.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="HBoxACW" alignment="CENTER" prefHeight="66.0" prefWidth="530.0">
+                     <children>
+                        <VBox fx:id="VBoxAddress" alignment="CENTER" prefHeight="82.0" prefWidth="177.0">
+                           <children>
+                              <Label fx:id="LabelAddress" alignment="CENTER" prefHeight="24.0" prefWidth="198.0" text="Address" textFill="WHITE" />
+                              <TextField fx:id="Address" prefHeight="18.0" prefWidth="178.0" />
+                           </children>
+                        </VBox>
+                        <VBox fx:id="VBoxCountry" alignment="CENTER" prefHeight="82.0" prefWidth="170.0">
+                           <children>
+                              <Label fx:id="LabelCountry" alignment="CENTER" prefHeight="24.0" prefWidth="130.0" text="Country" textFill="WHITE" />
+                              <TextField fx:id="Country" prefHeight="22.0" prefWidth="130.0" />
+                           </children>
+                        </VBox>
+                        <VBox fx:id="VBoxWorkEmail" alignment="CENTER" prefHeight="82.0" prefWidth="177.0">
+                           <children>
+                              <Label fx:id="LabelWorkEmail" alignment="CENTER" prefHeight="24.0" prefWidth="182.0" text="Work Email" textFill="WHITE" />
+                              <TextField fx:id="WorkEmail" promptText="Name.surname@NYSleep.com" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <Button fx:id="RegisterButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#register" prefHeight="42.0" prefWidth="122.0" text="Register">
+                     <VBox.margin>
+                        <Insets left="200.0" top="2.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </VBox>
+         </children>
+      </AnchorPane>
+   </content>
+</ScrollPane>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.control.ChoiceBox?>
+<Pane fx:id="MainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.InsertAccommodationController">
+   <children>
+      <AnchorPane fx:id="AnchorPane" layoutX="2.0" layoutY="2.0" prefHeight="400.0" prefWidth="600.0">
+         <children>
+            <Label fx:id="Title" alignment="CENTER" contentDisplay="CENTER" layoutX="-1.0" layoutY="1.0" prefHeight="31.0" prefWidth="600.0" text="Insert your Accommodation">
+               <font>
+                  <Font name="System Bold" size="21.0" />
+               </font>
+            </Label>
+            <VBox fx:id="MainVBox" layoutX="38.0" layoutY="33.0" prefHeight="311.0" prefWidth="522.0" style="-fx-background-color: blue;">
+               <children>
+                  <HBox fx:id="HBoxNN" prefHeight="78.0" prefWidth="522.0">
+                     <children>
+                        <VBox fx:id="NameVBox" alignment="TOP_CENTER" prefHeight="100.0" prefWidth="261.0" spacing="10.0">
+                           <children>
+                              <Label fx:id="NameLabel" alignment="CENTER" prefHeight="18.0" prefWidth="309.0" text="Accommodation name" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="Name" alignment="CENTER" prefHeight="30.0" prefWidth="261.0" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </VBox>
+                        <VBox fx:id="NeighborhoodVBox" alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="261.0" spacing="10.0">
+                           <children>
+                              <Label fx:id="NeighborhoodLabel" alignment="CENTER" prefHeight="18.0" prefWidth="309.0" text="Neighborhood" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="Neighborhood" alignment="CENTER" prefHeight="30.0" prefWidth="261.0" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="HBoxNumbers" layoutX="10.0" layoutY="10.0" prefHeight="78.0" prefWidth="522.0">
+                     <children>
+                        <VBox fx:id="BedsVBox" alignment="TOP_CENTER" prefHeight="100.0" prefWidth="261.0" spacing="10.0">
+                           <children>
+                              <Label fx:id="BedsLabel" alignment="CENTER" prefHeight="18.0" prefWidth="309.0" text="Number of beds" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <ChoiceBox fx:id="Beds"   prefWidth="150.0" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </VBox>
+                        <VBox fx:id="RoomsVBox" alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="261.0" spacing="10.0">
+                           <children>
+                              <Label fx:id="RoomsLabel" alignment="CENTER" prefHeight="18.0" prefWidth="309.0" text="Number of rooms" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <ChoiceBox fx:id="Rooms" prefWidth="150.0" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="HBoxTP" layoutX="10.0" layoutY="10.0" prefHeight="78.0" prefWidth="522.0">
+                     <children>
+                        <VBox fx:id="TypeVBox" alignment="TOP_CENTER" prefHeight="100.0" prefWidth="261.0" spacing="10.0">
+                           <children>
+                              <Label fx:id="TypeLabel" alignment="CENTER" prefHeight="18.0" prefWidth="309.0" text="Property type" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="Type" alignment="CENTER" prefHeight="30.0" prefWidth="261.0" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </VBox>
+                        <VBox fx:id="PriceVBox" alignment="TOP_CENTER" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="261.0" spacing="10.0">
+                           <children>
+                              <Label fx:id="PriceLabel" alignment="CENTER" prefHeight="18.0" prefWidth="309.0" text="Price (€)" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="Price" alignment="CENTER" prefHeight="30.0" prefWidth="261.0" />
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <VBox fx:id="AmenitiesVBox" alignment="CENTER" prefHeight="0.0" prefWidth="354.0" spacing="10.0">
+                     <children>
+                        <Label fx:id="AmenitiesLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="18.0" prefWidth="346.0" text="Amenities" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                        <TextArea fx:id="Amenities" prefHeight="73.0" prefWidth="514.0" />
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="PicVBox" alignment="TOP_CENTER" prefHeight="100.0" prefWidth="261.0" spacing="10.0">
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </VBox>
+            <Button fx:id="InsertButton" layoutX="252.0" layoutY="354.0" mnemonicParsing="false" onMouseClicked="#insertAccommodation" prefHeight="31.0" prefWidth="95.0" style="-fx-background-color: blue;" text="Insert" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+   </children>
+</Pane>

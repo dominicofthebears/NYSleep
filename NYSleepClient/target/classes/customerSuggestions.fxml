@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Pagination?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<GridPane prefWidth="1538.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SuggestionsController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <children>
+      <Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1538.0">
+         <children>
+            <GridPane fx:id="researchBar" alignment="CENTER" layoutX="1.0" layoutY="-2.0" prefHeight="72.0" prefWidth="1538.0" style="-fx-background-color: rgb(55, 99, 255);">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="268.6" minWidth="10.0" prefWidth="115.39996337890625" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="450.9999820709228" minWidth="10.0" prefWidth="161.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="450.9999820709228" minWidth="10.0" prefWidth="34.000024414062494" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="527.0000549316406" minWidth="10.0" prefWidth="100.39997558593751" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="727.4001037597656" minWidth="10.0" prefWidth="157.00009765624998" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="792.000048828125" minWidth="10.0" prefWidth="54.59990234374999" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="792.000048828125" minWidth="10.0" prefWidth="12.399975585937455" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="792.000048828125" minWidth="10.0" prefWidth="427.5999999999999" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="690.4000000000001" minWidth="0.0" prefWidth="0.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="690.4000000000001" minWidth="0.0" prefWidth="0.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="690.4000000000001" minWidth="10.0" prefWidth="107.60000000000014" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="690.4000000000001" minWidth="4.4000244140625" prefWidth="4.4000244140625" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="559.7999511718749" minWidth="10.0" prefWidth="128.99995117187495" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="559.7999511718749" minWidth="10.0" prefWidth="85.800048828125" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="315.599853515625" minWidth="10.0" prefWidth="111.19985351562491" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="315.599853515625" minWidth="1.800146484375091" prefWidth="1.800146484375091" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="315.599853515625" minWidth="10.0" prefWidth="111.19990234374995" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="287.7999389648437" minWidth="10.0" prefWidth="78.40009765624995" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label fx:id="title" alignment="CENTER" contentDisplay="CENTER" prefHeight="30.0" prefWidth="746.0" text="Your suggestions" GridPane.columnIndex="7">
+                     <font>
+                        <Font name="System Bold" size="36.0" />
+                     </font>
+                  </Label>
+               </children>
+            </GridPane>
+            <TabPane layoutY="69.0" prefHeight="729.0" prefWidth="1536.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab text="Suggestions by user similarity">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Pagination fx:id="pagination" nodeOrientation="LEFT_TO_RIGHT" pageCount="10" prefHeight="707.0" prefWidth="1538.0" />
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab text="Suggestion by liked renter">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Pagination fx:id="pagination1" nodeOrientation="LEFT_TO_RIGHT" pageCount="10" prefHeight="696.0" prefWidth="1538.0" />
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+            <Button fx:id="backButton" layoutX="24.0" layoutY="18.0" mnemonicParsing="false" onMouseClicked="#backToMainPage" prefHeight="36.0" prefWidth="69.0" text="Back" />
+         </children>
+      </Pane>
+   </children>
+</GridPane>

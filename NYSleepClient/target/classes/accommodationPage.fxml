@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="MainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="460.0" prefWidth="751.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AccommodationPageController">
+   <children>
+      <AnchorPane fx:id="AnchorPane" layoutX="1.0" layoutY="-1.0" prefHeight="460.0" prefWidth="751.0">
+         <children>
+            <VBox layoutX="14.0" layoutY="71.0" />
+            <Label fx:id="AccName" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="14.0" prefHeight="40.0" prefWidth="731.0" style="-fx-background-color: blue;" textFill="WHITE">
+               <font>
+                  <Font name="System Bold Italic" size="20.0" />
+               </font>
+            </Label>
+            <VBox fx:id="AccInfoVBox" layoutX="256.0" layoutY="60.0" prefHeight="253.0" prefWidth="470.0">
+               <children>
+                  <HBox fx:id="NeighHBox" prefHeight="50.0" prefWidth="334.0">
+                     <children>
+                        <Label fx:id="NeighLabel" prefHeight="50.0" prefWidth="120.0" text="Neighborhood:">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="Neighborhood" prefHeight="50.0" prefWidth="214.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="NumBedsHBox" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="334.0">
+                     <children>
+                        <Label fx:id="NumBedsLabel" prefHeight="50.0" prefWidth="120.0" text="Num Beds:">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="NumBeds" prefHeight="50.0" prefWidth="214.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="NumRoomsHBox" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="334.0">
+                     <children>
+                        <Label fx:id="NumRoomsLabel" prefHeight="50.0" prefWidth="120.0" text="Num Rooms:">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="NumRooms" prefHeight="50.0" prefWidth="214.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="PropertyTypeHBox" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="334.0">
+                     <children>
+                        <Label fx:id="PropertyTypeLabel" prefHeight="50.0" prefWidth="120.0" text="Property type:">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="PropertyType" prefHeight="50.0" prefWidth="214.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="RatingHBox" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="334.0">
+                     <children>
+                        <Label fx:id="RatingLabel" prefHeight="50.0" prefWidth="120.0" text="Rating:">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="Rating" prefHeight="50.0" prefWidth="214.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="PriceHBox" layoutX="10.0" layoutY="10.0" prefHeight="50.0" prefWidth="334.0">
+                     <children>
+                        <Label fx:id="PriceLabel" prefHeight="50.0" prefWidth="120.0" text="Price (€)">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="Price" prefHeight="50.0" prefWidth="214.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox fx:id="SideVBOx" alignment="CENTER" layoutX="8.0" layoutY="71.0" prefHeight="362.0" prefWidth="207.0" style="-fx-background-color: gold;">
+               <children>
+                  <ImageView fx:id="MainPic" fitHeight="117.0" fitWidth="198.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@house.jpg" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="AmenitiesLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="34.0" prefWidth="224.0" text="Amenities:" />
+                  <Label fx:id="Amenities" alignment="TOP_LEFT" prefHeight="86.0" prefWidth="214.0" wrapText="true" />
+                  <Label fx:id="RenterLabel" />
+                  <Label fx:id="RenterNames" />
+                  <Label fx:id="RenterMail" />
+                  <Label fx:id="RenterPhone" />
+               </children>
+            </VBox>
+            <HBox fx:id="DateHBox" alignment="CENTER_LEFT" layoutX="233.0" layoutY="314.0" prefHeight="53.0" prefWidth="366.0" spacing="5.0">
+               <children>
+                  <Label fx:id="StartDateLabel" prefHeight="50.0" prefWidth="59.0" text="Start date:" />
+                  <DatePicker fx:id="StartDate" prefHeight="27.0" prefWidth="118.0" />
+                  <Label fx:id="EndDateLabel" text="End date:" />
+                  <DatePicker fx:id="EndDate" prefHeight="26.0" prefWidth="123.0" />
+               </children>
+            </HBox>
+            <Button fx:id="ButtonReserve" layoutX="481.0" layoutY="383.0" mnemonicParsing="false" onAction="#createReservation" prefHeight="40.0" prefWidth="85.0" style="-fx-background-color: blue;" text="Reserve" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Button>
+            <Button fx:id="showReviews" layoutX="301.0" layoutY="388.0" mnemonicParsing="false" onAction="#showReviews" prefHeight="34.0" prefWidth="90.0" text="Show Reviews" />
+            <Button fx:id="backButton" disable="true" layoutX="14.0" layoutY="22.0" mnemonicParsing="false" onMouseClicked="#backToRentAccommodations" text="Back" visible="false" />
+            <Button fx:id="deleteAccButton" disable="true" layoutX="618.0" layoutY="323.0" mnemonicParsing="false" onMouseClicked="#deleteAccommodation" prefHeight="34.0" prefWidth="118.0" text="Delete accommodation " visible="false">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Button>
+            <Button fx:id="reservationsButton" disable="true" layoutX="618.0" layoutY="388.0" mnemonicParsing="false" onMouseClicked="#showAccReservations" prefHeight="34.0" prefWidth="118.0" text="Show reservations" visible="false" />
+         </children>
+      </AnchorPane>
+   </children>
+</Pane>
