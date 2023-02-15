@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Pagination?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<GridPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainPageController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <children>
+      <Pane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1518.0">
+         <children>
+            <GridPane fx:id="researchBar" alignment="CENTER" layoutX="1.0" layoutY="-2.0" prefHeight="72.0" prefWidth="1543.0" style="-fx-background-color: rgb(55, 99, 255);">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="268.6" minWidth="10.0" prefWidth="115.39996337890625" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="450.9999820709228" minWidth="10.0" prefWidth="161.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="450.9999820709228" minWidth="10.0" prefWidth="34.000024414062494" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="527.0000549316406" minWidth="10.0" prefWidth="100.39997558593751" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="727.4001037597656" minWidth="10.0" prefWidth="157.00009765624998" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="792.000048828125" minWidth="10.0" prefWidth="54.59990234374999" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="792.000048828125" minWidth="10.0" prefWidth="200.600048828125" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="792.000048828125" minWidth="10.0" prefWidth="27.600024414062545" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="792.000048828125" minWidth="10.0" prefWidth="107.39995117187505" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="792.000048828125" minWidth="6.399999999999977" prefWidth="27.200048828124977" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="690.4000000000001" minWidth="10.0" prefWidth="184.0000000000001" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="690.4000000000001" minWidth="0.0" prefWidth="0.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="690.4000000000001" minWidth="10.0" prefWidth="107.60000000000014" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="690.4000000000001" minWidth="4.4000244140625" prefWidth="4.4000244140625" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="559.7999511718749" minWidth="10.0" prefWidth="92.59999999999991" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="559.7999511718749" minWidth="10.0" prefWidth="70.20000000000005" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="315.599853515625" minWidth="10.0" prefWidth="188.599853515625" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="287.7999389648437" minWidth="10.0" prefWidth="40.400146484375" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginUser" prefHeight="48.0" prefWidth="65.0" style="-fx-border-color: #2124c7;" text="Login" GridPane.columnIndex="16" GridPane.halignment="RIGHT">
+                     <font>
+                        <Font name="Calibri" size="18.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="registerButton" mnemonicParsing="false" onAction="#registerUser" prefHeight="48.0" prefWidth="98.0" style="-fx-border-color: #2124c7;" text="Register" GridPane.columnIndex="16">
+                     <font>
+                        <Font name="Calibri" size="18.0" />
+                     </font>
+                  </Button>
+                  <TextField fx:id="neighborhood" prefHeight="31.0" prefWidth="114.0" promptText="Insert neighborhood" style="-fx-border-color: #2124c7;" GridPane.columnIndex="6">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+                  <ChoiceBox fx:id="numPeople" prefHeight="27.0" prefWidth="83.0" style="-fx-border-color: #2124c7;" GridPane.columnIndex="12" GridPane.halignment="LEFT" />
+                  <DatePicker fx:id="startDate" style="-fx-background-color: blue;" GridPane.columnIndex="1" />
+                  <DatePicker fx:id="endDate" style="-fx-background-color: blue;" GridPane.columnIndex="4" />
+                  <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchAccommodation" prefHeight="48.0" prefWidth="103.0" style="-fx-border-color: #2124c7;" text="Search" GridPane.columnIndex="14">
+                     <font>
+                        <Font name="Calibri" size="18.0" />
+                     </font>
+                  </Button>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="109.0" text="Start date" textFill="WHITE">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="109.0" text="End date" textFill="WHITE" GridPane.columnIndex="3" GridPane.halignment="RIGHT">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="150.0" text="Number of people" textFill="WHITE" GridPane.columnIndex="10" GridPane.halignment="CENTER">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="price" prefHeight="31.0" prefWidth="102.0" promptText="Insert price" style="-fx-border-color: #2124c7;" GridPane.columnIndex="8">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </GridPane>
+            <ScrollPane fx:id="pageScroll" layoutY="70.0" prefHeight="742.0" prefWidth="1540.0">
+               <content>
+                  <Pagination fx:id="pagination" nodeOrientation="LEFT_TO_RIGHT" pageCount="10" prefHeight="722.0" prefWidth="1538.0" />
+               </content>
+            </ScrollPane>
+         </children>
+      </Pane>
+   </children>
+</GridPane>

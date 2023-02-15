@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="MainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="487.0" prefWidth="751.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AnalyticsController">
+   <children>
+      <AnchorPane fx:id="TopSide" prefHeight="40.0" prefWidth="751.0" style="-fx-background-color: cyan;">
+         <children>
+            <Label fx:id="Label" alignment="CENTER" layoutX="84.0" layoutY="10.0" prefHeight="18.0" prefWidth="207.0" text="Select an Analytic:">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <MenuButton fx:id="choiceMenu" layoutX="291.0" layoutY="7.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="321.0">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Action 1" />
+                <MenuItem mnemonicParsing="false" text="Action 2" />
+              </items>
+            </MenuButton>
+         </children>
+      </AnchorPane>
+      <VBox fx:id="resultsVbox" layoutY="39.0" prefHeight="451.0" prefWidth="751.0" />
+   </children>
+</Pane>

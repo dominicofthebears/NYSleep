@@ -1,0 +1,17 @@
+it\unipi\lsmsd\nysleep\DTO\CustomerDTO.class
+it\unipi\lsmsd\nysleep\DTO\AccReviewDTO.class
+controllers\MainPageController.class
+it\unipi\lsmsd\nysleep\DTO\RegisteredUserDTO.class
+it\unipi\lsmsd\nysleep\DTO\RenterDTO.class
+it\unipi\lsmsd\nysleep\DTO\AccommodationDTO.class
+it\unipi\lsmsd\nysleep\DTO\PageDTO.class
+it\unipi\lsmsd\nysleep\DTO\ModifiedCustomerDTO.class
+it\unipi\lsmsd\nysleep\DTO\AdminDTO.class
+it\unipi\lsmsd\nysleep\DTO\AccommodationDetailsDTO.class
+it\unipi\lsmsd\nysleep\DTO\ModifiedAccDTO.class
+it\unipi\lsmsd\nysleep\DTO\ModifiedRenterDTO.class
+it\unipi\lsmsd\nysleep\DTO\RenterDetailsDTO.class
+it\unipi\lsmsd\nysleep\business\exception\BusinessException.class
+controllers\Controller.class
+it\unipi\lsmsd\nysleep\DTO\CustomerReviewDTO.class
+it\unipi\lsmsd\nysleep\DTO\ReservationDTO.class
