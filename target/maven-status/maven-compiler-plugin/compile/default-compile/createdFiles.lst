@@ -45,7 +45,6 @@ it\unipi\lsmsd\nysleep\ServerStarter.class
 it\unipi\lsmsd\nysleep\business\exception\BusinessException.class
 it\unipi\lsmsd\nysleep\model\Customer.class
 it\unipi\lsmsd\nysleep\DAO\neo4jDB\NeoCustomerDAO.class
-secondoMain.class
 it\unipi\lsmsd\nysleep\RMI\UnregisteredUserServicesRMI.class
 it\unipi\lsmsd\nysleep\DTO\CustomerReviewDTO.class
 it\unipi\lsmsd\nysleep\DTO\ReservationDTO.class

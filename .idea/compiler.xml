@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
+    <excludeFromCompile>
+      <directory url="file://$PROJECT_DIR$/../NYSleepClient/src/main/resources/archetype-resources" includeSubdirectories="true" />
+    </excludeFromCompile>
     <annotationProcessing>
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="NYSleepServer" />
         <module name="untitled" />
+        <module name="NYSleepClient" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="NYSleepClient" target="19" />
-    </bytecodeTargetLevel>
   </component>
   <component name="RmicSettings">
     <option name="IS_EANABLED" value="true" />
